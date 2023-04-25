@@ -1,6 +1,6 @@
 # vectorbrat
 
-Experimental software for live interactive installations using ILDA lasers and xy-mode cathode ray oscilloscopes.
+Experimental software for live interactive installations using ILDA lasers and xy-mode cathode ray tube oscilloscopes.
 
 > "more of a brat than a punk"
 
