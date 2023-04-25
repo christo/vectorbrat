@@ -19,7 +19,7 @@ The two most popular forms of vector display are firstly, Cathod Ray Tube (CRT) 
 and secondly, lasers, which project an often multicolour beam of light that traces arbitrary shapes in space. In order to be most useful for displaying graphics, the oscilloscope should have an XY
 mode, which allows it to trace a path of any shape and the laser ought to support the same kind of control, typically through the ILDA standard. The tradeoffs between each display are:
 
-| CRO Oscilloscope | RGB ILDA Laser  |
+| CRT Oscilloscope | RGB ILDA Laser  |
 | ---------------- | --------------- |
 | monochrome       | full colour     |  
 | high complexity geometry | moderate complexity geometry |
