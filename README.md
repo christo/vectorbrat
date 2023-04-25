@@ -6,18 +6,21 @@ Experimental software for live interactive installations using ILDA lasers and x
 
 ## What is a Vector Display?
 
-Vector graphics displays are much less common than pixel grids. Most TVs and computer screens cut the display into a rectangular matrix, even the old-school glass-tube TVs. The picture shown is 
-constructed by refreshing the entire screen many times each second. Vector displays trace out points, lines and curves over and over, resulting in a   So what's the difference?
+Vector graphics displays are much less common than pixel grids. Most TVs and
+computer screens cut the display into a rectangular matrix, even the old-school
+glass-tube TVs. The picture shown is constructed by refreshing the entire
+screen many times each second. Vector displays trace out points, lines and
+curves over and over, resulting in a very high-contrast, smooth path without
+the stair-step or aliasing particularly noticeable on lower-resolution
+displays. You have to see it in person.
 
-Whenever shapes with diagonal edges are displayed with pixels, there are often-visible stair-step patterns as if the whole picture was stitched on a tapestry or made of Lego bricks. Instead of this, 
-vector displays have completely smooth diagonal lines and edges, which can be more effective for certain kinds of imagery. However, people can't appreciate this incredible, visceral difference by
-watching a video on a phone, computer or TV because, the whole scene is being shown with a grid of pixels!
-
-You have to see a vector display in person.
-
-The two most popular forms of vector display are firstly, Cathod Ray Tube (CRT) Oscilloscope, which are usually monochromatic, showing pristine lines on the same glass vacuum tube as pre-1990s TVs, 
-and secondly, lasers, which project an often multicolour beam of light that traces arbitrary shapes in space. In order to be most useful for displaying graphics, the oscilloscope should have an XY
-mode, which allows it to trace a path of any shape and the laser ought to support the same kind of control, typically through the ILDA standard. The tradeoffs between each display are:
+The two most popular forms of vector display are firstly, Cathod Ray Tube (CRT)
+Oscilloscope, which are usually monochromatic, showing pristine lines on the
+same glass vacuum tube as pre-1990s TVs, and secondly, lasers, which project an
+often multicolour beam of light that traces arbitrary shapes in space. The
+oscilloscope should have an XY mode, which allows it to trace a path of any
+shape and the laser ought to support the same kind of control, typically
+through the ILDA standard. The tradeoffs between each display are:
 
 | CRT Oscilloscope | RGB ILDA Laser  |
 | ---------------- | --------------- |
@@ -27,21 +30,55 @@ mode, which allows it to trace a path of any shape and the laser ought to suppor
 | very small screen     | vast projection surface |
 | relatively safe       | potential serious eye damage / fire hazard |
 | available as ex lab equipment | available as products for night clubs etc. |
+| designed as a professional tool | designed for public display |
+| simple connection via audio | moderately expensive integration | 
+| no special tools required | specialist ILDA interface products |
+| DIY integration difficulty: low | DIY integration difficulty: medium | 
 
-CRT oscilloscopes tend to only be available as second-hand lab equipment as their professional use has been replaced by modern flat panel displays. Lasers of all quality and features are available.
 
-The display signal sent to a scope or laser is changing analog voltages over time. In order to control this with a computer, a DAC (Digital to Analog Converter) is used. Scopes are easier since they
-are designed to accommodate any kind of signal. Left and right audio straight out of a headphone jack will produce an image of some kind. The ILDA laser standard specifies a DB25 connector that looks
-like a boomer printer cable. Sound cards with DC coupling (like the MOTU or Expert Sleepers devices) can do the job, as can dedicated products like Etherdream which have the DB25 socket on one side 
-and an ethernet port on the other. Modular synthesisers can also be used to control ILDA lasers using such modules as the 
-[LZX Industries Cyclops](https://lzxindustries.net/products/cyclops) (discontinued) which has an ILDA DB25 and optionally add a 
-[1010 Toolbox](https://1010music.com/product/toolbox-sequencer-function-generator-eurorack-module) running the alternative 
+The vector display signal sent to a scope or laser is changing analog voltages
+over time. In order to control this with a computer, a DAC (Digital to Analog
+Converter) is used. In some cases a sound card will do the job but it must be
+"DC Coupled" and most are not. 
+
+Scopes are designed to take any kind of signal though the quality of the scope
+and signal both affect the fidelity of the output. Left and right audio
+straight out of a headphone jack will produce an image of some kind though if
+it is not true stereo, that image will be collapsed onto a single diagonal
+line. 
+
+The ILDA laser standard specifies a DB25 connector that looks like a boomer
+printer cable. Sound cards with DC coupling (like the MOTU or Expert Sleepers
+devices) can do the job, as can dedicated products like Etherdream which have
+the DB25 socket on one side and an ethernet port on the other. 
+
+## Laser Safety
+
+Don't use lasers unless you understand the dangers and have the skills to keep
+yourself and others safe. You will only find sufficient information about this
+elsewhere. 
+
+The significant dangers to using lasers include permanent damage to eyesight,
+fire hazards, and potential damage to the laser equipment itself. Safety
+measures of many kinds are typically employed to ameliorate each of these.
+Laser output power is typically measured in milliwatts. A common laser pointer
+may be 0.5mW and yet can still cause damage to eyesight. A club laser will
+usually output more than 1000mW and sometimes more than 10,000mW (10 Watts).
+
+## Modular Synthesiser Integeration
+
+Modular synthesisers can also be used to control ILDA lasers
+using such modules as the 
+[LZX Industries Cyclops](https://lzxindustries.net/products/cyclops) 
+(discontinued) which has an ILDA DB25 and optionally add a 
+[1010 Toolbox](https://1010music.com/product/toolbox-sequencer-function-generator-eurorack-module) (discontinued)
+running the alternative 1010
 [LaserBox Firmware](https://1010music.com/product/laserbox-pattern-generator-for-lasers).
 
 ## Existing Software
 
 There's a lot, and then there's also a lot of potential.
 
-TODO
+TODO: everything
 
 
