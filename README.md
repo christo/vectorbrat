@@ -25,14 +25,14 @@ through the ILDA standard. The tradeoffs between each display are:
 | CRT Oscilloscope | RGB ILDA Laser  |
 | ---------------- | --------------- |
 | monochrome       | full colour     |  
-| high complexity geometry | moderate complexity geometry |
-| interconnected lines    | separate line shapes |
+| capable of high complexity geometry | capable of moderate complexity geometry |
+| all lines are interconnected | line segments can be separate |
 | very small screen     | vast projection surface |
-| relatively safe       | potential serious eye damage / fire hazard |
+| relatively safe to use  | potential serious eye damage / fire hazard |
 | available as ex lab equipment | available as products for night clubs etc. |
 | designed as a professional tool | designed for public display |
-| simple connection via audio | moderately expensive integration | 
-| no special tools required | specialist ILDA interface products |
+| crocodile clips or similar | ILDA connector | 
+| simple audio signal | specialist ILDA interface signal |
 | DIY integration difficulty: low | DIY integration difficulty: medium | 
 
 
