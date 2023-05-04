@@ -3,8 +3,6 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
-// TODO create submodules and move the javafx experiment and the swing app into their own gradle modules
-
 javafx {
     version = "20"
     modules = ['javafx.controls'] // for the javafx implementation
@@ -26,7 +24,7 @@ repositories {
 dependencies {
     implementation group: 'com.github.micycle1', name: 'processing-core-4', version: '4.0.3'
     implementation group: 'ddf.minim', name: 'ddf.minim', version: '2.2.0'
-//    implementation 'org.jaudiolibs:jnajack:1.4.0'
+    implementation 'org.jaudiolibs:jnajack:1.4.0'
 
 
     // logging using slf4j api and logback implementation
