@@ -1,0 +1,79 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+// TODO create submodules and move the javafx experiment and the swing app into their own gradle modules
+
+javafx {
+    version = "20"
+    modules = [ 'javafx.controls' ] // for the javafx implementation
+}
+
+application {
+    mainClassName = 'com.chromosundrift.vectorbrat.VectorBrat'
+}
+
+repositories {
+    mavenCentral()
+
+    // needed for minim:
+    maven { url 'https://clojars.org/repo/' }
+    // supposed to go at the end of repositories
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.micycle1:processing-core-4:4.0.3'
+    implementation 'ddf.minim:ddf.minim:2.2.0'
+
+    // processing runtime deps
+    runtimeOnly group: 'org.jogamp.jogl', name: 'jogl-all-main', version: '2.3.2'
+    runtimeOnly group: 'org.jogamp.jogl', name: 'jogl-all', version: '2.3.2'
+    runtimeOnly group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version: '2.3.2'
+
+    // logging using slf4j api and logback implementation
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    runtimeOnly group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.6'
+    runtimeOnly group: 'ch.qos.logback', name: 'logback-core', version: '1.4.6'
+    runtimeOnly group: 'ch.qos.logback', name: 'logback-access', version: '1.4.6'
+
+    implementation group: 'commons-io', name: 'commons-io', version: '2.7'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+
+    implementation 'net.java.dev.jna:jna:5.6.0'
+    implementation 'net.java.dev.jna:jna-platform:5.6.0'
+    implementation 'org.freedesktop.gstreamer:gst1-java-core:1.4.0'
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.6'
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.14.2"
+
+    // testCommon covers testImplementation and integrationTestImplementation
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    testImplementation 'org.mockito:mockito-core:3.3.3'
+}
+
+
+task printDeps(description: "yo know") {
+    doLast {
+        configurations.runtime.resolve().each { println " RT " + it.getName() }
+    }
+}
+
+task printSourceSetInformation(){
+
+    doLast{
+        sourceSets.each { srcSet ->
+            println "["+srcSet.name+"]"
+            print "-->Source directories: "+srcSet.allJava.srcDirs+"\n"
+            print "-->Output directories: "+srcSet.output.classesDirs.files+"\n"
+            print "-->Compile classpath:\n"
+            srcSet.compileClasspath.files.each {
+                print "  "+it.path+"\n"
+            }
+            println ""
+        }
+    }
+}
+
