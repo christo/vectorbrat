@@ -1,4 +1,4 @@
-package com.chromosundrift.vectorbrat;
+package com.chromosundrift.vectorbrat.processing;
 
 import processing.core.PApplet;
 import xyscope.XYscope;
