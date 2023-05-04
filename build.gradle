@@ -15,15 +15,9 @@ application {
 repositories {
     mavenCentral()
 
-    // for minim
-    maven { url 'https://clojars.org/repo/' }
-    // for processing ("put at end")
-    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation group: 'com.github.micycle1', name: 'processing-core-4', version: '4.0.3'
-    implementation group: 'ddf.minim', name: 'ddf.minim', version: '2.2.0'
     implementation 'org.jaudiolibs:jnajack:1.4.0'
 
 
@@ -35,45 +29,9 @@ dependencies {
 
     implementation group: 'commons-io', name: 'commons-io', version: '2.7'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
-
-    // processing runtime deps (for P3D although still barfing)
-    runtimeOnly group: 'org.jogamp.jogl', name: 'jogl-all-main', version: '2.3.2'
-    runtimeOnly group: 'org.jogamp.jogl', name: 'jogl-all', version: '2.3.2'
-    runtimeOnly group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version: '2.3.2'
-
-    // for processing video
-    implementation 'net.java.dev.jna:jna:5.6.0'
-    implementation 'net.java.dev.jna:jna-platform:5.6.0'
-    implementation 'org.freedesktop.gstreamer:gst1-java-core:1.4.0'
-
-//    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.6'
-//    implementation "com.fasterxml.jackson.core:jackson-databind:2.14.2"
 
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-//    testImplementation 'org.mockito:mockito-core:3.3.3'
+    testImplementation 'org.mockito:mockito-core:3.3.3'
 }
 
-
-task printDeps(description: "yo know") {
-    doLast {
-        configurations.runtime.resolve().each { println " RT " + it.getName() }
-    }
-}
-
-task printSourceSetInformation(){
-
-    doLast{
-        sourceSets.each { srcSet ->
-            println "["+srcSet.name+"]"
-            print "-->Source directories: "+srcSet.allJava.srcDirs+"\n"
-            print "-->Output directories: "+srcSet.output.classesDirs.files+"\n"
-            print "-->Compile classpath:\n"
-            srcSet.compileClasspath.files.each {
-                print "  "+it.path+"\n"
-            }
-            println ""
-        }
-    }
-}
 
