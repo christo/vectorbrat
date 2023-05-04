@@ -11,7 +11,7 @@ javafx {
 }
 
 application {
-    mainClassName = 'com.chromosundrift.vectorbrat.VectorBrat'
+    mainClass.set('com.chromosundrift.vectorbrat.VectorBrat')
 }
 
 repositories {
