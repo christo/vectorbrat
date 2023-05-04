@@ -7,7 +7,7 @@ plugins {
 
 javafx {
     version = "20"
-    modules = [ 'javafx.controls' ] // for the javafx implementation
+    modules = ['javafx.controls'] // for the javafx implementation
 }
 
 application {
@@ -17,20 +17,17 @@ application {
 repositories {
     mavenCentral()
 
-    // needed for minim:
+    // for minim
     maven { url 'https://clojars.org/repo/' }
-    // supposed to go at the end of repositories
+    // for processing ("put at end")
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'com.github.micycle1:processing-core-4:4.0.3'
-    implementation 'ddf.minim:ddf.minim:2.2.0'
+    implementation group: 'com.github.micycle1', name: 'processing-core-4', version: '4.0.3'
+    implementation group: 'ddf.minim', name: 'ddf.minim', version: '2.2.0'
+//    implementation 'org.jaudiolibs:jnajack:1.4.0'
 
-    // processing runtime deps
-    runtimeOnly group: 'org.jogamp.jogl', name: 'jogl-all-main', version: '2.3.2'
-    runtimeOnly group: 'org.jogamp.jogl', name: 'jogl-all', version: '2.3.2'
-    runtimeOnly group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version: '2.3.2'
 
     // logging using slf4j api and logback implementation
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
@@ -42,16 +39,21 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
 
+    // processing runtime deps (for P3D although still barfing)
+    runtimeOnly group: 'org.jogamp.jogl', name: 'jogl-all-main', version: '2.3.2'
+    runtimeOnly group: 'org.jogamp.jogl', name: 'jogl-all', version: '2.3.2'
+    runtimeOnly group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version: '2.3.2'
+
+    // for processing video
     implementation 'net.java.dev.jna:jna:5.6.0'
     implementation 'net.java.dev.jna:jna-platform:5.6.0'
     implementation 'org.freedesktop.gstreamer:gst1-java-core:1.4.0'
 
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.6'
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.14.2"
+//    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.6'
+//    implementation "com.fasterxml.jackson.core:jackson-databind:2.14.2"
 
-    // testCommon covers testImplementation and integrationTestImplementation
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-    testImplementation 'org.mockito:mockito-core:3.3.3'
+//    testImplementation 'org.mockito:mockito-core:3.3.3'
 }
 
 
