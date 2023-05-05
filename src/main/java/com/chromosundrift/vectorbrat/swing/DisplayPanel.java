@@ -65,15 +65,15 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         g2.dispose();
     }
 
-    private void branding(BufferedImage im, Graphics2D g2) {
+    private void branding(final BufferedImage im, final Graphics2D g2) {
         // centred string
         g2.setColor(colText);
         final String mesg = im.getCapabilities(null).isAccelerated() ? "VectorBrat >> accel" : "VectorBrat";
         g2.setFont(defaultFont);
-        FontMetrics fontMetrics = g2.getFontMetrics();
+        final FontMetrics fontMetrics = g2.getFontMetrics();
         final Rectangle2D stringBounds = fontMetrics.getStringBounds(mesg, g2);
         //g2.drawRect((int) (int) ((im.getWidth() / 2) - stringBounds.getWidth() / 2), (int) ((im.getHeight() / 2) - stringBounds.getHeight() / 2), (int) stringBounds.getWidth(), (int) stringBounds.getHeight());
-        LineMetrics lineMetrics = fontMetrics.getLineMetrics(mesg, g2);
+        final LineMetrics lineMetrics = fontMetrics.getLineMetrics(mesg, g2);
         g2.drawString(mesg, (int) ((im.getWidth() / 2) - stringBounds.getWidth() / 2), (int) ((im.getHeight() / 2) + lineMetrics.getAscent() / 2));
     }
 
