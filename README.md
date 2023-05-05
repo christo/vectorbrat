@@ -9,12 +9,65 @@ Experimental software for live interactive installations using ILDA lasers and x
 If you don't know why you want to play with lasers and vector graphics and 
 what's the big deal anyway, start with [background info](background.md).
 
+### Hack Mode: ON
+
+Mere days to showtime, hack mode is gaffa-taped into the **on** position. All manner of sins are going into the code
+as of May 2023. If you're reading this more than a few months later, I must have drifted
+on to pastures shinier and you should proceed at your peril.
+
 ## TODO
 
-See [TODO](TODO.md).
+SO much. See [TODO](TODO.md).
 
 
-## Modular Synthesiser Integeration
+## Game Ideas
+
+* [asteroids](asteroids.md)
+* pong
+* gravity wars
+* star wars ?
+* lunar lander
+* pinball
+* future racing
+* gyruss
+* night driving
+
+## Stretch goals for Asteroids
+
+* fisheye distortion etc.
+* screen shake & compression blasts
+* asteroid collisions
+* conservation of rotational momentum
+* rotation around centre of mass
+* laser weapon (goes through everything, instantaneous)
+* show starfield video backdrop
+* modular synth sound effects
+* beat detection input to effects
+* custom play controls - continuous encoder and a couple of buttons
+* use daisy patch for advanced modulation (beat detect? etc.)
+
+## modular fx
+
+* warps / lens distortion (nonlinear proportional adder)
+* screen shake (linear precision adder)
+
+## Effects Ideas
+
+* virtual raster: render horizontal stripes like old IBM logo
+* joy division mountains - made from sound input
+* star wars text
+* 3d rotations with hidden line treatment (e.g. blue making object translucent)
+* soft-body physics demos, box 2d demos
+* stripes with perturbations
+* starfield
+
+## Content Ideas
+
+* image input from artist's instagrams
+* welcome to country
+* laser overlay on video
+
+## Modular Synthesiser Integration
 
 Modular synthesisers can also be used to control ILDA lasers
 using such modules as the 
