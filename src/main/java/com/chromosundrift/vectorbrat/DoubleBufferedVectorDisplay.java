@@ -2,7 +2,6 @@ package com.chromosundrift.vectorbrat;
 
 import com.chromosundrift.vectorbrat.geom.Model;
 
-import javax.swing.JPanel;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 
@@ -30,6 +29,7 @@ public final class DoubleBufferedVectorDisplay implements VectorDisplay {
 
     /**
      * Sets the back buffer model only. Next render, this will be flipped to the front model.
+     *
      * @param model the new model.
      * @return this.
      */

@@ -43,7 +43,18 @@ public final class Config {
     private String xy;
     private String rz;
     private String gb;
+    private final String title;
 
+    public Config(String title) {
+        this.title = title;
+        this.xy = DEFAULT_XY;
+        this.rz = DEFAULT_RZ;
+        this.gb = DEFAULT_GB;
+    }
+
+    public Config() {
+        this(DEFAULT_TITLE);
+    }
 
     public static List<String> requiredDevices() {
         return Arrays.asList(DEFAULT_XY, DEFAULT_RZ, DEFAULT_GB);
@@ -55,19 +66,6 @@ public final class Config {
 
     public static List<String> knownDevices() {
         return Arrays.asList(ES8, ES9, DEFAULT_XY, DEFAULT_RZ, DEFAULT_GB);
-    }
-
-    private String title;
-
-    public Config(String title) {
-        this.title = title;
-        this.xy = DEFAULT_XY;
-        this.rz = DEFAULT_RZ;
-        this.gb = DEFAULT_GB;
-    }
-
-    public Config() {
-        this(DEFAULT_TITLE);
     }
 
     public String getXy() {
