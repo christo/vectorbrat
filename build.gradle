@@ -11,9 +11,6 @@ application {
 
 repositories {
     mavenCentral()
-
-    // TODO get rid of this
-    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
 }
 
 dependencies {
@@ -44,5 +41,7 @@ java {
         languageVersion = JavaLanguageVersion.of(20)
     }
 }
+
+
 
 
