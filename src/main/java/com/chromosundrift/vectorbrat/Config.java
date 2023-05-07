@@ -38,18 +38,25 @@ public final class Config {
      * Green and blue pair of channels.
      */
     public static final String DEFAULT_GB = "es-9_G_B";
+    private static final int DEFAULT_PPS = 30000;
+    public static final int MAX_PPS = 30000;
+    public static final int MIN_PPS = 5;
 
 
     private String xy;
     private String rz;
     private String gb;
     private final String title;
+    private int pps;
+    private boolean lockout;
 
     public Config(String title) {
         this.title = title;
         this.xy = DEFAULT_XY;
         this.rz = DEFAULT_RZ;
         this.gb = DEFAULT_GB;
+        this.pps = DEFAULT_PPS;
+        this.lockout = true;
     }
 
     public Config() {
@@ -98,5 +105,21 @@ public final class Config {
 
     public String logoUrl() {
         return "vectorbrat.png";
+    }
+
+    public int getPps() {
+        return pps;
+    }
+
+    public boolean isLockout() {
+        return lockout;
+    }
+
+    public void setPps(int pps) {
+        this.pps = pps;
+    }
+
+    public void setLockout(boolean lockout) {
+        this.lockout = lockout;
     }
 }

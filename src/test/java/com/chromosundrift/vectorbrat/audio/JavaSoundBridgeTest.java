@@ -1,7 +1,6 @@
 package com.chromosundrift.vectorbrat.audio;
 
 import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.MissingAudioDevice;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import junit.framework.AssertionFailedError;
 import org.junit.Ignore;

@@ -12,13 +12,14 @@ application {
 repositories {
     mavenCentral()
 
+    // TODO get rid of this
+    maven { url 'https://www.jetbrains.com/intellij-repository/releases' }
 }
 
 dependencies {
 
     // for jack
     implementation 'org.jaudiolibs:jnajack:1.4.0'
-
 
     // logging using slf4j api and logback implementation
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'

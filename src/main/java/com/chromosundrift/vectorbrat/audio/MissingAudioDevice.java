@@ -1,4 +1,4 @@
-package com.chromosundrift.vectorbrat;
+package com.chromosundrift.vectorbrat.audio;
 
 public class MissingAudioDevice extends Exception {
 

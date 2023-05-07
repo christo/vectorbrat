@@ -59,7 +59,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         this.vectorDisplay = new DoubleBufferedVectorDisplay();
         setBackground(Color.BLACK);
         setForeground(Color.GREEN);
-        defaultFont = new Font("HelveticaNeue", Font.BOLD, 80);
+        defaultFont = new Font("HelveticaNeue", Font.BOLD, 130);
         setMinimumSize(new Dimension(400, 300));
         vectorDisplay.setModel(Model.empty());
     }

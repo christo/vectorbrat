@@ -15,7 +15,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.MissingAudioDevice;
 
 /**
  * JavaSound implemention for getting required system sound resources.
