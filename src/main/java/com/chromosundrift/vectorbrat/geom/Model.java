@@ -13,6 +13,8 @@ import java.util.stream.Stream;
  */
 public class Model {
 
+    private static Model EMPTY_MODEL = new Model();
+
     private List<Polygon> polygons;
 
     private final ReentrantLock lock = new ReentrantLock();
@@ -32,6 +34,10 @@ public class Model {
         polygons = new ArrayList<>();
     }
 
+    public static Model empty() {
+        return EMPTY_MODEL;
+    }
+
     private Model add(Polygon p) {
         try {
             lock.lock();
@@ -49,5 +55,9 @@ public class Model {
         } finally {
             lock.unlock();
         }
+    }
+
+    public int size() {
+        return polygons.size();
     }
 }
