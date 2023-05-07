@@ -23,6 +23,7 @@ public final class LaserDisplay implements VectorDisplay, Runnable {
         // TODO get audio device
         // TODO get x and y channels
         // TODO timer
+        // TODO path planner
         // TODO render xy coordinates to the audio buffer - keep rendering the same point until time to move
         // TODO quintic easing
         // TODO pen down - colour

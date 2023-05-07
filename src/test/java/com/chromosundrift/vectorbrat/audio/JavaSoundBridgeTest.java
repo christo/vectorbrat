@@ -48,15 +48,14 @@ public class JavaSoundBridgeTest {
         }
     }
 
-    @Ignore
+
     @Test
     public void tryDataLineInfos() throws Exception {
 
-        AudioFormat f = new AudioFormat(96000f, 32, 2, false, true);
+        AudioFormat f = new AudioFormat(96000f, 24, 2, true, true);
 
         TargetDataLine line;
-        InputStream inputStream = SineWaveInputStream.create(440d, 96000);
-        AudioInputStream audioStream = AudioSystem.getAudioInputStream(inputStream);
+
 
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, f); // format is an AudioFormat object
         if (!AudioSystem.isLineSupported(info)) {
