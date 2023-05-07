@@ -17,9 +17,7 @@ on to pastures shinier and you should proceed at your peril.
 
 ## How To
 
-* Run qjackctl
-* make sure jack is running from qjackctl (not `jackstart`, doesn't work yet)
-* make sure audio device in the system is set to ES-9
+* make sure default system audio device is set to ES-9
 * (confirm) qjackctl shows Input Device and Output Device as ES-9
 
 ## TODO
