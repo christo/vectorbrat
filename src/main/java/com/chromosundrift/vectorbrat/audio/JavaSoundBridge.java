@@ -1,8 +1,5 @@
 package com.chromosundrift.vectorbrat.audio;
 
-import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.MissingAudioDevice;
-
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Control;
@@ -16,6 +13,9 @@ import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.MissingAudioDevice;
 
 /**
  * JavaSound implemention for getting required system sound resources.

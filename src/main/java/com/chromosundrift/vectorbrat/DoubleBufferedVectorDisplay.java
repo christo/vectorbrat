@@ -1,9 +1,9 @@
 package com.chromosundrift.vectorbrat;
 
-import com.chromosundrift.vectorbrat.geom.Model;
-
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
+
+import com.chromosundrift.vectorbrat.geom.Model;
 
 /**
  * Threadsafe, double-buffered display. Call {@link DoubleBufferedVectorDisplay#withLockAndFlip(Function)} to render
