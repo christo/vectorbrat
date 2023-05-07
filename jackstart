@@ -30,5 +30,5 @@ echo
 # jackd -X $SLAVE_BACKEND -d $MACOS_DEVICE
 
 set -vx
-jackd -v -X $SLAVE_BACKEND -d $MACOS_DEVICE -l
+jackd -v -X $SLAVE_BACKEND -d $MACOS_DEVICE 
 
