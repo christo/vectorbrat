@@ -15,6 +15,13 @@ Mere days to showtime, hack mode is gaffa-taped into the **on** position. All ma
 as of May 2023. If you're reading this more than a few months later, I must have drifted
 on to pastures shinier and you should proceed at your peril.
 
+## How To
+
+* Run qjackctl
+* make sure jack is running from qjackctl (not `jackstart`, doesn't work yet)
+* make sure audio device in the system is set to ES-9
+
+
 ## TODO
 
 SO much. See [TODO](TODO.md).
