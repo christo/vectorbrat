@@ -2,7 +2,6 @@ package com.chromosundrift.vectorbrat.geom;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
@@ -13,11 +12,13 @@ import java.util.stream.Stream;
  */
 public class Model {
 
-    private static Model EMPTY_MODEL = new Model();
-
-    private List<Polygon> polygons;
-
+    private static final Model EMPTY_MODEL = new Model();
     private final ReentrantLock lock = new ReentrantLock();
+    private final List<Polygon> polygons;
+
+    public Model() {
+        polygons = new ArrayList<>();
+    }
 
     public static Model midSquare() {
         Model m = new Model();
@@ -28,10 +29,6 @@ public class Model {
                 new Point(0.25, 0.75)
         );
         return m.add(square);
-    }
-
-    public Model() {
-        polygons = new ArrayList<>();
     }
 
     public static Model empty() {
