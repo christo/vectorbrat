@@ -9,6 +9,12 @@ application {
     mainClass.set('com.chromosundrift.vectorbrat.VectorBrat')
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(20)
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -36,11 +42,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:3.3.3'
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(20)
-    }
-}
+
 
 
 
