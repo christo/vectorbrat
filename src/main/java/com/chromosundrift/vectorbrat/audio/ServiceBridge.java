@@ -1,9 +1,12 @@
 package com.chromosundrift.vectorbrat.audio;
 
+import com.google.common.collect.ImmutableList;
+import org.jaudiolibs.audioservers.AudioConfiguration;
 import org.jaudiolibs.audioservers.AudioServerProvider;
 import org.jaudiolibs.audioservers.ext.Device;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -36,6 +39,17 @@ public class ServiceBridge {
             }
         }
         throw new MissingAudioDevice(JACK);
+    }
+
+    public ImmutableList<AudioConfiguration> getConfigurations() throws MissingAudioDevice {
+        Iterator<AudioConfiguration> iterator = ServiceLoader.load(AudioConfiguration.class).iterator();
+        ImmutableList<AudioConfiguration> configurations = ImmutableList.copyOf(iterator);
+        System.out.println("configurations:");
+        for (AudioConfiguration c : configurations) {
+            // dump
+            System.out.println("c = " + c);
+        }
+        return configurations;
     }
 
     public List<Device> getDevices() throws MissingAudioDevice {

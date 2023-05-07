@@ -4,14 +4,13 @@ import junit.framework.AssertionFailedError;
 import org.jaudiolibs.audioservers.ext.Device;
 import org.jaudiolibs.jnajack.examples.SineAudioSource;
 import org.jaudiolibs.jnajack.util.SimpleAudioClient;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.lang.String.join;
 
@@ -28,7 +27,7 @@ public class JackTest {
         Util.setSystemLibraryPath();
     }
 
-    @Ignore("Makes a noise for a second on the default audio device")
+
     @Test
     public void baep() throws Exception {
         SimpleAudioClient client = SimpleAudioClient.create("sine", new String[0],
