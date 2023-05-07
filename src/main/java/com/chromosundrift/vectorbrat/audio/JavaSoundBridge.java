@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -24,18 +23,11 @@ import java.util.stream.Collectors;
 public class JavaSoundBridge implements SoundBridge {
 
     private static final Function<Optional<Mixer.Info>, Optional<Mixer>> systemMixerGetter = info -> info.map(AudioSystem::getMixer);
-
-    public static void main(String[] args) {
-        JavaSoundBridge demo = new JavaSoundBridge();
-        System.out.println("----");
-    }
-
-    private Optional<Mixer> mixerXY;
-    private Optional<Mixer> mixerRZ;
-    private Optional<Mixer> mixerGB;
+    private final Optional<Mixer> mixerXY;
+    private final Optional<Mixer> mixerRZ;
+    private final Optional<Mixer> mixerGB;
     private Function<String, Mixer> mixerByName;
-    private Function<Optional<Mixer.Info>, Optional<Mixer>> mixerGetter;
-
+    private final Function<Optional<Mixer.Info>, Optional<Mixer>> mixerGetter;
     public JavaSoundBridge(Function<Optional<Mixer.Info>, Optional<Mixer>> mixerGetter) {
 
         this.mixerGetter = mixerGetter;
@@ -46,29 +38,17 @@ public class JavaSoundBridge implements SoundBridge {
 
     }
 
-    public List<Optional<Mixer>> getDeviceStatus() {
-        return Config.knownDevices().stream().map(this::getMixer).collect(Collectors.toList());
+    public JavaSoundBridge() {
+        this(systemMixerGetter);
+    }
+
+    public static void main(String[] args) {
+        JavaSoundBridge demo = new JavaSoundBridge();
+        System.out.println("----");
     }
 
     public static void dump() {
         Arrays.stream(AudioSystem.getMixerInfo()).map(JavaSoundBridge::dump).forEach(System.out::println);
-    }
-
-    public JavaSoundBridge()  {
-        this(systemMixerGetter);
-    }
-
-    public Mixer getMixerOrDie(final String deviceName) throws  MissingAudioDevice {
-        return getMixer(deviceName).orElseThrow(() -> new MissingAudioDevice(deviceName));
-    }
-
-    /**
-     * Will return one (unspecified) Mixer matching the given name precisely or empty.
-     */
-    public Optional<Mixer> getMixer(final String deviceName) {
-        return mixerGetter.apply(Arrays.stream(AudioSystem.getMixerInfo())
-                .filter(info -> deviceName.equals(info.getName()))
-                .findAny());
     }
 
     private static String dump(Line.Info[] lineInfos) {
@@ -119,5 +99,22 @@ public class JavaSoundBridge implements SoundBridge {
             sb.append(j).append(":").append(controls[j].getType());
         }
         return sb.append(")").toString();
+    }
+
+    public List<Optional<Mixer>> getDeviceStatus() {
+        return Config.knownDevices().stream().map(this::getMixer).collect(Collectors.toList());
+    }
+
+    public Mixer getMixerOrDie(final String deviceName) throws MissingAudioDevice {
+        return getMixer(deviceName).orElseThrow(() -> new MissingAudioDevice(deviceName));
+    }
+
+    /**
+     * Will return one (unspecified) Mixer matching the given name precisely or empty.
+     */
+    public Optional<Mixer> getMixer(final String deviceName) {
+        return mixerGetter.apply(Arrays.stream(AudioSystem.getMixerInfo())
+                .filter(info -> deviceName.equals(info.getName()))
+                .findAny());
     }
 }

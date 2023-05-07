@@ -75,7 +75,7 @@ public class JavaSoundBridgeTest {
         List<Boolean> signed = Arrays.asList(true, false);
         List<Integer> bitRates = Arrays.asList(44100, 48000, 96000);
         List<String> devices = Config.knownDevices();
-        // TODO run all combinations to find supported formats
+        // run all combinations to find supported formats
     }
 
     @Test
