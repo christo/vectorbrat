@@ -1,12 +1,9 @@
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
-javafx {
-    version = "20"
-    modules = ['javafx.controls'] // for the javafx implementation
-}
+version = '1.2.1'
+group = 'com.chromosundrift'
 
 application {
     mainClass.set('com.chromosundrift.vectorbrat.VectorBrat')
@@ -32,6 +29,12 @@ dependencies {
 
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
     testImplementation 'org.mockito:mockito-core:3.3.3'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(20)
+    }
 }
 
 
