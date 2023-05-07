@@ -1,0 +1,34 @@
+#!/usr/bin/env zsh
+
+# starts the jack audio server daemon for macos
+
+# check the following:
+# jackd --help
+# jackd -d coreaudio --help
+
+MACOS_DEVICE=coreaudio
+
+# slave backend (not sure what this is but it's needed)
+SLAVE_BACKEND=coremidi
+
+echo
+echo '           _ _        _                  '
+echo '    __   _(_) |_ __ _| | __ _ ___  ___   '
+echo '    \ \ / / | __/ _` | |/ _` / __|/ _ \  '
+echo '     \ V /| | || (_| | | (_| \__ \  __/  '
+echo '      \_/ |_|\__\__,_|_|\__,_|___/\___|  '
+echo
+grep 'version\s*=\s*[.\d_-]*' build.gradle
+echo
+
+
+echo
+echo starting jackd
+echo
+
+# non-verbose (still chatty)
+# jackd -X $SLAVE_BACKEND -d $MACOS_DEVICE
+
+set -vx
+jackd -v -X $SLAVE_BACKEND -d $MACOS_DEVICE -l
+
