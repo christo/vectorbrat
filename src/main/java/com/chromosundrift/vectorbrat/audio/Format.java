@@ -8,19 +8,13 @@ import java.util.List;
  */
 public final class Format {
 
-    public enum Signitude {SIGNED, UNSIGNED}
-
-    public enum Endianness {BIG, LITTLE}
-
     public static final float MAX_SAMPLE_RATE = 96000;
     public static final int MAX_CHANNELS = 16;
     public static final List<Integer> LEGIT_BITS = Arrays.asList(8, 16, 24, 32);
-
     private final float rate;
     private final Endianness endianness;
     private final Signitude signitude;
     private final int channels;
-
     public Format(float sampleRate, int bits, Endianness endianness, Signitude signitude, int channels) {
         if (sampleRate < 1 || sampleRate > MAX_SAMPLE_RATE) {
             throw new IllegalArgumentException("sample rate out of range");
@@ -37,6 +31,8 @@ public final class Format {
         this.channels = channels;
     }
 
+    public enum Signitude {SIGNED, UNSIGNED}
 
+    public enum Endianness {BIG, LITTLE}
 
 }
