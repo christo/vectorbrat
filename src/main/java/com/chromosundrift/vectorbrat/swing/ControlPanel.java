@@ -1,7 +1,5 @@
 package com.chromosundrift.vectorbrat.swing;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -11,6 +9,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -27,14 +27,6 @@ public class ControlPanel extends JPanel {
     public ControlPanel(Config config) {
         this.config = config;
         setBorder(new EmptyBorder(5, 5, 5, 5));
-
-        ButtonGroup interlock = new ButtonGroup();
-        JRadioButton armed = new JRadioButton("Armed");
-        JRadioButton safe = new JRadioButton("Safe");
-        interlock.add(armed);
-        interlock.add(safe);
-        safe.setSelected(true);
-
 
         // settings controls
         JComponent xy = new DeviceSelector("X/Y Device");
@@ -58,10 +50,30 @@ public class ControlPanel extends JPanel {
         pps.add(ppsControl, BorderLayout.SOUTH);
 
         setLayout(new GridLayout(5, 1, 5, 5));
+        add(createInterlock());
         add(xy);
         add(rz);
         add(gb);
         add(pps);
+    }
+
+    private JPanel createInterlock() {
+        ButtonGroup group = new ButtonGroup();
+        JRadioButton armed = new JRadioButton("Armed");
+        JRadioButton safe = new JRadioButton("Safe");
+        group.add(armed);
+        group.add(safe);
+        safe.setSelected(true);
+        JPanel interlock = new JPanel(new BorderLayout());
+        TitledBorder border = new TitledBorder(
+                new LineBorder(Color.LIGHT_GRAY),
+                "Laser",
+                TitledBorder.CENTER,
+                TitledBorder.TOP);
+        interlock.setBorder(border);
+        interlock.add(armed, BorderLayout.WEST);
+        interlock.add(safe, BorderLayout.EAST);
+        return interlock;
     }
 
     private static JLabel rLabel(String text) {
@@ -73,12 +85,11 @@ public class ControlPanel extends JPanel {
 
     private static class DeviceSelector extends JPanel {
 
-        private final JLabel label;
-        private final JComboBox combo;
+        final JComboBox combo;
 
         public DeviceSelector(String text) {
             super(new GridLayout(2, 1, 0, 5), true);
-            label = rLabel(text);
+            JLabel label = rLabel(text);
             combo = new JComboBox(Config.knownDevices().toArray(new String[0]));
             combo.setAlignmentX(Component.RIGHT_ALIGNMENT);
             label.setLabelFor(combo);

@@ -1,22 +1,15 @@
 package com.chromosundrift.vectorbrat.swing;
 
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.WindowConstants;
-import javax.swing.border.TitledBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Insets;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.geom.Model;
@@ -36,13 +29,13 @@ public class VectorBratFrame extends JFrame {
     public VectorBratFrame(Config config) {
         this.config = config;
         this.setTitle(config.getTitle());
+        setBackground(Color.BLACK);
 
         setPreferredSize(new Dimension(900, 600));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(5, 5));
 
         rootPanel = new JPanel(new BorderLayout(), true);
-        rootPanel.setBackground(Color.CYAN);
         rootPanel.setMinimumSize(new Dimension(200, 100));
 
         split = new JSplitPane();
