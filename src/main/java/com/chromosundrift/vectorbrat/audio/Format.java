@@ -5,7 +5,6 @@ import java.util.List;
 
 /**
  * Immutable representation of audio format.
- * TODO finish him!
  */
 public final class Format {
 
