@@ -1,8 +1,8 @@
 package com.chromosundrift.vectorbrat.laser;
 
-import com.chromosundrift.vectorbrat.javasound.JavaSoundDemo;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorDisplay;
+import com.chromosundrift.vectorbrat.audio.JavaSoundBridge;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Polygon;
 
@@ -10,12 +10,11 @@ public final class LaserDisplay implements VectorDisplay, Runnable {
 
     public static final int MAX_PPS = 30000;
     public static final int MIN_PPS = 2;
-
-    private int pps = MAX_PPS;
     private final DoubleBufferedVectorDisplay vectorDisplay;
-    private JavaSoundDemo audioLink;
+    private int pps = MAX_PPS;
+    private final JavaSoundBridge audioLink;
 
-    public LaserDisplay(JavaSoundDemo audioLink) {
+    public LaserDisplay(JavaSoundBridge audioLink) {
         this.audioLink = audioLink;
         this.vectorDisplay = new DoubleBufferedVectorDisplay();
     }
