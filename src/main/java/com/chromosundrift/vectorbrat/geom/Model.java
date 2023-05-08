@@ -30,12 +30,10 @@ public class Model {
     }
 
     public void add(Model model) {
-        for (int i = 0; i < polygons.size(); i++) {
-            Polygon polygon = polygons.get(i);
+        for (Polygon polygon : polygons) {
             add(polygon);
         }
-        for (int i = 0; i < points.size(); i++) {
-            Point point = points.get(i);
+        for (Point point : points) {
             add(point);
         }
         // remove duplicates?
