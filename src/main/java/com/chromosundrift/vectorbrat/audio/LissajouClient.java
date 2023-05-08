@@ -5,12 +5,13 @@ import org.jaudiolibs.audioservers.AudioConfiguration;
 import org.jaudiolibs.audioservers.AudioServer;
 import org.jaudiolibs.audioservers.AudioServerProvider;
 import org.jaudiolibs.jnajack.Jack;
-import org.jaudiolibs.jnajack.JackClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.FloatBuffer;
 import java.util.List;
+
+import com.chromosundrift.vectorbrat.Util;
 
 /**
  * Aphasic pair of oscillators over two channels.
@@ -62,7 +63,7 @@ public class LissajouClient implements AudioClient {
     }
 
     private static float clampFreq(float freqL) {
-        return Math.min(Math.max(MIN_FREQ, freqL), MAX_FREQ);
+        return Util.clamp(freqL, MIN_FREQ, MAX_FREQ);
     }
 
     public void stop() {
