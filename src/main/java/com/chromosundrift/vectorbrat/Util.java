@@ -15,4 +15,8 @@ public class Util {
         logger.info("setting up native library paths");
         System.setProperty("jna.library.path", "/opt/homebrew/lib");
     }
+
+    public static float clamp(float freqL, float min, float max) {
+        return Math.min(Math.max(min, freqL), max);
+    }
 }
