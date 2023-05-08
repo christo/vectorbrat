@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 /**
  * Vector display model with coordinates from (0.0,0.0) (top left) to 1.0, 1.0 (bottom right)
- * // TODO thread safety
+ * not thread safe
  */
 public class Model {
 
@@ -27,6 +27,18 @@ public class Model {
         m.add(createMidSquare());
         m.add(new Point(0d, 0d));
         return m;
+    }
+
+    public void add(Model model) {
+        for (int i = 0; i < polygons.size(); i++) {
+            Polygon polygon = polygons.get(i);
+            add(polygon);
+        }
+        for (int i = 0; i < points.size(); i++) {
+            Point point = points.get(i);
+            add(point);
+        }
+        // remove duplicates?
     }
 
     private void add(Point point) {
