@@ -1,5 +1,6 @@
 package com.chromosundrift.vectorbrat;
 
+import java.nio.channels.Channel;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,11 +9,11 @@ public final class Config {
     public static final String DEFAULT_TITLE = "Vitalase";
 
     public static final float DEFAULT_SAMPLE_RATE = 96000;
-    public static final int ES9_CHANNEL_X = 9;
-    public static final int ES9_CHANNEL_Y = 10;
-    public static final int ES9_CHANNEL_R = 11;
-    public static final int ES9_CHANNEL_G = 12;
-    public static final int ES9_CHANNEL_B = 13;
+    public static final int DEFAULT_ES9_CHANNEL_X = 9;
+    public static final int DEFAULT_ES9_CHANNEL_Y = 10;
+    public static final int DEFAULT_ES9_CHANNEL_R = 11;
+    public static final int DEFAULT_ES9_CHANNEL_G = 12;
+    public static final int DEFAULT_ES9_CHANNEL_B = 13;
 
     /**
      * The main ES-9 device
@@ -41,6 +42,11 @@ public final class Config {
     private static final int DEFAULT_PPS = 30000;
     public static final int MAX_PPS = 30000;
     public static final int MIN_PPS = 5;
+    private final Channel channelX;
+    private final Channel channelY;
+    private final Channel channelR;
+    private final Channel channelG;
+    private final Channel channelB;
 
 
     private String xy;
@@ -57,6 +63,11 @@ public final class Config {
         this.gb = DEFAULT_GB;
         this.pps = DEFAULT_PPS;
         this.lockout = true;
+        this.channelX = new Channel("X-channel", DEFAULT_ES9_CHANNEL_X);
+        this.channelY = new Channel("Y-channel", DEFAULT_ES9_CHANNEL_Y);
+        this.channelR = new Channel("R-channel", DEFAULT_ES9_CHANNEL_R);
+        this.channelG = new Channel("G-channel", DEFAULT_ES9_CHANNEL_G);
+        this.channelB = new Channel("B-channel", DEFAULT_ES9_CHANNEL_B);
     }
 
     public Config() {
@@ -122,4 +133,31 @@ public final class Config {
     public void setLockout(boolean lockout) {
         this.lockout = lockout;
     }
+
+    public Channel getChannelX() {
+        return channelX;
+    }
+
+    public Channel getChannelY() {
+        return channelY;
+    }
+
+    public Channel getChannelR() {
+        return channelR;
+    }
+
+    public Channel getChannelG() {
+        return channelG;
+    }
+
+    public Channel getChannelB() {
+        return channelB;
+    }
+
+    /**
+     * Represents a configured audio channel with our name and 1-based index.
+     * @param name the name
+     * @param number the 1-based index
+     */
+    public record Channel(String name, int number){}
 }
