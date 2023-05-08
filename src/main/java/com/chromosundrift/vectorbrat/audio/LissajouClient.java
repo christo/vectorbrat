@@ -4,6 +4,8 @@ import org.jaudiolibs.audioservers.AudioClient;
 import org.jaudiolibs.audioservers.AudioConfiguration;
 import org.jaudiolibs.audioservers.AudioServer;
 import org.jaudiolibs.audioservers.AudioServerProvider;
+import org.jaudiolibs.jnajack.Jack;
+import org.jaudiolibs.jnajack.JackClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,8 @@ public class LissajouClient implements AudioClient {
         final AudioServer server = provider.createServer(audioConfig, client);
         ServerRunner runner = new ServerRunner(server);
         runner.start();
+        Jack jack = Jack.getInstance();
+
         System.out.println("hit enter to stop");
         int ignore = System.in.read();
         runner.stop();
@@ -109,18 +113,22 @@ public class LissajouClient implements AudioClient {
         return data;
     }
 
-    public boolean process(long time, List<FloatBuffer> inputs, List<FloatBuffer> outputs, int nframes) {
+    public boolean process(long time, List<FloatBuffer> inputs, List<FloatBuffer> outputs, int frameCount) {
         FloatBuffer xBuffer = outputs.get(xChannelIndex);
         FloatBuffer yBuffer = outputs.get(yChannelData);
 
-        if (bufferLeft == null || bufferLeft.length != nframes) {
-            bufferLeft = new float[nframes];
+        // handle the requested number of frames - buffer size and sample rate may change
+
+        // lazy create or recreate to match
+        if (bufferLeft == null || bufferLeft.length != frameCount) {
+            bufferLeft = new float[frameCount];
         }
-        if (bufferRight == null || bufferRight.length != nframes) {
-            bufferRight = new float[nframes];
+        if (bufferRight == null || bufferRight.length != frameCount) {
+            bufferRight = new float[frameCount];
         }
 
-        for (int i = 0; i < nframes; i++) {
+        // copy the requested number of frames
+        for (int i = 0; i < frameCount; i++) {
             bufferLeft[i] = dataLeft[idxLeft];
             idxLeft++;
             if (idxLeft == dataLeft.length) {
