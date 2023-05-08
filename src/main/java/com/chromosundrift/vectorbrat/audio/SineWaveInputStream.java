@@ -6,6 +6,9 @@ import java.io.InputStream;
 
 import com.chromosundrift.vectorbrat.Config;
 
+/**
+ * wip for javasound
+ */
 public class SineWaveInputStream extends InputStream {
 
     private static final int BYTES_PER_SAMPLE = 4;
