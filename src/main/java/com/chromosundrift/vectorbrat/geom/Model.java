@@ -15,20 +15,37 @@ public class Model {
     private static final Model EMPTY_MODEL = new Model();
     private final ReentrantLock lock = new ReentrantLock();
     private final List<Polygon> polygons;
+    private final List<Point> points;
 
     public Model() {
         polygons = new ArrayList<>();
+        points = new ArrayList<>();
+    }
+
+    public static Model testPattern1() {
+        Model m = new Model();
+        m.add(createMidSquare());
+        m.add(new Point(0d, 0d));
+        return m;
+    }
+
+    private void add(Point point) {
+        points.add(point);
     }
 
     public static Model midSquare() {
         Model m = new Model();
+        return m.add(createMidSquare());
+    }
+
+    private static Polygon createMidSquare() {
         Polygon square = Polygon.closed(
                 new Point(0.25, 0.25),
                 new Point(0.75, 0.25),
                 new Point(0.75, 0.75),
                 new Point(0.25, 0.75)
         );
-        return m.add(square);
+        return square;
     }
 
     public static Model empty() {
