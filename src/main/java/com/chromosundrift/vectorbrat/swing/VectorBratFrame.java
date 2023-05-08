@@ -66,14 +66,13 @@ public class VectorBratFrame extends JFrame {
         ControlPanel controlPanel = new ControlPanel(config);
         scrollPane.setViewportView(controlPanel);
 
-
-
         setContentPane(rootPanel);
     }
 
     public void start(Model model) {
 
         vd.setModel(model);
+
         JFrame f = this;
         pack();
         UiUtil.centerFrame(f);

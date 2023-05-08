@@ -1,5 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import org.jaudiolibs.jnajack.lowlevel.JackLibrary;
+
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -22,5 +24,9 @@ public final class Polygon {
 
     public Stream<Point> points() {
         return Arrays.stream(_points);
+    }
+
+    public boolean isClosed() {
+        return _closed;
     }
 }

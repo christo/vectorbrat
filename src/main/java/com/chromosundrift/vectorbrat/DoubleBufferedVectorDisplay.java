@@ -11,8 +11,18 @@ import com.chromosundrift.vectorbrat.geom.Model;
  */
 public final class DoubleBufferedVectorDisplay implements VectorDisplay {
     private final ReentrantLock lock = new ReentrantLock();
-    private Model frontModel = new Model();
-    private Model backModel = new Model();
+    private Model frontModel;
+    private Model backModel;
+
+
+    public DoubleBufferedVectorDisplay(Model initialModel) {
+        frontModel = initialModel;
+        backModel = initialModel;
+    }
+
+    public DoubleBufferedVectorDisplay() {
+        this(new Model());
+    }
 
     /**
      * Applies the function to the model using double-buffering and thread safety.
@@ -34,14 +44,14 @@ public final class DoubleBufferedVectorDisplay implements VectorDisplay {
      * @return this.
      */
     @Override
-    public VectorDisplay setModel(Model model) {
+    public void setModel(Model model) {
         try {
             lock.lock();
             this.backModel = model;
+            flip();
         } finally {
             lock.unlock();
         }
-        return this;
     }
 
     /**

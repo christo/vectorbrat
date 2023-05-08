@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
@@ -33,7 +34,6 @@ import com.chromosundrift.vectorbrat.geom.Polygon;
  */
 public final class DisplayPanel extends JPanel implements VectorDisplay {
 
-    public static final float ARCHAIC_SCREEN_RESOLUTION = 72f;
     private static final Logger logger = LoggerFactory.getLogger(DisplayPanel.class);
     private static final int MIN_WIDTH = 100;
     private static final int MIN_HEIGHT = 100;
@@ -41,10 +41,10 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private final Color colBg = Color.getHSBColor(0, 0, 0.0f);
 
     private final DoubleBufferedVectorDisplay vectorDisplay;
-    private final Font defaultFont;
+    private final Font brandingFont;
     private final Config config;
     private Optional<BufferedImage> logo = Optional.empty();
-
+    private BasicStroke lineStroke;
 
     public DisplayPanel(Config config) {
         this.config = config;
@@ -56,12 +56,13 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         } catch (IOException e) {
             logger.warn("Unable to load logo from url " + config.logoUrl(), e);
         }
-        this.vectorDisplay = new DoubleBufferedVectorDisplay();
         setBackground(Color.BLACK);
         setForeground(Color.GREEN);
-        defaultFont = new Font("HelveticaNeue", Font.BOLD, 130);
+        brandingFont = new Font("HelveticaNeue", Font.PLAIN, 130);
+        lineStroke = new BasicStroke(4.5f);
+
         setMinimumSize(new Dimension(400, 300));
-        vectorDisplay.setModel(Model.empty());
+        this.vectorDisplay = new DoubleBufferedVectorDisplay();
     }
 
     /**
@@ -88,8 +89,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         final Dimension s = getSize();
         int imWidth = Math.max(s.width, MIN_WIDTH);
         int imHeight = Math.max(s.height, MIN_HEIGHT);
-        int screenResolution = getToolkit().getScreenResolution();
-        float imageScale = screenResolution / ARCHAIC_SCREEN_RESOLUTION;
+        float imageScale = 2.0f;
 
         // TODO ? physical screen resolution so the image can be made at that scaling factor
         BufferedImage im = new BufferedImage((int) (imWidth * imageScale), (int) (imHeight * imageScale), BufferedImage.TYPE_INT_ARGB);
@@ -100,12 +100,21 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
         g2.clearRect(0, 0, im.getWidth(), im.getHeight());
 
-        if (model.size() == 0) {
+        if (model.isEmpty()) {
             branding(im, g2);
         }
 
-        g2.setColor(Color.LIGHT_GRAY);
-        model.polygons().map(polymorph(im.getWidth(), im.getHeight())).forEach(g2::drawPolygon);
+        g2.setColor(Color.LIGHT_GRAY); // TODO line colours
+
+        g2.setStroke(lineStroke);
+        Stream<Polygon> polygons = model.polygons();
+        polygons.map(polymorph(im.getWidth(), im.getHeight())).forEach(g2::drawPolygon);
+        model.points().forEach(point -> {
+            int x = (int) (point.x() * im.getWidth());
+            int y = (int) (point.y() * im.getHeight());
+
+            g2.drawLine(x, y, x, y);
+        });
         g.drawImage(im, 0, 0, imWidth, imHeight, Color.BLACK, null);
         g2.dispose();
     }
@@ -122,20 +131,23 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         });
 
         // centred string
-        g2.setColor(colText);
 
-        g2.setStroke(new BasicStroke(3f));
         final String mesg = config.getTitle().toUpperCase();
-        g2.setFont(defaultFont);
+        g2.setFont(brandingFont);
         final FontMetrics fontMetrics = g2.getFontMetrics();
         final Rectangle2D stringBounds = fontMetrics.getStringBounds(mesg, g2);
         final LineMetrics lineMetrics = fontMetrics.getLineMetrics(mesg, g2);
+        g2.setColor(Color.BLACK);
+        int titleX = (int) (targetCentreX - stringBounds.getWidth() / 2);
+        int titleY = (int) (im.getHeight() - lineMetrics.getHeight() * 0.6);
 
-        g2.drawString(mesg, (int) (targetCentreX - stringBounds.getWidth() / 2), (int) (im.getHeight() - lineMetrics.getHeight() * 0.6));
+        g2.setColor(colText);
+        g2.drawString(mesg, titleX, titleY);
     }
 
     @Override
     public void paint(final Graphics g) {
+        // TODO don't draw over the inset region
         vectorDisplay.withLockAndFlip(model -> {
             unsafePaint(g, model);
             return null;
@@ -143,8 +155,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     }
 
     @Override
-    public VectorDisplay setModel(final Model model) {
+    public void setModel(final Model model) {
         vectorDisplay.setModel(model);
-        return this;
     }
 }

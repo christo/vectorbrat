@@ -8,11 +8,10 @@ import java.util.stream.Stream;
 
 /**
  * Vector display model with coordinates from (0.0,0.0) (top left) to 1.0, 1.0 (bottom right)
- * not thread safe
+ * TODO needs to be threadsafe
  */
 public class Model {
 
-    private static final Model EMPTY_MODEL = new Model();
     private final ReentrantLock lock = new ReentrantLock();
     private final List<Polygon> polygons;
     private final List<Point> points;
@@ -25,22 +24,11 @@ public class Model {
     public static Model testPattern1() {
         Model m = new Model();
         m.add(createMidSquare());
-        m.add(new Point(0d, 0d));
+        m.add(new Point(0.5d, 0.5d));
+
+        m.add(Polygon.open(new Point(0.45, 0.30), new Point(0.5, 0.25), new Point(0.55, 0.3)));
+        m.add(Polygon.open(new Point(0.75, 0.75), new Point(0.85, 0.85)));
         return m;
-    }
-
-    public void add(Model model) {
-        for (Polygon polygon : polygons) {
-            add(polygon);
-        }
-        for (Point point : points) {
-            add(point);
-        }
-        // remove duplicates?
-    }
-
-    private void add(Point point) {
-        points.add(point);
     }
 
     public static Model midSquare() {
@@ -58,8 +46,14 @@ public class Model {
         return square;
     }
 
-    public static Model empty() {
-        return EMPTY_MODEL;
+    private Model add(Point point) {
+        try {
+            lock.lock();
+            points.add(point);
+        } finally {
+            lock.unlock();
+        }
+        return this;
     }
 
     private Model add(Polygon p) {
@@ -81,7 +75,21 @@ public class Model {
         }
     }
 
-    public int size() {
-        return polygons.size();
+    public Stream<Point> points() {
+        try {
+            lock.lock();
+            return new ArrayList<>(points).stream();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean isEmpty() {
+        try {
+            lock.lock();
+            return polygons.size() == 0 && points.size() == 0;
+        } finally {
+            lock.unlock();
+        }
     }
 }

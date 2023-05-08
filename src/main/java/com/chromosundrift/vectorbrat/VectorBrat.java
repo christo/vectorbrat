@@ -45,7 +45,7 @@ public class VectorBrat {
     private static VectorBratFrame vectorBratFrame() {
         Config config = new Config();
         VectorBratFrame f = new VectorBratFrame(config);
-        f.start(Model.empty());
+        f.start(Model.testPattern1());
         return f;
     }
 
