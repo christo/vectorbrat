@@ -1,7 +1,7 @@
 # vectorbrat TODO List
 
 * [ ] sanity check
-  * [ ] audio device detection
+  * [x] audio device detection
   * [ ] colour
   * [ ] off/on
   * [ ] brightness
@@ -10,7 +10,6 @@
 * [ ] define deployment setup
   * [x] laptop
   * [x] modular rig:
-  * [ ] gamepads - use HID or special USB magic that will make me cry?
 * [ ] collect credits to do some kind of credit screen
 * [ ] vitalise branding
 
