@@ -82,7 +82,8 @@ public class ControlPanel extends JPanel {
         JRadioButton safe = new JRadioButton("Safe");
         group.add(armed);
         group.add(safe);
-        safe.setSelected(true);
+        safe.setSelected(!laserController.getOn());
+        armed.setSelected(laserController.getOn());
         JPanel interlock = new JPanel(new BorderLayout());
         TitledBorder border = new TitledBorder(
                 new LineBorder(Color.LIGHT_GRAY),
