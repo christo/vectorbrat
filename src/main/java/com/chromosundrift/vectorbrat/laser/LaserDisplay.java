@@ -3,12 +3,14 @@ package com.chromosundrift.vectorbrat.laser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.VectorDisplay;
-import com.chromosundrift.vectorbrat.audio.SoundBridge;
-import com.chromosundrift.vectorbrat.audio.jack.LaserDriver;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.swing.LaserController;
@@ -19,11 +21,14 @@ import com.chromosundrift.vectorbrat.swing.LaserController;
 public final class LaserDisplay implements VectorDisplay, LaserController {
 
     private static final Logger logger = LoggerFactory.getLogger(LaserDisplay.class);
-    public static final int MAX_PPS = 30000;
-    public static final int MIN_PPS = 2;
+
+    private static final long NANO = 1000L * 1000L * 1000L;
+
     private final DoubleBufferedVectorDisplay vectorDisplay;
-    private final LaserDriver laserDriver = null;
-    private int pps = MAX_PPS;
+    private final LaserDriver laserDriver;
+    private final int maximumDeflection;
+    private final int ppsDeflectionDeg;
+    private int pps;
 
     /**
      * Time in nanos to dwell on an isolated point.
@@ -37,39 +42,50 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     private volatile boolean running;
     private Thread thread;
-    private volatile boolean armed;
+    private ExecutorService exec;
 
     public LaserDisplay(Config config) throws VectorBratException {
         logger.info("initialising LaserDisplay");
         this.vectorDisplay = new DoubleBufferedVectorDisplay();
-//        this.laserDriver = new LaserDriver(config);
-    }
+        this.laserDriver = new LaserDriver(config);
+        this.pps = config.getPps();
+        this.maximumDeflection = Config.MAXIMUM_DEFLECTION_DEG;
+        this.ppsDeflectionDeg = Config.PPS_DEFLECTION;
 
-    private void renderConnectedLine(Point from, Point to) {
-        // do quintic easing
-    }
-
-    private void renderPoint(Point point) {
-        // use dwell time
     }
 
     /**
-     * Renders the model once at the configured rate while holding the lock for model updates.
+     * Renders the model once at the configured rate while holding the lock for model updates, if the laserDriver is
+     * off, does nothing.
      *
      * @param model the model to render
      * @return null
      */
     private Void render(Model model) {
+        if (laserDriver.isOn()) {
+            // calculate scan rate
+            int nVerts = model.countVertices();
+            long nanosPerPoint = pps * NANO / nVerts;
+            long nanos = this.laserDriver.getNanos();
 
-        // TODO get x and y channels
-        // TODO get timer from audio system
-        // TODO path planner - nearest unrendered neighbour
-        // get all the points from the polygon and sort them to render order
-        // TODO render xy coordinates to the audio buffer - keep rendering the same point until time to move
-        // TODO quintic easing
-        // TODO pen down - colour
-        // closed poly for now
-        // TODO pen up - black
+            long nanosPerCycle = nanosPerPoint * nVerts;
+
+            // calculate intermediate points
+
+
+            // for now, render each poly then each point
+
+
+            // path planner - nearest unrendered neighbour
+            // get timer from audio system
+            // get all the points from the polygon and sort them to render order
+            // render xy coordinates to the audio buffer - keep rendering the same point until time to move
+            // quintic easing
+            // pen down - colour
+            // closed poly for now
+            // pen up - black
+        }
+
         return null;
     }
 
@@ -90,12 +106,15 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     public void stop() {
         running = false;
+        logger.info("shutdown initiated");
+        exec.shutdown();
     }
 
 
-
     /**
-     * Will block until laser is finished any in-progress model rendering.
+     * Will block until laser is finished any in-progress model rendering. Depending on current pps and
+     * the number of points in the currently rendering model, this may take, a number of seconds.
+     * Do not call from UI thread.
      *
      * @param model the model to update to
      */
@@ -106,12 +125,19 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     /**
      * Starts in its own thread.
+     *
      * @param model the initial model.
      */
     public void start(Model model) {
         logger.info("starting laser display");
         vectorDisplay.setModel(model);
-        thread = new Thread(() -> {
+        ThreadFactory laserDisplay = r -> {
+            Thread t = new Thread(r, "laser display");
+            t.setPriority(Thread.MAX_PRIORITY);
+            return t;
+        };
+        exec = Executors.newSingleThreadExecutor(laserDisplay);
+        exec.submit(() -> {
             try {
                 run();
             } catch (VectorBratException e) {
@@ -121,22 +147,40 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         });
     }
 
+    /**
+     * Called from ui thread.
+     *
+     * @param on whether we are armed.
+     */
     @Override
     public void setOn(boolean on) {
-        logger.info("%s laser".formatted(on ? "arming" : "disarming"));
-        this.armed = on;
+        this.laserDriver.setOn(on);
     }
 
+    /**
+     * Called from ui thread.
+     *
+     * @return true iff we are armed.
+     */
     @Override
     public boolean getOn() {
-        return this.armed;
+        return this.laserDriver.isOn();
     }
 
+    /**
+     * Called from ui thread.
+     * @return the pps
+     */
     @Override
     public int getPps() {
         return pps;
     }
 
+    /**
+     * Called from ui thread.
+     *
+     * @param pps new pps.
+     */
     @Override
     public void setPps(int pps) {
         this.pps = pps;

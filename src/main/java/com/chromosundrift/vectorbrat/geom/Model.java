@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 /**
- * Vector display model with coordinates from (0.0,0.0) (top left) to 1.0, 1.0 (bottom right)
+ * Vector display model with coordinates from (-1.0,-1.0) (top left) to 1.0, 1.0 (bottom right)
  * TODO WIP threadsafety - fix races and deadlocks and consider immutable updates
  */
 public class Model {
@@ -32,14 +32,17 @@ public class Model {
         Model m = new Model();
         m.add(createMidSquare(Color.ORANGE));
         // centre dot
-        m.add(new Point(0.5d, 0.5d, Color.MAGENTA));
+        m.add(new Point(0.0d, 0.0d, Color.MAGENTA));
 
         // top arrow
         Color c = Color.CYAN;
-        m.add(Polygon.open(c, new Point(0.45, 0.30, c), new Point(0.5, 0.25, c), new Point(0.55, 0.3, c)));
+        m.add(Polygon.open(c, new Point(-0.15, -0.35, c), new Point(0.0, -0.5, c), new Point(0.15, -0.35, c)));
         // bottom right handle
         c = Color.PINK;
-        m.add(Polygon.open(c, new Point(0.75, 0.75, c), new Point(0.85, 0.85, c)));
+        m.add(Polygon.open(c, new Point(0.5, 0.5, c), new Point(0.75, 0.75, c)));
+
+        // bounding box
+        m.add(box(-1f, -1f, 1f, 1f, Color.GREEN));
         logger.info("created test pattern: " + m);
         return m;
     }
@@ -59,7 +62,7 @@ public class Model {
     }
     
     private static Polygon createMidSquare(Color c) {
-        return box(0.25f, 0.25f, 0.75f, 0.75f, c);
+        return box(-0.5f, -0.5f, 0.5f, 0.5f, c);
     }
 
     private Model add(Point point) {

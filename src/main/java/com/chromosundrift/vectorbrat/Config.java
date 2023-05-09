@@ -1,6 +1,5 @@
 package com.chromosundrift.vectorbrat;
 
-import java.nio.channels.Channel;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,10 +39,14 @@ public final class Config {
      * Green and blue pair of channels.
      */
     public static final String DEFAULT_GB = "es-9_G_B";
-    private static final int DEFAULT_PPS = 30000;
-    public static final int MAX_PPS = 30000;
-    public static final int MIN_PPS = 5;
 
+    private static final int DEFAULT_PPS = 30000;
+    public static final int MAX_PPS = 40000;
+    public static final int MIN_PPS = 5;
+    public static final int MAXIMUM_DEFLECTION_DEG = 40;
+    public static final int PPS_DEFLECTION = 4;
+    public static final String LASER_MODEL = "PRO-1600RGB";
+    public static final String LASER_MAKE = "LaserWorld";
 
     private final Channel channelX;
     private final Channel channelY;
@@ -91,7 +94,7 @@ public final class Config {
     }
 
     public static List<String> knownDevices() {
-        return Arrays.asList(ES8, ES9, DEFAULT_XY, DEFAULT_RZ, DEFAULT_GB);
+        return Arrays.asList(ES9, ES8, DEFAULT_XY, DEFAULT_RZ, DEFAULT_GB);
     }
 
     public String getXy() {

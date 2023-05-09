@@ -1,5 +1,8 @@
 package com.chromosundrift.vectorbrat.swing;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -7,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
+import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -16,12 +20,16 @@ import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Hashtable;
 
 import com.chromosundrift.vectorbrat.Config;
 
 public class ControlPanel extends JPanel {
+
+    private static final Logger logger = LoggerFactory.getLogger(ControlPanel.class);
+
     private final JSlider ppsControl;
     private final Config config;
     private final LaserController laserController;
@@ -29,6 +37,7 @@ public class ControlPanel extends JPanel {
 
 
     public ControlPanel(Config config, LaserController laserController) {
+        logger.info("initialising ControlPanel");
         this.config = config;
         this.laserController = laserController;
         setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -41,12 +50,29 @@ public class ControlPanel extends JPanel {
         JPanel pps = new JPanel(new BorderLayout());
         ppsControl = createPpsSlider(config, laserController, pps);
 
-        setLayout(new GridLayout(5, 1, 5, 5));
-        add(createInterlock(laserController));
-        add(xy);
-        add(rz);
-        add(gb);
-        add(pps);
+        JComponent[] details = new JComponent[] {
+                rLabel(Config.LASER_MAKE),
+                rLabel(Config.LASER_MODEL)
+        };
+        JPanel detail = new JPanel(new GridLayout(details.length, 1, 5, 5));
+        for (JComponent item : details) {
+            detail.add(item);
+        }
+
+        JComponent[] items = new JComponent[]{
+                createArmDisarm(laserController),
+                xy,
+                rz,
+                gb,
+                pps,
+                detail
+        };
+
+        setLayout(new GridLayout(items.length, 1, 5, 5));
+        for (JComponent item : items) {
+            add(item);
+        }
+        setPreferredSize(new Dimension(170, 400));
     }
 
     private static JSlider createPpsSlider(Config config, LaserController laserController, JPanel pps) {
@@ -61,6 +87,7 @@ public class ControlPanel extends JPanel {
         sliderLabels.put(10000, new JLabel("10k"));
         sliderLabels.put(20000, new JLabel("20k"));
         sliderLabels.put(30000, new JLabel("30k"));
+        sliderLabels.put(40000, new JLabel("40k"));
 
         ppsControl.setLabelTable(sliderLabels);
         psl.setLabelFor(ppsControl);
@@ -73,17 +100,16 @@ public class ControlPanel extends JPanel {
             psl.setText(value + units);
         });
 
+
         return ppsControl;
     }
 
-    private JPanel createInterlock(LaserController laserController) {
+    private JPanel createArmDisarm(final LaserController laserController) {
         ButtonGroup group = new ButtonGroup();
-        JRadioButton armed = new JRadioButton("Armed");
-        JRadioButton safe = new JRadioButton("Safe");
+        JRadioButton armed = new JRadioButton("Armed", laserController.getOn());
+        JRadioButton safe = new JRadioButton("Safe", !laserController.getOn());
         group.add(armed);
         group.add(safe);
-        safe.setSelected(!laserController.getOn());
-        armed.setSelected(laserController.getOn());
         JPanel interlock = new JPanel(new BorderLayout());
         TitledBorder border = new TitledBorder(
                 new LineBorder(Color.LIGHT_GRAY),
@@ -93,8 +119,20 @@ public class ControlPanel extends JPanel {
         interlock.setBorder(border);
         interlock.add(armed, BorderLayout.WEST);
         interlock.add(safe, BorderLayout.EAST);
-        armed.addActionListener(e -> laserController.setOn(((JRadioButton) e.getSource()).isSelected()));
-        safe.addActionListener(e -> laserController.setOn(!((JRadioButton) e.getSource()).isSelected()));
+
+        armed.addActionListener(e -> {
+            boolean laserOn = ((JRadioButton) e.getSource()).isSelected();
+            if (laserController.getOn() != laserOn) {
+                laserController.setOn(laserOn);
+            }
+        });
+        safe.addActionListener(e -> {
+            boolean laserOn = !((JRadioButton) e.getSource()).isSelected();
+            if (laserController.getOn() != laserOn) {
+                laserController.setOn(laserOn);
+            }
+        });
+
         return interlock;
     }
 
@@ -126,7 +164,7 @@ public class ControlPanel extends JPanel {
         private final boolean live;
         private final LaserController lc;
 
-        public PpsListener(boolean live, LaserController laserController ) {
+        public PpsListener(boolean live, LaserController laserController) {
             this.live = live;
             lc = laserController;
         }

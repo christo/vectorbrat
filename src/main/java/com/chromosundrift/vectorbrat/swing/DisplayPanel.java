@@ -61,7 +61,8 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         brandingFont = new Font("HelveticaNeue", Font.PLAIN, 130);
         lineStroke = new BasicStroke(config.getLineWidth());
 
-        setMinimumSize(new Dimension(400, 300));
+        setMinimumSize(new Dimension(800, 500));
+        setPreferredSize(new Dimension(900, 700));
         this.vectorDisplay = new DoubleBufferedVectorDisplay();
     }
 

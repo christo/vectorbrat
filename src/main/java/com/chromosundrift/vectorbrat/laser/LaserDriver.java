@@ -1,4 +1,4 @@
-package com.chromosundrift.vectorbrat.audio.jack;
+package com.chromosundrift.vectorbrat.laser;
 
 import org.jaudiolibs.jnajack.Jack;
 import org.jaudiolibs.jnajack.JackClient;
@@ -11,37 +11,58 @@ import org.jaudiolibs.jnajack.JackStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.FloatBuffer;
 import java.util.EnumSet;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.VectorBratException;
+import com.chromosundrift.vectorbrat.audio.jack.SoundGenerator;
 
-public class LaserDriver {
+/**
+ * Handles generation of audio buffers and connection to audio subsystem. Also provides nanosecond time from
+ * audio device. Uses Jack and requires the jack server to be running.
+ */
+public final class LaserDriver {
+
+    private static final Logger logger = LoggerFactory.getLogger(LaserDriver.class);
 
     public static final EnumSet<JackStatus> NO_STATUS = EnumSet.noneOf(JackStatus.class);
     public static final EnumSet<JackOptions> NO_OPTIONS = EnumSet.noneOf(JackOptions.class);
     public static final EnumSet<JackPortFlags> PHYSICAL_JACK_INPUTS = EnumSet.of(JackPortFlags.JackPortIsInput, JackPortFlags.JackPortIsPhysical);
-
-    private static final Logger logger = LoggerFactory.getLogger(LaserDriver.class);
-    private static final EnumSet<JackPortFlags> TO_JACK = EnumSet.of(JackPortFlags.JackPortIsInput);
+    private static final EnumSet<JackPortFlags> TO_JACK = EnumSet.of(JackPortFlags.JackPortIsOutput);
     private final JackPort xPort;
     private final JackPort yPort;
     private final JackPort rPort;
     private final JackPort gPort;
     private final JackPort bPort;
+
     private final Config config;
+    private final float sampleMax;
+    private final float sampleMin;
+    private final float peakToTrough;
     private volatile boolean running = false;
     private JackClient client;
 
     /**
+     * Whether laser light and galvo motion should be on or off.
+     */
+    private boolean isOn;
+
+    /**
      * Uses the config but doesn't subscribe to all updates.
+     *
      * @param config the config
      * @throws VectorBratException if setup fails.
      */
     public LaserDriver(Config config) throws VectorBratException {
-        logger.info("initialising laser driver");
+        logger.info("initialising LaserDriver");
         this.config = config;
         String title = config.getTitle();
+        this.sampleMin = -1.0f;
+        this.sampleMax = 1.0f;
+        this.peakToTrough = sampleMax - sampleMin;
+
+
         Config.Channel channelX = config.getChannelX();
         Config.Channel channelY = config.getChannelY();
         Config.Channel channelR = config.getChannelR();
@@ -53,7 +74,6 @@ public class LaserDriver {
         try {
             int maxName = jack.getMaximumPortNameSize();
             client = openClient(jack, title);
-
 
             xPort = registerPort(channelX, client, maxName);
             yPort = registerPort(channelY, client, maxName);
@@ -84,7 +104,12 @@ public class LaserDriver {
         connect();
     }
 
+    public void stop() {
+        this.running = false;
+    }
+
     private void connect() throws VectorBratException {
+        logger.info("connecting");
         Jack jack = getJack();
 
         try {
@@ -102,8 +127,8 @@ public class LaserDriver {
     }
 
     private void activateClient() throws VectorBratException {
+        logger.info("activating");
         try {
-            logger.info("activating client");
             client.activate();
         } catch (JackException e) {
             throw new VectorBratException("can't activate client", e);
@@ -117,10 +142,7 @@ public class LaserDriver {
             logger.info("Sample rate: " + sampleRate);
             int bufferSize = client.getBufferSize();
             logger.info("Buffer size = " + bufferSize);
-            client.setProcessCallback((client, nframes) -> {
-                // TODO
-                return false;
-            });
+            client.setProcessCallback(this::process);
         } catch (JackException e) {
             throw new VectorBratException("can't register callback", e);
         }
@@ -143,7 +165,7 @@ public class LaserDriver {
     }
 
     private static JackPort registerPort(Config.Channel channel, JackClient client, int maxPortName) throws VectorBratException {
-        logger.info("registering jack port for channel " + channel);
+        logger.info("registering jack port for " + channel);
         String name = truncate(channel.name(), maxPortName);
         try {
             return client.registerPort(name, JackPortType.AUDIO, TO_JACK);
@@ -156,4 +178,57 @@ public class LaserDriver {
         return name.substring(0, Math.min(name.length() - 1, maxLen - 1));
     }
 
+    public long getNanos() {
+        return 0; //TODO
+    }
+
+    /**
+     * Must run without blocking, "realtime"
+     * @param client jack client.
+     * @param nframes number of frames to be sent
+     * @return true if client should remain connected.
+     */
+    private boolean process(JackClient client, int nframes) {
+        FloatBuffer xBuffer = xPort.getFloatBuffer();
+        FloatBuffer yBuffer = xPort.getFloatBuffer();
+        FloatBuffer rBuffer = xPort.getFloatBuffer();
+        FloatBuffer gBuffer = xPort.getFloatBuffer();
+        FloatBuffer bBuffer = xPort.getFloatBuffer();
+
+        if (this.isOn) {
+            // temporarily generate white noise
+            SoundGenerator.whiteNoise(  0.2f, xBuffer, yBuffer);
+            for (int i = 0; i < nframes; i++) {
+                rBuffer.put(i, 1.0f);
+                gBuffer.put(i, 1.0f);
+                bBuffer.put(i, 1.0f);
+            }
+        } else {
+            for (int i = 0; i < nframes; i++) {
+                xBuffer.put(i, 0f);
+                yBuffer.put(i, 0f);
+                rBuffer.put(i, 0f);
+                gBuffer.put(i, 0f);
+                bBuffer.put(i, 0f);
+            }
+        }
+        return running;
+    }
+
+    /**
+     * Called from ui thread.
+     * @return whether we are armed.
+     */
+    public boolean isOn() {
+        return isOn;
+    }
+
+    /**
+     * Called from ui thread.
+     * @param on whether we are armed.
+     */
+    public void setOn(boolean on) {
+        isOn = on;
+        logger.info("laser %s".formatted(isOn ? "armed" : "disarmed"));
+    }
 }

@@ -4,6 +4,7 @@ package com.chromosundrift.vectorbrat.swing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,6 +14,7 @@ import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.geom.Model;
@@ -37,7 +39,9 @@ public class VectorBratFrame extends JFrame {
         this.setTitle(config.getTitle());
         setBackground(Color.BLACK);
 
-        setPreferredSize(new Dimension(900, 600));
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        setPreferredSize(new Dimension(Math.min(1600, screenSize.width), Math.min(1000, screenSize.height)));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(5, 5));
 
@@ -46,7 +50,7 @@ public class VectorBratFrame extends JFrame {
 
         split = new JSplitPane();
         split.setContinuousLayout(true);
-        split.setDividerLocation(630);
+        split.setDividerLocation(0.4);
         rootPanel.add(split, BorderLayout.CENTER);
 
         enginePanel = new JPanel();
@@ -59,11 +63,12 @@ public class VectorBratFrame extends JFrame {
         mainPanel.setBorder(UiUtil.titledBorder("Vector Simulator", UiUtil.HAlign.CENTRE));
         mainPanel.add(displayPanel, BorderLayout.CENTER);
 
-        split.setLeftComponent(mainPanel);
-        split.setRightComponent(enginePanel);
+        split.setLeftComponent(enginePanel);
+        split.setRightComponent(mainPanel);
         split.setOneTouchExpandable(true);
 
         scrollPane = new JScrollPane();
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
 
         enginePanel.add(scrollPane, BorderLayout.NORTH);
         enginePanel.add(Box.createVerticalBox(), BorderLayout.CENTER);
