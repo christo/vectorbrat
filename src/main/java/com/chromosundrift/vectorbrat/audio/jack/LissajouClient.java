@@ -34,7 +34,6 @@ public class LissajouClient implements AudioClient {
         final AudioServer server = provider.createServer(audioConfig, client);
         ServerRunner runner = new ServerRunner(server);
         runner.start();
-        Jack jack = Jack.getInstance();
 
         System.out.println("hit enter to stop");
         int ignore = System.in.read();
