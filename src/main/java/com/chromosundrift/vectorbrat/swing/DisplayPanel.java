@@ -98,8 +98,8 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             g2.drawPolygon(p.awt(im.getWidth(), im.getHeight()));
         });
         model.points().forEach(point -> {
-            int x = (int) (point.x() * im.getWidth());
-            int y = (int) (point.y() * im.getHeight());
+            int x = (int) ((point.x()/2 + 0.5) * im.getWidth());
+            int y = (int) ((point.y()/2 + 0.5) * im.getHeight());
             g2.setColor(point.color());
             g2.drawLine(x, y, x, y);
         });
