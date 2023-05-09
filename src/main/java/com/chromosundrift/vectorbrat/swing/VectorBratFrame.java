@@ -76,9 +76,7 @@ public class VectorBratFrame extends JFrame {
     }
 
     public void start(Model model) {
-
         vd.setModel(model);
-
         JFrame f = this;
         pack();
         UiUtil.centerFrame(f);
