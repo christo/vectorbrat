@@ -39,7 +39,7 @@ public class ServiceBridge {
         this.backend = backend;
     }
 
-    static AudioConfiguration getStereoAudioConfiguration() {
+    public static AudioConfiguration getStereoAudioConfiguration() {
         AudioConfiguration audioConfig = new AudioConfiguration(
                 Config.DEFAULT_SAMPLE_RATE,
                 0,

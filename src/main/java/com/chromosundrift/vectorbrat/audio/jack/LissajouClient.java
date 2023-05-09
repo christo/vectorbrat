@@ -1,4 +1,4 @@
-package com.chromosundrift.vectorbrat.audio;
+package com.chromosundrift.vectorbrat.audio.jack;
 
 import org.jaudiolibs.audioservers.AudioClient;
 import org.jaudiolibs.audioservers.AudioConfiguration;
@@ -12,6 +12,8 @@ import java.nio.FloatBuffer;
 import java.util.List;
 
 import com.chromosundrift.vectorbrat.Util;
+import com.chromosundrift.vectorbrat.audio.ServerRunner;
+import com.chromosundrift.vectorbrat.audio.ServiceBridge;
 
 /**
  * Aphasic pair of oscillators over two channels.
