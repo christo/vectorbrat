@@ -19,7 +19,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.chromosundrift.vectorbrat.Config;
@@ -47,6 +46,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private BasicStroke lineStroke;
 
     public DisplayPanel(Config config) {
+        logger.info("initialising display panel");
         this.config = config;
         try {
             InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(config.logoUrl());
@@ -59,26 +59,10 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         setBackground(Color.BLACK);
         setForeground(Color.GREEN);
         brandingFont = new Font("HelveticaNeue", Font.PLAIN, 130);
-        lineStroke = new BasicStroke(4.5f);
+        lineStroke = new BasicStroke(config.getLineWidth());
 
         setMinimumSize(new Dimension(400, 300));
         this.vectorDisplay = new DoubleBufferedVectorDisplay();
-    }
-
-    /**
-     * Converts our {@link Polygon} to a {@link java.awt.Polygon} scaling from normalised using the given
-     * factors.
-     *
-     * @param xScale the x-axis scaling factor
-     * @param yScale the y-axis scaling factor
-     * @return the awt Polygon
-     */
-    private static Function<? super Polygon, java.awt.Polygon> polymorph(final int xScale, final int yScale) {
-        return p -> {
-            final java.awt.Polygon polygon = new java.awt.Polygon();
-            p.points().forEachOrdered(pt -> polygon.addPoint((int) (pt.x() * xScale), (int) (pt.y() * yScale)));
-            return polygon;
-        };
     }
 
     /**
@@ -108,11 +92,14 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
         g2.setStroke(lineStroke);
         Stream<Polygon> polygons = model.polygons();
-        polygons.map(polymorph(im.getWidth(), im.getHeight())).forEach(g2::drawPolygon);
+        polygons.forEach(p -> {
+                    g2.setColor(p.getColor());
+                    g2.drawPolygon(p.awt(im.getWidth(), im.getHeight()));
+                });
         model.points().forEach(point -> {
             int x = (int) (point.x() * im.getWidth());
             int y = (int) (point.y() * im.getHeight());
-
+            g2.setColor(point.color());
             g2.drawLine(x, y, x, y);
         });
         g.drawImage(im, 0, 0, imWidth, imHeight, Color.BLACK, null);

@@ -1,6 +1,10 @@
 package com.chromosundrift.vectorbrat.geom;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -8,10 +12,13 @@ import java.util.stream.Stream;
 
 /**
  * Vector display model with coordinates from (0.0,0.0) (top left) to 1.0, 1.0 (bottom right)
- * TODO needs to be threadsafe
+ * TODO WIP threadsafety - fix races and deadlocks and consider immutable updates
  */
 public class Model {
 
+    private static final Logger logger = LoggerFactory.getLogger(Model.class);
+
+    // TODO get all model shapes as a set of vector segments
     private final ReentrantLock lock = new ReentrantLock();
     private final List<Polygon> polygons;
     private final List<Point> points;
@@ -23,27 +30,36 @@ public class Model {
 
     public static Model testPattern1() {
         Model m = new Model();
-        m.add(createMidSquare());
-        m.add(new Point(0.5d, 0.5d));
+        m.add(createMidSquare(Color.ORANGE));
+        // centre dot
+        m.add(new Point(0.5d, 0.5d, Color.MAGENTA));
 
-        m.add(Polygon.open(new Point(0.45, 0.30), new Point(0.5, 0.25), new Point(0.55, 0.3)));
-        m.add(Polygon.open(new Point(0.75, 0.75), new Point(0.85, 0.85)));
+        // top arrow
+        Color c = Color.CYAN;
+        m.add(Polygon.open(c, new Point(0.45, 0.30, c), new Point(0.5, 0.25, c), new Point(0.55, 0.3, c)));
+        // bottom right handle
+        c = Color.PINK;
+        m.add(Polygon.open(c, new Point(0.75, 0.75, c), new Point(0.85, 0.85, c)));
+        logger.info("created test pattern: " + m);
         return m;
     }
 
-    public static Model midSquare() {
+    public static Model midSquare(Color c) {
         Model m = new Model();
-        return m.add(createMidSquare());
+        return m.add(createMidSquare(c));
     }
 
-    private static Polygon createMidSquare() {
-        Polygon square = Polygon.closed(
-                new Point(0.25, 0.25),
-                new Point(0.75, 0.25),
-                new Point(0.75, 0.75),
-                new Point(0.25, 0.75)
+    private static Polygon box(float x1, float y1, float x2, float y2, Color c) {
+        return Polygon.closed(c,
+                new Point(x1, y1, c),
+                new Point(x2, y1, c),
+                new Point(x2, y2, c),
+                new Point(x1, y2, c)
         );
-        return square;
+    }
+    
+    private static Polygon createMidSquare(Color c) {
+        return box(0.25f, 0.25f, 0.75f, 0.75f, c);
     }
 
     private Model add(Point point) {
@@ -66,6 +82,10 @@ public class Model {
         return this;
     }
 
+    /**
+     * Stream of just the polygons (not points).
+     * @return polygons.
+     */
     public Stream<Polygon> polygons() {
         try {
             lock.lock();
@@ -75,6 +95,10 @@ public class Model {
         }
     }
 
+    /**
+     * Stream of just the points (not polygons)
+     * @return points.
+     */
     public Stream<Point> points() {
         try {
             lock.lock();
@@ -91,5 +115,22 @@ public class Model {
         } finally {
             lock.unlock();
         }
+    }
+
+    public int countVertices() {
+        try {
+            lock.lock();
+            return polygons.stream().mapToInt(Polygon::size).sum() + points.size();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Model{" +
+                "polygons=" + polygons +
+                ", points=" + points +
+                '}';
     }
 }

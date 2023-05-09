@@ -1,6 +1,9 @@
 package com.chromosundrift.vectorbrat.swing;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,8 +19,9 @@ import com.chromosundrift.vectorbrat.geom.Model;
 
 public class VectorBratFrame extends JFrame {
 
+    private static final Logger logger = LoggerFactory.getLogger(VectorBratFrame.class);
+
     private final Config config;
-    private final DisplayPanel vd;
     private final JPanel rootPanel;
 
     private final JSplitPane split;
@@ -25,9 +29,12 @@ public class VectorBratFrame extends JFrame {
     private final JScrollPane scrollPane;
 
     private final JPanel mainPanel;
+    private final DisplayPanel vd;
 
-    public VectorBratFrame(Config config) {
+    public VectorBratFrame(Config config, DisplayPanel displayPanel, LaserController laserController) {
+        logger.info("initialising VectorBratFrame");
         this.config = config;
+        this.vd = displayPanel;
         this.setTitle(config.getTitle());
         setBackground(Color.BLACK);
 
@@ -51,8 +58,7 @@ public class VectorBratFrame extends JFrame {
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(UiUtil.titledBorder("Vector Simulator", UiUtil.HAlign.CENTRE));
-        vd = new DisplayPanel(config);
-        mainPanel.add(vd, BorderLayout.CENTER);
+        mainPanel.add(displayPanel, BorderLayout.CENTER);
 
         split.setLeftComponent(mainPanel);
         split.setRightComponent(enginePanel);
@@ -63,7 +69,7 @@ public class VectorBratFrame extends JFrame {
         enginePanel.add(scrollPane, BorderLayout.NORTH);
         enginePanel.add(Box.createVerticalBox(), BorderLayout.CENTER);
 
-        ControlPanel controlPanel = new ControlPanel(config);
+        ControlPanel controlPanel = new ControlPanel(config, laserController);
         scrollPane.setViewportView(controlPanel);
 
         setContentPane(rootPanel);

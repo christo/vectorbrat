@@ -42,12 +42,15 @@ public final class Config {
     private static final int DEFAULT_PPS = 30000;
     public static final int MAX_PPS = 30000;
     public static final int MIN_PPS = 5;
+
+
     private final Channel channelX;
     private final Channel channelY;
     private final Channel channelR;
     private final Channel channelG;
     private final Channel channelB;
 
+    private static final float DEFAULT_LINE_WIDTH = 5.5f;
 
     private String xy;
     private String rz;
@@ -55,6 +58,8 @@ public final class Config {
     private final String title;
     private int pps;
     private boolean lockout;
+    private float lineWidth;
+    private boolean liveControls;
 
     public Config(String title) {
         this.title = title;
@@ -68,6 +73,8 @@ public final class Config {
         this.channelR = new Channel("R-channel", DEFAULT_ES9_CHANNEL_R);
         this.channelG = new Channel("G-channel", DEFAULT_ES9_CHANNEL_G);
         this.channelB = new Channel("B-channel", DEFAULT_ES9_CHANNEL_B);
+        this.lineWidth = DEFAULT_LINE_WIDTH;
+        this.liveControls = true;
     }
 
     public Config() {
@@ -152,6 +159,18 @@ public final class Config {
 
     public Channel getChannelB() {
         return channelB;
+    }
+
+    public float getLineWidth() {
+        return this.lineWidth;
+    }
+
+    public void setLineWidth(float lineWidth) {
+        this.lineWidth = lineWidth;
+    }
+
+    public boolean liveControls() {
+        return this.liveControls;
     }
 
     /**
