@@ -46,7 +46,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private BasicStroke lineStroke;
 
     public DisplayPanel(Config config) {
-        logger.info("initialising display panel");
+        logger.info("initialising DisplayPanel");
         this.config = config;
         try {
             InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(config.logoUrl());
