@@ -51,7 +51,7 @@ public final class Polygon {
         final java.awt.Polygon awt = new java.awt.Polygon();
         for (Point pt : _points) {
             // normalise to 0-1 then multiply by scale
-            awt.addPoint((int) ((pt.x()/2 + 0.5) * xScale), (int) ((pt.y()/2 + 0.5) * yScale));
+            awt.addPoint((int) ((pt.x() / 2 + 0.5) * xScale), (int) ((pt.y() / 2 + 0.5) * yScale));
         }
         return awt;
     }

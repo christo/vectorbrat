@@ -4,7 +4,6 @@ import org.jaudiolibs.audioservers.AudioClient;
 import org.jaudiolibs.audioservers.AudioConfiguration;
 import org.jaudiolibs.audioservers.AudioServer;
 import org.jaudiolibs.audioservers.AudioServerProvider;
-import org.jaudiolibs.jnajack.Jack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +94,7 @@ public class LissajouClient implements AudioClient {
         this.amp = amp;
     }
 
-    public void configure(AudioConfiguration context)  {
+    public void configure(AudioConfiguration context) {
         logger.info("output channels: " + context.getOutputChannelCount());
         logger.info("input channels: " + context.getInputChannelCount());
         float sampleRate = context.getSampleRate();

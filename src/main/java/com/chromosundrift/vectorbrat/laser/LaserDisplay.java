@@ -12,7 +12,6 @@ import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.VectorDisplay;
 import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.swing.LaserController;
 
 /**
@@ -169,6 +168,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     /**
      * Called from ui thread.
+     *
      * @return the pps
      */
     @Override
@@ -184,5 +184,15 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     @Override
     public void setPps(int pps) {
         this.pps = pps;
+    }
+
+    @Override
+    public float getSampleRate() {
+        return laserDriver.getSampleRate();
+    }
+
+    @Override
+    public int getBufferSize() {
+        return laserDriver.getBufferSize();
     }
 }

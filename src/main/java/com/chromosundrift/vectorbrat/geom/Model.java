@@ -60,7 +60,7 @@ public class Model {
                 new Point(x1, y2, c)
         );
     }
-    
+
     private static Polygon createMidSquare(Color c) {
         return box(-0.5f, -0.5f, 0.5f, 0.5f, c);
     }
@@ -87,6 +87,7 @@ public class Model {
 
     /**
      * Stream of just the polygons (not points).
+     *
      * @return polygons.
      */
     public Stream<Polygon> polygons() {
@@ -100,6 +101,7 @@ public class Model {
 
     /**
      * Stream of just the points (not polygons)
+     *
      * @return points.
      */
     public Stream<Point> points() {

@@ -2,7 +2,6 @@ package com.chromosundrift.vectorbrat.audio;
 
 import com.google.common.collect.ImmutableList;
 import org.jaudiolibs.audioservers.AudioConfiguration;
-import org.jaudiolibs.audioservers.AudioServer;
 import org.jaudiolibs.audioservers.AudioServerProvider;
 import org.jaudiolibs.audioservers.ext.ClientID;
 import org.jaudiolibs.audioservers.ext.Connections;

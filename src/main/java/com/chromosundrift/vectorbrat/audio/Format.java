@@ -15,6 +15,7 @@ public final class Format {
     private final Endianness endianness;
     private final Signitude signitude;
     private final int channels;
+
     public Format(float sampleRate, int bits, Endianness endianness, Signitude signitude, int channels) {
         if (sampleRate < 1 || sampleRate > MAX_SAMPLE_RATE) {
             throw new IllegalArgumentException("sample rate out of range");

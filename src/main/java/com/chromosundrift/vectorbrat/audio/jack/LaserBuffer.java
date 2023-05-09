@@ -1,7 +1,6 @@
 package com.chromosundrift.vectorbrat.audio.jack;
 
 import org.jaudiolibs.jnajack.JackClient;
-import org.jaudiolibs.jnajack.JackPort;
 
 import java.nio.FloatBuffer;
 
@@ -25,12 +24,12 @@ public class LaserBuffer {
 
     @SuppressWarnings("DuplicatedCode")
     private void copyBuffers(JackClient client,
-                                FloatBuffer xb,
-                                FloatBuffer yb,
-                                FloatBuffer rb,
-                                FloatBuffer gb,
-                                FloatBuffer bb,
-                                int nframes) {
+                             FloatBuffer xb,
+                             FloatBuffer yb,
+                             FloatBuffer rb,
+                             FloatBuffer gb,
+                             FloatBuffer bb,
+                             int nframes) {
 
 
         if (xBuffer == null || xBuffer.length != nframes) {

@@ -68,8 +68,7 @@ public class VectorBratFrame extends JFrame {
         split.setOneTouchExpandable(true);
 
         scrollPane = new JScrollPane();
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         enginePanel.add(scrollPane, BorderLayout.NORTH);
         enginePanel.add(Box.createVerticalBox(), BorderLayout.CENTER);
 

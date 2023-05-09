@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
-import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -30,11 +29,8 @@ public class ControlPanel extends JPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(ControlPanel.class);
 
-    private final JSlider ppsControl;
     private final Config config;
     private final LaserController laserController;
-    private ChangeListener ppsListener;
-
 
     public ControlPanel(Config config, LaserController laserController) {
         logger.info("initialising ControlPanel");
@@ -47,12 +43,12 @@ public class ControlPanel extends JPanel {
         JComponent rz = new DeviceSelector("Red/Z Device");
         JComponent gb = new DeviceSelector("Green/Blue Device");
 
-        JPanel pps = new JPanel(new BorderLayout());
-        ppsControl = createPpsSlider(config, laserController, pps);
 
-        JComponent[] details = new JComponent[] {
+        JPanel pps = createPpsSlider(config, laserController);
+
+        JComponent[] details = new JComponent[]{
                 rLabel(Config.LASER_MAKE),
-                rLabel(Config.LASER_MODEL)
+                rLabel(Config.LASER_MODEL),
         };
         JPanel detail = new JPanel(new GridLayout(details.length, 1, 5, 5));
         for (JComponent item : details) {
@@ -75,7 +71,8 @@ public class ControlPanel extends JPanel {
         setPreferredSize(new Dimension(170, 400));
     }
 
-    private static JSlider createPpsSlider(Config config, LaserController laserController, JPanel pps) {
+    private static JPanel createPpsSlider(Config config, LaserController laserController) {
+        final JPanel pps = new JPanel(new BorderLayout());
         final JSlider ppsControl;
         final String units = " PPS";
         final JLabel psl = rLabel(laserController.getPps() + units);
@@ -99,9 +96,9 @@ public class ControlPanel extends JPanel {
             int value = slider.getValue();
             psl.setText(value + units);
         });
+        pps.setMinimumSize(new Dimension(200, 50));
 
-
-        return ppsControl;
+        return pps;
     }
 
     private JPanel createArmDisarm(final LaserController laserController) {

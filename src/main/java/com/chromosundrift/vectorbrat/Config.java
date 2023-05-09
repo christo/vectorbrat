@@ -63,7 +63,7 @@ public final class Config {
     private int pps;
     private boolean lockout;
     private float lineWidth;
-    private boolean liveControls;
+    private final boolean liveControls;
 
     public Config(String title) {
         this.title = title;
@@ -183,8 +183,10 @@ public final class Config {
 
     /**
      * Represents a configured audio channel with our name and 1-based index.
-     * @param name the name
+     *
+     * @param name   the name
      * @param number the 1-based index
      */
-    public record Channel(String name, int number){}
+    public record Channel(String name, int number) {
+    }
 }

@@ -41,7 +41,7 @@ public final class LaserDriver {
     private final float sampleMin;
     private final float peakToTrough;
     private volatile boolean running = false;
-    private JackClient client;
+    private final JackClient client;
 
     /**
      * Whether laser light and galvo motion should be on or off.
@@ -60,7 +60,7 @@ public final class LaserDriver {
         String title = config.getTitle();
         this.sampleMin = -1.0f;
         this.sampleMax = 1.0f;
-        this.peakToTrough = sampleMax - sampleMin;
+        this.peakToTrough = Math.abs(sampleMax - sampleMin);
 
 
         Config.Channel channelX = config.getChannelX();
@@ -184,7 +184,8 @@ public final class LaserDriver {
 
     /**
      * Must run without blocking, "realtime"
-     * @param client jack client.
+     *
+     * @param client  jack client.
      * @param nframes number of frames to be sent
      * @return true if client should remain connected.
      */
@@ -197,7 +198,7 @@ public final class LaserDriver {
 
         if (this.isOn) {
             // temporarily generate white noise
-            SoundGenerator.whiteNoise(  0.2f, xBuffer, yBuffer);
+            SoundGenerator.whiteNoise(0.2f, xBuffer, yBuffer);
             for (int i = 0; i < nframes; i++) {
                 rBuffer.put(i, 1.0f);
                 gBuffer.put(i, 1.0f);
@@ -217,6 +218,7 @@ public final class LaserDriver {
 
     /**
      * Called from ui thread.
+     *
      * @return whether we are armed.
      */
     public boolean isOn() {
@@ -225,10 +227,34 @@ public final class LaserDriver {
 
     /**
      * Called from ui thread.
+     *
      * @param on whether we are armed.
      */
     public void setOn(boolean on) {
         isOn = on;
         logger.info("laser %s".formatted(isOn ? "armed" : "disarmed"));
+    }
+
+    public float getSampleRate() {
+        if (running) {
+            try {
+                return client.getSampleRate();
+            } catch (JackException ignored) {
+
+            }
+        }
+        return -1;
+    }
+
+    public int getBufferSize() {
+        if (running) {
+            try {
+                return client.getBufferSize();
+            } catch (JackException ignored) {
+
+            }
+        }
+        return -1;
+
     }
 }

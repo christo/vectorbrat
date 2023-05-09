@@ -43,7 +43,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private final Font brandingFont;
     private final Config config;
     private Optional<BufferedImage> logo = Optional.empty();
-    private BasicStroke lineStroke;
+    private final BasicStroke lineStroke;
 
     public DisplayPanel(Config config) {
         logger.info("initialising DisplayPanel");
@@ -61,7 +61,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         brandingFont = new Font("HelveticaNeue", Font.PLAIN, 130);
         lineStroke = new BasicStroke(config.getLineWidth());
 
-        setMinimumSize(new Dimension(800, 500));
+        setMinimumSize(new Dimension(400, 300));
         setPreferredSize(new Dimension(900, 700));
         this.vectorDisplay = new DoubleBufferedVectorDisplay();
     }
@@ -94,9 +94,9 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         g2.setStroke(lineStroke);
         Stream<Polygon> polygons = model.polygons();
         polygons.forEach(p -> {
-                    g2.setColor(p.getColor());
-                    g2.drawPolygon(p.awt(im.getWidth(), im.getHeight()));
-                });
+            g2.setColor(p.getColor());
+            g2.drawPolygon(p.awt(im.getWidth(), im.getHeight()));
+        });
         model.points().forEach(point -> {
             int x = (int) (point.x() * im.getWidth());
             int y = (int) (point.y() * im.getHeight());
