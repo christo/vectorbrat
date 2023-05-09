@@ -24,11 +24,10 @@ import com.chromosundrift.vectorbrat.audio.jack.SoundGenerator;
  */
 public final class LaserDriver {
 
-    private static final Logger logger = LoggerFactory.getLogger(LaserDriver.class);
-
     public static final EnumSet<JackStatus> NO_STATUS = EnumSet.noneOf(JackStatus.class);
     public static final EnumSet<JackOptions> NO_OPTIONS = EnumSet.noneOf(JackOptions.class);
     public static final EnumSet<JackPortFlags> PHYSICAL_JACK_INPUTS = EnumSet.of(JackPortFlags.JackPortIsInput, JackPortFlags.JackPortIsPhysical);
+    private static final Logger logger = LoggerFactory.getLogger(LaserDriver.class);
     private static final EnumSet<JackPortFlags> TO_JACK = EnumSet.of(JackPortFlags.JackPortIsOutput);
     private final JackPort xPort;
     private final JackPort yPort;
@@ -40,9 +39,8 @@ public final class LaserDriver {
     private final float sampleMax;
     private final float sampleMin;
     private final float peakToTrough;
-    private volatile boolean running = false;
     private final JackClient client;
-
+    private volatile boolean running = false;
     /**
      * Whether laser light and galvo motion should be on or off.
      */
@@ -89,6 +87,36 @@ public final class LaserDriver {
         } catch (JackException e) {
             throw new VectorBratException("problem with jack", e);
         }
+    }
+
+    private static Jack getJack() throws VectorBratException {
+        try {
+            return Jack.getInstance();
+        } catch (JackException e) {
+            throw new VectorBratException("cannot get jack instance", e);
+        }
+    }
+
+    private static JackClient openClient(Jack jack, String title) throws VectorBratException {
+        try {
+            return jack.openClient(truncate(title, jack.getMaximumClientNameSize()), NO_OPTIONS, NO_STATUS);
+        } catch (JackException e) {
+            throw new VectorBratException("jack spewed trying to open client", e);
+        }
+    }
+
+    private static JackPort registerPort(Config.Channel channel, JackClient client, int maxPortName) throws VectorBratException {
+        logger.info("registering jack port for " + channel);
+        String name = truncate(channel.name(), maxPortName);
+        try {
+            return client.registerPort(name, JackPortType.AUDIO, TO_JACK);
+        } catch (JackException e) {
+            throw new VectorBratException("died trying to register port for channel " + channel, e);
+        }
+    }
+
+    private static String truncate(String name, int maxLen) {
+        return name.substring(0, Math.min(name.length() - 1, maxLen - 1));
     }
 
     /**
@@ -146,36 +174,6 @@ public final class LaserDriver {
         } catch (JackException e) {
             throw new VectorBratException("can't register callback", e);
         }
-    }
-
-    private static Jack getJack() throws VectorBratException {
-        try {
-            return Jack.getInstance();
-        } catch (JackException e) {
-            throw new VectorBratException("cannot get jack instance", e);
-        }
-    }
-
-    private static JackClient openClient(Jack jack, String title) throws VectorBratException {
-        try {
-            return jack.openClient(truncate(title, jack.getMaximumClientNameSize()), NO_OPTIONS, NO_STATUS);
-        } catch (JackException e) {
-            throw new VectorBratException("jack spewed trying to open client", e);
-        }
-    }
-
-    private static JackPort registerPort(Config.Channel channel, JackClient client, int maxPortName) throws VectorBratException {
-        logger.info("registering jack port for " + channel);
-        String name = truncate(channel.name(), maxPortName);
-        try {
-            return client.registerPort(name, JackPortType.AUDIO, TO_JACK);
-        } catch (JackException e) {
-            throw new VectorBratException("died trying to register port for channel " + channel, e);
-        }
-    }
-
-    private static String truncate(String name, int maxLen) {
-        return name.substring(0, Math.min(name.length() - 1, maxLen - 1));
     }
 
     public long getNanos() {

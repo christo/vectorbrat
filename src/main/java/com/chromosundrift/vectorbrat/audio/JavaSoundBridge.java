@@ -25,8 +25,8 @@ public class JavaSoundBridge implements SoundBridge {
     private final Optional<Mixer> mixerXY;
     private final Optional<Mixer> mixerRZ;
     private final Optional<Mixer> mixerGB;
-    private Function<String, Mixer> mixerByName;
     private final Function<Optional<Mixer.Info>, Optional<Mixer>> mixerGetter;
+    private Function<String, Mixer> mixerByName;
 
     public JavaSoundBridge(Function<Optional<Mixer.Info>, Optional<Mixer>> mixerGetter) {
 

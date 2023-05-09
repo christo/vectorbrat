@@ -1,13 +1,13 @@
 package com.chromosundrift.vectorbrat.swing;
 
 public interface LaserController {
-    void setOn(boolean on);
-
     boolean getOn();
 
-    void setPps(int fps);
+    void setOn(boolean on);
 
     int getPps();
+
+    void setPps(int fps);
 
     /**
      * Negative number means unknown / not applicable.

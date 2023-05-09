@@ -13,25 +13,20 @@ public class SineWaveInputStream extends InputStream {
 
     private static final int BYTES_PER_SAMPLE = 4;
     private static final int BITS_PER_SAMPLE = BYTES_PER_SAMPLE * 8;
-
-    private double theta = 0d;
-
     /**
      * Per sample delta
      */
     private final double delta;
-
     /**
      * Per byte delta
      */
     private final double deltaByte;
-
     /**
      * Maximum positive sample value.
      */
     private final int amp = 0x01 << 31;
-
     private final int[] sampleBuffer = new int[4];
+    private double theta = 0d;
     private int byteIndex = 0;
 
     /**

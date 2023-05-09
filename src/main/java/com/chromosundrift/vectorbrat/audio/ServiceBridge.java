@@ -19,14 +19,14 @@ import com.chromosundrift.vectorbrat.Util;
 
 public class ServiceBridge {
 
+    public static final String JACK = "JACK";
+    public static final String JAVASOUND = "JavaSound";
     private static final Logger logger = LoggerFactory.getLogger(ServiceBridge.class);
 
     static {
         Util.setSystemLibraryPath();
     }
 
-    public static final String JACK = "JACK";
-    public static final String JAVASOUND = "JavaSound";
     private final String backend;
 
     /**

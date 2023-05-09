@@ -23,6 +23,26 @@ public class LissajouClient implements AudioClient {
     private static final Logger logger = LoggerFactory.getLogger(LissajouClient.class);
     private static final float MIN_FREQ = 0.1f;
     private static final float MAX_FREQ = 20000f;
+    private final int xChannelIndex;
+    private final int yChannelData;
+    private float freqL;
+    private float freqR;
+    private boolean run;
+    private float[] dataLeft;
+    private float[] dataRight;
+    private float[] bufferLeft;
+    private float[] bufferRight;
+    private int idxLeft;
+    private int idxRight;
+    private double amp;
+    public LissajouClient(float freqL, float freqR, double amp) {
+        this.freqL = clampFreq(freqL);
+        this.freqR = clampFreq(freqR);
+        this.amp = amp;
+        xChannelIndex = 0;
+        yChannelData = 1;
+        run = true;
+    }
 
     public static void main(String[] args) throws Exception {
         logger.info("starting");
@@ -38,28 +58,6 @@ public class LissajouClient implements AudioClient {
         int ignore = System.in.read();
         runner.stop();
         logger.info("finishing");
-    }
-
-    private float freqL;
-    private float freqR;
-    private final int xChannelIndex;
-    private final int yChannelData;
-    private boolean run;
-    private float[] dataLeft;
-    private float[] dataRight;
-    private float[] bufferLeft;
-    private float[] bufferRight;
-    private int idxLeft;
-    private int idxRight;
-    private double amp;
-
-    public LissajouClient(float freqL, float freqR, double amp) {
-        this.freqL = clampFreq(freqL);
-        this.freqR = clampFreq(freqR);
-        this.amp = amp;
-        xChannelIndex = 0;
-        yChannelData = 1;
-        run = true;
     }
 
     private static float clampFreq(float freqL) {

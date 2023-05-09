@@ -39,31 +39,27 @@ public final class Config {
      * Green and blue pair of channels.
      */
     public static final String DEFAULT_GB = "es-9_G_B";
-
-    private static final int DEFAULT_PPS = 30000;
     public static final int MAX_PPS = 40000;
     public static final int MIN_PPS = 5;
     public static final int MAXIMUM_DEFLECTION_DEG = 40;
     public static final int PPS_DEFLECTION = 4;
     public static final String LASER_MODEL = "PRO-1600RGB";
     public static final String LASER_MAKE = "LaserWorld";
-
+    private static final int DEFAULT_PPS = 30000;
+    private static final float DEFAULT_LINE_WIDTH = 5.5f;
     private final Channel channelX;
     private final Channel channelY;
     private final Channel channelR;
     private final Channel channelG;
     private final Channel channelB;
-
-    private static final float DEFAULT_LINE_WIDTH = 5.5f;
-
+    private final String title;
+    private final boolean liveControls;
     private String xy;
     private String rz;
     private String gb;
-    private final String title;
     private int pps;
     private boolean lockout;
     private float lineWidth;
-    private final boolean liveControls;
 
     public Config(String title) {
         this.title = title;
@@ -133,12 +129,12 @@ public final class Config {
         return pps;
     }
 
-    public boolean isLockout() {
-        return lockout;
-    }
-
     public void setPps(int pps) {
         this.pps = pps;
+    }
+
+    public boolean isLockout() {
+        return lockout;
     }
 
     public void setLockout(boolean lockout) {

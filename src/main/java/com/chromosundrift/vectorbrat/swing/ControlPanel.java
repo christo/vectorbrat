@@ -101,6 +101,13 @@ public class ControlPanel extends JPanel {
         return pps;
     }
 
+    private static JLabel rLabel(String text) {
+        final JLabel label;
+        label = new JLabel(text, SwingConstants.RIGHT);
+        label.setBorder(new EmptyBorder(5, 0, 0, 10));
+        return label;
+    }
+
     private JPanel createArmDisarm(final LaserController laserController) {
         ButtonGroup group = new ButtonGroup();
         JRadioButton armed = new JRadioButton("Armed", laserController.getOn());
@@ -131,13 +138,6 @@ public class ControlPanel extends JPanel {
         });
 
         return interlock;
-    }
-
-    private static JLabel rLabel(String text) {
-        final JLabel label;
-        label = new JLabel(text, SwingConstants.RIGHT);
-        label.setBorder(new EmptyBorder(5, 0, 0, 10));
-        return label;
     }
 
     private static class DeviceSelector extends JPanel {

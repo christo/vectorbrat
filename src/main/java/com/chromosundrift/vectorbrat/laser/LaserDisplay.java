@@ -149,21 +149,21 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     /**
      * Called from ui thread.
      *
-     * @param on whether we are armed.
-     */
-    @Override
-    public void setOn(boolean on) {
-        this.laserDriver.setOn(on);
-    }
-
-    /**
-     * Called from ui thread.
-     *
      * @return true iff we are armed.
      */
     @Override
     public boolean getOn() {
         return this.laserDriver.isOn();
+    }
+
+    /**
+     * Called from ui thread.
+     *
+     * @param on whether we are armed.
+     */
+    @Override
+    public void setOn(boolean on) {
+        this.laserDriver.setOn(on);
     }
 
     /**

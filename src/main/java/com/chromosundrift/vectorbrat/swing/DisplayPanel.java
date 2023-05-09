@@ -42,8 +42,8 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private final DoubleBufferedVectorDisplay vectorDisplay;
     private final Font brandingFont;
     private final Config config;
-    private Optional<BufferedImage> logo = Optional.empty();
     private final BasicStroke lineStroke;
+    private Optional<BufferedImage> logo = Optional.empty();
 
     public DisplayPanel(Config config) {
         logger.info("initialising DisplayPanel");
