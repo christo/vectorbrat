@@ -7,6 +7,7 @@ import java.util.List;
 public final class Config {
 
     public static final String DEFAULT_TITLE = "Vitalase";
+    public static final String LAF = "Mac OS X";
 
     public static final float DEFAULT_SAMPLE_RATE = 96000;
     public static final int DEFAULT_ES9_CHANNEL_X = 9;
@@ -171,6 +172,10 @@ public final class Config {
 
     public boolean liveControls() {
         return this.liveControls;
+    }
+
+    public String getLaf() {
+        return LAF;
     }
 
     /**
