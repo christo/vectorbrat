@@ -12,6 +12,7 @@ import static javax.swing.UIManager.setLookAndFeel;
 
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
+import com.chromosundrift.vectorbrat.swing.DisplayController;
 import com.chromosundrift.vectorbrat.swing.DisplayPanel;
 import com.chromosundrift.vectorbrat.swing.VectorBratFrame;
 
@@ -37,7 +38,7 @@ public class VectorBrat {
         });
 
         laser = new LaserDisplay(config);
-        frame = new VectorBratFrame(config, new DisplayPanel(config), laser);
+        frame = new VectorBratFrame(config, new DisplayPanel(config, new DisplayController(true)), laser);
     }
 
     public static void main(String[] args) {

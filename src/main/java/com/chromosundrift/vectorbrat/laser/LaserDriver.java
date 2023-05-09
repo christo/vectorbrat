@@ -12,11 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.VectorBratException;
-import com.chromosundrift.vectorbrat.audio.jack.SoundGenerator;
+import com.chromosundrift.vectorbrat.geom.PathPlanner;
 
 /**
  * Handles generation of audio buffers and connection to audio subsystem. Also provides nanosecond time from
@@ -26,9 +28,13 @@ public final class LaserDriver {
 
     public static final EnumSet<JackStatus> NO_STATUS = EnumSet.noneOf(JackStatus.class);
     public static final EnumSet<JackOptions> NO_OPTIONS = EnumSet.noneOf(JackOptions.class);
-    public static final EnumSet<JackPortFlags> PHYSICAL_JACK_INPUTS = EnumSet.of(JackPortFlags.JackPortIsInput, JackPortFlags.JackPortIsPhysical);
+    public static final EnumSet<JackPortFlags> PHYSICAL_JACK_INPUTS = EnumSet.of(
+            JackPortFlags.JackPortIsInput,
+            JackPortFlags.JackPortIsPhysical
+    );
     private static final Logger logger = LoggerFactory.getLogger(LaserDriver.class);
     private static final EnumSet<JackPortFlags> TO_JACK = EnumSet.of(JackPortFlags.JackPortIsOutput);
+
     private final JackPort xPort;
     private final JackPort yPort;
     private final JackPort rPort;
@@ -36,11 +42,20 @@ public final class LaserDriver {
     private final JackPort bPort;
 
     private final Config config;
-    private final float sampleMax;
-    private final float sampleMin;
-    private final float peakToTrough;
+
     private final JackClient client;
+
     private volatile boolean running = false;
+
+    private final ReentrantLock bufferLock = new ReentrantLock();
+
+    private float[] xBuffer;
+    private float[] yBuffer;
+    private float[] rBuffer;
+    private float[] gBuffer;
+    private float[] bBuffer;
+
+
     /**
      * Whether laser light and galvo motion should be on or off.
      */
@@ -56,10 +71,6 @@ public final class LaserDriver {
         logger.info("initialising LaserDriver");
         this.config = config;
         String title = config.getTitle();
-        this.sampleMin = -1.0f;
-        this.sampleMax = 1.0f;
-        this.peakToTrough = Math.abs(sampleMax - sampleMin);
-
 
         Config.Channel channelX = config.getChannelX();
         Config.Channel channelY = config.getChannelY();
@@ -176,40 +187,32 @@ public final class LaserDriver {
         }
     }
 
-    public long getNanos() {
-        return 0; //TODO
-    }
-
-    /**
-     * Must run without blocking, "realtime"
-     *
-     * @param client  jack client.
-     * @param nframes number of frames to be sent
-     * @return true if client should remain connected.
-     */
     private boolean process(JackClient client, int nframes) {
-        FloatBuffer xBuffer = xPort.getFloatBuffer();
-        FloatBuffer yBuffer = xPort.getFloatBuffer();
-        FloatBuffer rBuffer = xPort.getFloatBuffer();
-        FloatBuffer gBuffer = xPort.getFloatBuffer();
-        FloatBuffer bBuffer = xPort.getFloatBuffer();
+        try {
+            FloatBuffer xBuffer1 = xPort.getFloatBuffer();
+            FloatBuffer yBuffer1 = xPort.getFloatBuffer();
+            FloatBuffer rBuffer1 = xPort.getFloatBuffer();
+            FloatBuffer gBuffer1 = xPort.getFloatBuffer();
+            FloatBuffer bBuffer1 = xPort.getFloatBuffer();
 
-        if (this.isOn) {
-            // temporarily generate white noise
-            SoundGenerator.whiteNoise(0.2f, xBuffer, yBuffer);
-            for (int i = 0; i < nframes; i++) {
-                rBuffer.put(i, 1.0f);
-                gBuffer.put(i, 1.0f);
-                bBuffer.put(i, 1.0f);
+            if (this.isOn) {
+                int sampleRate = client.getSampleRate();
+                int framesPerSecond = sampleRate / nframes;
+
+            } else {
+                // black silence
+                for (int i = 0; i < nframes; i++) {
+                    xBuffer1.put(i, 0f);
+                    yBuffer1.put(i, 0f);
+                    rBuffer1.put(i, 0f);
+                    gBuffer1.put(i, 0f);
+                    bBuffer1.put(i, 0f);
+                }
             }
-        } else {
-            for (int i = 0; i < nframes; i++) {
-                xBuffer.put(i, 0f);
-                yBuffer.put(i, 0f);
-                rBuffer.put(i, 0f);
-                gBuffer.put(i, 0f);
-                bBuffer.put(i, 0f);
-            }
+            return running;
+        } catch (JackException e) {
+            logger.error("exception thrown during process callback", e);
+            this.running = false;
         }
         return running;
     }
@@ -253,6 +256,40 @@ public final class LaserDriver {
             }
         }
         return -1;
+
+    }
+
+    public void setPath(PathPlanner p) {
+        ArrayList<Float> xs = p.getXs();
+        ArrayList<Float> ys = p.getXs();
+        ArrayList<Float> rs = p.getXs();
+        ArrayList<Float> gs = p.getXs();
+        ArrayList<Float> bs = p.getXs();
+        int size = xs.size();
+        float[] bx = new float[size];
+        float[] by = new float[size];
+        float[] br = new float[size];
+        float[] bg = new float[size];
+        float[] bb = new float[size];
+        for (int i = 0; i < size; i++) {
+            bx[i] = xs.get(i);
+            by[i] = ys.get(i);
+            br[i] = rs.get(i);
+            bg[i] = gs.get(i);
+            bb[i] = bs.get(i);
+        }
+        try {
+            bufferLock.lock();
+
+            this.xBuffer = bx;
+            this.yBuffer = by;
+            this.rBuffer = br;
+            this.gBuffer = bg;
+            this.bBuffer = bb;
+
+        } finally {
+            bufferLock.unlock();
+        }
 
     }
 }

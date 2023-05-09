@@ -22,49 +22,46 @@ public class Model {
     private final ReentrantLock lock = new ReentrantLock();
     private final List<Polygon> polygons;
     private final List<Point> points;
+    private final String name;
 
     public Model() {
-        polygons = new ArrayList<>();
-        points = new ArrayList<>();
+        this("empty", new ArrayList<>(), new ArrayList<>());
+    }
+
+    public Model(String name, List<Polygon> polygons, List<Point> points) {
+        this.polygons = polygons;
+        this.points = points;
+        this.name = name;
+    }
+
+    public Model(String name) {
+        this(name, new ArrayList<>(), new ArrayList<>());
     }
 
     public static Model testPattern1() {
-        Model m = new Model();
-        m.add(createMidSquare(Color.ORANGE));
+        Model m = new Model("test pattern 1");
+        m.add(Polygon.createMidSquare(Color.ORANGE));
         // centre dots
         for(float i=0; i<0.4; i+= 0.1) {
-            m.add(new Point(0.0d, i, Color.MAGENTA));
+            m.add(new Point(0.0f, i, Color.MAGENTA));
         }
 
         // top arrow
         Color c = Color.CYAN;
-        m.add(Polygon.open(c, new Point(-0.15, -0.35, c), new Point(0.0, -0.5, c), new Point(0.15, -0.35, c)));
+        m.add(Polygon.open(c, new Point(-0.15f, -0.35f, c), new Point(0.0f, -0.5f, c), new Point(0.15f, -0.35f, c)));
         // bottom right handle
         c = Color.PINK;
-        m.add(Polygon.open(c, new Point(0.5, 0.5, c), new Point(0.75, 0.75, c)));
+        m.add(Polygon.open(c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
 
         // bounding box
-        m.add(box(-1f, -1f, 1f, 1f, Color.GREEN));
+        m.add(Polygon.box(-1f, -1f, 1f, 1f, Color.GREEN));
         logger.info("created test pattern: " + m);
         return m;
     }
 
     public static Model midSquare(Color c) {
-        Model m = new Model();
-        return m.add(createMidSquare(c));
-    }
-
-    private static Polygon box(float x1, float y1, float x2, float y2, Color c) {
-        return Polygon.closed(c,
-                new Point(x1, y1, c),
-                new Point(x2, y1, c),
-                new Point(x2, y2, c),
-                new Point(x1, y2, c)
-        );
-    }
-
-    private static Polygon createMidSquare(Color c) {
-        return box(-0.5f, -0.5f, 0.5f, 0.5f, c);
+        Model m = new Model("mid square");
+        return m.add(Polygon.createMidSquare(c));
     }
 
     private Model add(Point point) {
@@ -99,6 +96,14 @@ public class Model {
         } finally {
             lock.unlock();
         }
+    }
+
+    List<Polygon> _polygons() {
+        return this.polygons;
+    }
+
+    public List<Point> _points() {
+        return this.points;
     }
 
     /**
@@ -139,5 +144,9 @@ public class Model {
                 "polygons=" + polygons +
                 ", points=" + points +
                 '}';
+    }
+
+    public String getName() {
+        return name;
     }
 }

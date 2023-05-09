@@ -7,6 +7,10 @@ public class Util {
 
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
+    public static final long MILLI = 1000L;
+    public static final long MICRO = 1000* MILLI;
+    public static final long NANO = 1000L * MICRO;
+
     /**
      * Needed for jna to load jack native libraries, must be called before jack initialisation. Depends on
      * libjack.dylib existing at the specified path, can be installed on macos with <code>brew install jack</code>
@@ -19,4 +23,6 @@ public class Util {
     public static float clamp(float freqL, float min, float max) {
         return Math.min(Math.max(min, freqL), max);
     }
+
+
 }

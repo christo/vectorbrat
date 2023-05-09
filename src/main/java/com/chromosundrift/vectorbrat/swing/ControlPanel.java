@@ -49,6 +49,7 @@ public class ControlPanel extends JPanel {
         JComponent[] details = new JComponent[]{
                 rLabel(Config.LASER_MAKE),
                 rLabel(Config.LASER_MODEL),
+                // TODO show model stats
         };
         JPanel detail = new JPanel(new GridLayout(details.length, 1, 5, 5));
         for (JComponent item : details) {

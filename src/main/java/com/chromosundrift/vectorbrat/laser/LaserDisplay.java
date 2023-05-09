@@ -12,6 +12,8 @@ import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.VectorDisplay;
 import com.chromosundrift.vectorbrat.geom.Model;
+import com.chromosundrift.vectorbrat.geom.PathPlanner;
+import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.swing.LaserController;
 
 /**
@@ -21,12 +23,11 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     private static final Logger logger = LoggerFactory.getLogger(LaserDisplay.class);
 
-    private static final long NANO = 1000L * 1000L * 1000L;
+
 
     private final DoubleBufferedVectorDisplay vectorDisplay;
     private final LaserDriver laserDriver;
-    private final int maximumDeflection;
-    private final int ppsDeflectionDeg;
+
     private int pps;
 
     /**
@@ -42,14 +43,14 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private volatile boolean running;
     private Thread thread;
     private ExecutorService exec;
+    private volatile boolean modelDirty;
 
     public LaserDisplay(Config config) throws VectorBratException {
         logger.info("initialising LaserDisplay");
         this.vectorDisplay = new DoubleBufferedVectorDisplay();
         this.laserDriver = new LaserDriver(config);
         this.pps = config.getPps();
-        this.maximumDeflection = Config.MAXIMUM_DEFLECTION_DEG;
-        this.ppsDeflectionDeg = Config.PPS_DEFLECTION;
+
 
     }
 
@@ -61,42 +62,38 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      * @return null
      */
     private Void render(Model model) {
-        if (laserDriver.isOn()) {
-            // calculate scan rate
-            int nVerts = model.countVertices();
-            long nanosPerPoint = pps * NANO / nVerts;
-            long nanos = this.laserDriver.getNanos();
 
-            long nanosPerCycle = nanosPerPoint * nVerts;
-
-            // calculate intermediate points
+        // calculate scan rate
+        float laserSpeed = 0.01f;
 
 
-            // for now, render each poly then each point
-
-
-            // path planner - nearest unrendered neighbour
-            // get timer from audio system
-            // get all the points from the polygon and sort them to render order
-            // render xy coordinates to the audio buffer - keep rendering the same point until time to move
-            // quintic easing
-            // pen down - colour
-            // closed poly for now
-            // pen up - black
+        if (modelDirty) {
+            PathPlanner p = new PathPlanner(model, pps / 0.1f, pps / laserSpeed, new Point(0f, 0f));
+            laserDriver.setPath(p);
+            modelDirty = false;
         }
 
         return null;
     }
 
     /**
-     * Renders continually at the configured rate.
+     * Renders continually at the configured rate, unless driver is "off", in which case, we do lots of nothing.
      */
     public void run() throws VectorBratException {
         logger.info("running laser display");
         laserDriver.start();
         running = true;
         while (running) {
-            vectorDisplay.withLockAndFlip(this::render);
+            if (laserDriver.isOn()) {
+                vectorDisplay.withLockAndFlip(this::render);
+            } else {
+                try {
+                    //noinspection BusyWait
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
+
+                }
+            }
         }
     }
 
@@ -120,6 +117,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     @Override
     public void setModel(Model model) {
         vectorDisplay.setModel(model);
+        modelDirty = true;
     }
 
     /**

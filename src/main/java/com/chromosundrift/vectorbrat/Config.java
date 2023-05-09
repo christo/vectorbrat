@@ -3,6 +3,10 @@ package com.chromosundrift.vectorbrat;
 import java.util.Arrays;
 import java.util.List;
 
+
+/**
+ * Some config items are just constants.
+ */
 public final class Config {
 
     public static final String DEFAULT_TITLE = "Vitalase";
@@ -39,12 +43,42 @@ public final class Config {
      * Green and blue pair of channels.
      */
     public static final String DEFAULT_GB = "es-9_G_B";
-    public static final int MAX_PPS = 40000;
-    public static final int MIN_PPS = 5;
-    public static final int MAXIMUM_DEFLECTION_DEG = 40;
-    public static final int PPS_DEFLECTION = 4;
+
+
+    // laser config details
+
     public static final String LASER_MODEL = "PRO-1600RGB";
     public static final String LASER_MAKE = "LaserWorld";
+    public static final int MAX_PPS = 40000;    // without low-pass filter
+    /**
+     * Deflection in degrees for maximum PPS
+     */
+    public static final int PPS_DEFLECTION_DEG = 4;
+    /**
+     * Arbitrary low number not too slow for holding model locks.
+     */
+    public static final int MIN_PPS = 5;
+    public static final int MAX_DEFLECTION_DEG = 40;
+
+    /**
+     * Apparently there is a nonlinear relationship between the safe maximum pps capability of the laser at different
+     * arcs of deflection. Specifications typically quote pps with accompanying deflection in degrees (typically 8
+     * degrees, per ILDA). The laser's maximum deflection is much larger than the angle corresponding to the max pps.
+     * Therefore the following linear extrapolation will be incorrect. Most advice proposes to find an appropriate pps
+     * setting using the ILDA 30kpps test pattern and increasing the pps setting until either the test pattern
+     * loses geometric fidelity or the galvanometers start to whine louder.
+     */
+    public static final int MAX_PPS_FULL_DEFLECTION_WRONG = MAX_PPS * PPS_DEFLECTION_DEG / MAX_DEFLECTION_DEG;
+
+
+
+    public static final float SAMPLE_MIN = -1.0f;
+    public static final float SAMPLE_MAX = 1.0f;
+    /**
+     * Peak to trough range in sample representation.
+     */
+    public static final float SAMPLE_RANGE = Math.abs(Config.SAMPLE_MAX - Config.SAMPLE_MIN);
+
     private static final int DEFAULT_PPS = 30000;
     private static final float DEFAULT_LINE_WIDTH = 5.5f;
     private final Channel channelX;
