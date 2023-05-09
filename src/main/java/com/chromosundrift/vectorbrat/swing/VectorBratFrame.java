@@ -28,7 +28,6 @@ public class VectorBratFrame extends JFrame {
     private final JPanel enginePanel;
     private final JScrollPane scrollPane;
 
-    private final JPanel mainPanel;
     private final DisplayPanel vd;
 
     public VectorBratFrame(Config config, DisplayPanel displayPanel, LaserController laserController) {
@@ -47,7 +46,7 @@ public class VectorBratFrame extends JFrame {
 
         split = new JSplitPane();
         split.setContinuousLayout(true);
-        split.setDividerLocation(600);
+        split.setDividerLocation(630);
         rootPanel.add(split, BorderLayout.CENTER);
 
         enginePanel = new JPanel();
@@ -55,7 +54,7 @@ public class VectorBratFrame extends JFrame {
 
         enginePanel.setBorder(UiUtil.titledBorder("Engine", UiUtil.HAlign.CENTRE));
 
-        mainPanel = new JPanel();
+        JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setBorder(UiUtil.titledBorder("Vector Simulator", UiUtil.HAlign.CENTRE));
         mainPanel.add(displayPanel, BorderLayout.CENTER);
@@ -63,8 +62,8 @@ public class VectorBratFrame extends JFrame {
         split.setLeftComponent(mainPanel);
         split.setRightComponent(enginePanel);
         split.setOneTouchExpandable(true);
-        scrollPane = new JScrollPane();
 
+        scrollPane = new JScrollPane();
 
         enginePanel.add(scrollPane, BorderLayout.NORTH);
         enginePanel.add(Box.createVerticalBox(), BorderLayout.CENTER);
