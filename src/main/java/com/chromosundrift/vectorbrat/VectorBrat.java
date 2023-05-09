@@ -19,25 +19,25 @@ public class VectorBrat {
 
     private static final Logger logger = LoggerFactory.getLogger(VectorBrat.class);
     private final VectorBratFrame frame;
-    private final DisplayPanel displayPanel;
     private final LaserDisplay laser;
 
     public VectorBrat() throws VectorBratException {
-        logger.info("initialising vectorbrat");
-        Arrays.stream(getInstalledLookAndFeels()).filter(i -> "Mac OS X".equals(i.getName())).findAny().ifPresent(i -> {
+        logger.info("initialising VectorBrat");
+        final Config config = new Config();
+        String laf = config.getLaf();
+
+        Arrays.stream(getInstalledLookAndFeels()).filter(i -> laf.equals(i.getName())).findAny().ifPresent(i -> {
             try {
-                logger.debug("Setting Mac OS X look and feel");
+                logger.debug("Setting {} look and feel", laf);
                 setLookAndFeel(i.getClassName());
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                      UnsupportedLookAndFeelException e) {
-                logger.warn("Could not set Mac OS X look and feel");
+                logger.warn("Could not set {} look and feel", laf);
             }
         });
 
-        final Config config = new Config();
         laser = new LaserDisplay(config);
-        displayPanel = new DisplayPanel(config);
-        frame = new VectorBratFrame(config, displayPanel, laser);
+        frame = new VectorBratFrame(config, new DisplayPanel(config), laser);
     }
 
     public static void main(String[] args) {
