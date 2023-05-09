@@ -6,11 +6,11 @@ import com.chromosundrift.vectorbrat.Util;
 
 public class SoundGenerator {
 
-    public static void whiteNoise(final FloatBuffer output, final float amplitude) {
+    public static void whiteNoise(final float amplitude, final FloatBuffer output) {
         whiteNoise(amplitude, new FloatBuffer[]{output});
     }
 
-    public static void whiteNoise(final float amplitude, final FloatBuffer[] outputs) {
+    public static void whiteNoise(final float amplitude, final FloatBuffer ...outputs) {
         float amp = Util.clamp(amplitude, 0f, 1.0f);
         for (FloatBuffer buf : outputs) {
             int size = buf.capacity();
