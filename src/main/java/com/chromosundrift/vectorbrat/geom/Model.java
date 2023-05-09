@@ -31,8 +31,10 @@ public class Model {
     public static Model testPattern1() {
         Model m = new Model();
         m.add(createMidSquare(Color.ORANGE));
-        // centre dot
-        m.add(new Point(0.0d, 0.0d, Color.MAGENTA));
+        // centre dots
+        for(float i=0; i<0.4; i+= 0.1) {
+            m.add(new Point(0.0d, i, Color.MAGENTA));
+        }
 
         // top arrow
         Color c = Color.CYAN;
