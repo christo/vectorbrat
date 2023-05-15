@@ -130,17 +130,12 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         int targetCentreY = im.getHeight() / 2;
 
         logo.ifPresent(logo -> {
-            // TODO maintain aspect, but fill minimum of height or width
-            float targeSide = Math.min(im.getWidth(), im.getHeight());
-            float sourceSide = Math.min(logo.getWidth(), logo.getHeight());
-
             int logoX = targetCentreX - logo.getWidth() / 2;
             int logoY = targetCentreY - logo.getHeight() / 2;
             g2.drawImage(logo, logoX, logoY, logo.getWidth(), logo.getHeight(), null);
         });
 
-        // centred string
-
+        // centred string title
         final String mesg = config.getTitle().toUpperCase();
         g2.setFont(fontBranding);
         final FontMetrics fontMetrics = g2.getFontMetrics();
@@ -159,7 +154,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         int w = im.getWidth();
         int h = im.getHeight();
 
-        Point start = new Point(0f, 0f);
+        Point start = model.closestTo(new Point(0f, 0f));
         PathPlanner p = new PathPlanner(5, 30f);
         p.plan(model, start);
         ArrayList<Float> xs = p.getXs();
@@ -199,16 +194,22 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
                 int px = (int) ((xs.get(i-1) / 2 + 0.5) * w);
                 int py = (int) ((ys.get(i-1) / 2 + 0.5) * h);
                 g2.drawLine(px, py, x, y);
-            } else {
-                int startMarkerRadius = 10;
-                int d = startMarkerRadius + startMarkerRadius;
-                g2.drawOval(x - startMarkerRadius, y - startMarkerRadius, d, d);
             }
             // draw a dot at the point
             g2.fillOval(x - r, y - r, r + r, r + r);
 
         }
-
+        g2.setColor(Color.WHITE);
+        // draw start and end markers
+        int markerRadius = 10;
+        int d = markerRadius + markerRadius;
+        int x = (int) ((start.x() / 2 + 0.5) * w);
+        int y = (int) ((start.y() / 2 + 0.5) * h);
+        g2.drawOval(x - markerRadius, y - markerRadius, d, d);
+        x = (int) ((xs.get(xs.size() -1) / 2 + 0.5) * w);
+        y = (int) ((ys.get(ys.size() -1) / 2 + 0.5) * h);
+        g2.drawLine(x - markerRadius, y - markerRadius, x + markerRadius, y + markerRadius);
+        g2.drawLine(x + markerRadius, y - markerRadius, x - markerRadius, y + markerRadius);
     }
 
     private void hudLines(Graphics2D g2, int h, String[] lines) {
