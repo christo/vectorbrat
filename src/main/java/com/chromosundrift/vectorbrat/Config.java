@@ -10,6 +10,10 @@ import java.util.List;
 public final class Config {
 
     public static final String DEFAULT_TITLE = "Vitalase";
+
+    /**
+     * The look and feel to use for the ui.
+     */
     public static final String LAF = "Mac OS X";
 
     public static final float DEFAULT_SAMPLE_RATE = 96000;
@@ -50,14 +54,17 @@ public final class Config {
     public static final String LASER_MODEL = "PRO-1600RGB";
     public static final String LASER_MAKE = "LaserWorld";
     public static final int MAX_PPS = 40000;    // without low-pass filter
+
     /**
      * Deflection in degrees for maximum PPS
      */
     public static final int PPS_DEFLECTION_DEG = 4;
+
     /**
      * Arbitrary low number not too slow for holding model locks.
      */
     public static final int MIN_PPS = 5;
+
     public static final int MAX_DEFLECTION_DEG = 40;
 
     /**
@@ -70,10 +77,16 @@ public final class Config {
      */
     public static final int MAX_PPS_FULL_DEFLECTION_WRONG = MAX_PPS * PPS_DEFLECTION_DEG / MAX_DEFLECTION_DEG;
 
-
-
+    /**
+     * Minimum value for a sample.
+     */
     public static final float SAMPLE_MIN = -1.0f;
+
+    /**
+     * Maximum value for a sample.
+     */
     public static final float SAMPLE_MAX = 1.0f;
+
     /**
      * Peak to trough range in sample representation.
      */
@@ -81,6 +94,7 @@ public final class Config {
 
     private static final int DEFAULT_PPS = 30000;
     private static final float DEFAULT_LINE_WIDTH = 5.5f;
+
     private final Channel channelX;
     private final Channel channelY;
     private final Channel channelR;
