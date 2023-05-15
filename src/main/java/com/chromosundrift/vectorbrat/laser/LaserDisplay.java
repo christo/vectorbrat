@@ -23,8 +23,6 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     private static final Logger logger = LoggerFactory.getLogger(LaserDisplay.class);
 
-
-
     private final DoubleBufferedVectorDisplay vectorDisplay;
     private final LaserDriver laserDriver;
 
@@ -41,15 +39,28 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private int endPointDwellNano;
 
     private volatile boolean running;
-    private Thread thread;
+
+    /**
+     * Controls the thread that continually updates the model.
+     */
     private ExecutorService exec;
+
+    /**
+     * Tracks whether the model changed and a new path plan must be generated.
+     */
     private volatile boolean modelDirty;
+    private ThreadFactory threadFactory;
 
     public LaserDisplay(Config config) throws VectorBratException {
         logger.info("initialising LaserDisplay");
         this.vectorDisplay = new DoubleBufferedVectorDisplay();
         this.laserDriver = new LaserDriver(config);
         this.pps = config.getPps();
+        this.threadFactory = r -> {
+            Thread t = new Thread(r, "laser display");
+            t.setPriority(Thread.MAX_PRIORITY);
+            return t;
+        };
     }
 
     /**
@@ -66,7 +77,9 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
 
         if (modelDirty) {
-            PathPlanner p = new PathPlanner(model, pps / 0.1f, pps / laserSpeed, new Point(0f, 0f));
+            // TODO figure out how to choose a start point
+            Point start = new Point(0f, 0f);
+            PathPlanner p = new PathPlanner(model, pps / 0.1f, pps / laserSpeed, start);
             laserDriver.setPath(p);
             modelDirty = false;
         }
@@ -75,7 +88,8 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     }
 
     /**
-     * Renders continually at the configured rate, unless driver is "off", in which case, we do lots of nothing.
+     * Renders continually at the configured rate, unless driver is "off", in which case, we do lots of nothing. Runs
+     * in the current thread.
      */
     public void run() throws VectorBratException {
         logger.info("running laser display");
@@ -99,15 +113,21 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      * Requests stop at earliest convenience.
      */
     public void stop() {
-        running = false;
-        logger.info("shutdown initiated");
-        exec.shutdown();
+        if (exec == null) {
+            logger.warn("stop requested but never started");
+        } else if (exec.isShutdown()) {
+            logger.info("stop requested but executor was already shut down");
+        } else {
+            running = false;
+            logger.info("shutdown initiated");
+            exec.shutdown();
+        }
     }
 
 
     /**
      * Will block until laser is finished any in-progress model rendering. Depending on current pps and
-     * the number of points in the currently rendering model, this may take, a number of seconds.
+     * the number of points in the currently rendering model, this may take a number of seconds.
      * Do not call from UI thread.
      *
      * @param model the model to update to
@@ -119,27 +139,27 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     }
 
     /**
-     * Starts in its own thread.
+     * Starts in its own thread. Call stop to shutdown.
      *
      * @param model the initial model.
      */
     public void start(Model model) {
-        logger.info("starting laser display");
-        vectorDisplay.setModel(model);
-        ThreadFactory laserDisplay = r -> {
-            Thread t = new Thread(r, "laser display");
-            t.setPriority(Thread.MAX_PRIORITY);
-            return t;
-        };
-        exec = Executors.newSingleThreadExecutor(laserDisplay);
-        exec.submit(() -> {
-            try {
-                run();
-            } catch (VectorBratException e) {
-                logger.error("laser display died", e);
-                stop();
-            }
-        });
+        if (exec != null && !exec.isShutdown()) {
+            logger.warn("start requested but already running");
+        } else {
+            logger.info("starting laser display");
+            vectorDisplay.setModel(model);
+            exec = Executors.newSingleThreadExecutor(threadFactory);
+            exec.submit(() -> {
+                try {
+                    run();
+                } catch (VectorBratException e) {
+                    logger.error("laser display died", e);
+                    stop();
+                }
+            });
+
+        }
     }
 
     /**
