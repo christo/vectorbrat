@@ -36,7 +36,7 @@ ROIDS
 * ensure es8 or es9 DC coupling spike
 * render arbitrary streaming geometry on laser
 * laser driver
-  * easing functions for polygon points (quintic?)
+  * easing functions for polyline points (quintic?)
   * dwell time for bright points
   * colour
   * debug output - shows interconnected paths 

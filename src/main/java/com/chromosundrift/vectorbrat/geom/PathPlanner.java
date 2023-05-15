@@ -1,5 +1,8 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +11,8 @@ import java.util.List;
  * future: implement best-effort scan order.
  */
 public final class PathPlanner {
+
+    private static final Logger logger = LoggerFactory.getLogger(PathPlanner.class);
 
     /**
      * Initial size of path in total points including interpolation. Big enough to reduce allocations
@@ -34,38 +39,38 @@ public final class PathPlanner {
     private ArrayList<Float> bs = new ArrayList<>(INITIAL_CAPACITY);
 
     /**
-     * Constructs with
-     *
      * @param pointsPerPoint       number of render points to have per model point
      * @param pointsPerUnit number of intermediate points per model unit.
      */
     public PathPlanner(float pointsPerPoint, float pointsPerUnit) {
+        logger.info("initialising PathPlanner with {} ppp and {} ppu", pointsPerPoint, pointsPerUnit);
         this.pointsPerPoint = pointsPerPoint;
         this.pointsPerUnit = pointsPerUnit;
+
     }
 
     /**
      * Fill out the model with interpolated intermediate path points based on the scanning speed in units per second.
-     * The path must be a loop with interpolation from the last point to the first, including black steps between
-     * gaps.
+     * The path will be constructed as a loop with interpolation from the last point to the first, including black
+     * steps between gaps.
      *
      * @param m the model to plan.
-     * @param start the start point, not included in the planned path.
+     * @param start the start point, will draw the model from the closest point to this.
      */
     public void plan(Model m, Point start) {
         // future: add corner dwell param, maybe as function of angle
 
         // generate intermediate points along the course of the path to draw the model
 
-        Point prev = new Point(start);
+        Point prev = m.closestTo(start);
 
-        List<Polygon> polygons = m._polygons();
-        for (int i = 0; i < polygons.size(); i++) {
-            Polygon polygon = polygons.get(i);
+        List<Polyline> polylines = m._polygons();
+        for (int i = 0; i < polylines.size(); i++) {
+            Polyline polyline = polylines.get(i);
             // for polygons, use the colour of the whole polygon
-            float[] rgb = polygon.getColor().getRGBComponents(null);
+            float[] rgb = polyline.getColor().getRGBComponents(null);
 
-            Point[] points = polygon._points();
+            Point[] points = polyline._points();
             for (Point next : points) {
                 // interpolate points along line segment
                 interpolate(prev, next);

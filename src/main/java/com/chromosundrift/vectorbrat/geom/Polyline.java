@@ -2,34 +2,34 @@ package com.chromosundrift.vectorbrat.geom;
 
 import java.awt.Color;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Stream;
 
-public final class Polygon {
+
+public final class Polyline {
     private final Color color; // future: remove dep on java.awt.Color
     private final boolean _closed;
     private final Point[] _points;
 
-    private Polygon(Color color, boolean closed, Point... points) {
+    private Polyline(Color color, boolean closed, Point... points) {
         this.color = color;
         this._closed = closed;
         this._points = points;
     }
 
-    public static Polygon closed(Color color, Point... points) {
+    public static Polyline closed(Color color, Point... points) {
         Point[] closedPoints = new Point[points.length + 1];
         System.arraycopy(points, 0, closedPoints, 0, points.length);
         closedPoints[points.length] = points[0];
-        Polygon polygon = new Polygon(color, true, closedPoints);
+        Polyline polyline = new Polyline(color, true, closedPoints);
 
-        return polygon; // WART: assuming no retained points reference at call site
+        return polyline; // WART: assuming no retained points reference at call site
     }
 
-    public static Polygon open(Color c, Point... points) {
-        return new Polygon(c, false, points); // WART: assuming no retained points reference at call site
+    public static Polyline open(Color c, Point... points) {
+        return new Polyline(c, false, points); // WART: assuming no retained points reference at call site
     }
 
-    static Polygon box(float x1, float y1, float x2, float y2, Color c) {
+    static Polyline box(float x1, float y1, float x2, float y2, Color c) {
         return closed(c,
                 new Point(x1, y1, c),
                 new Point(x2, y1, c),
@@ -38,7 +38,7 @@ public final class Polygon {
         );
     }
 
-    static Polygon createMidSquare(Color c) {
+    static Polyline createMidSquare(Color c) {
         return box(-0.5f, -0.5f, 0.5f, 0.5f, c);
     }
 
@@ -55,7 +55,7 @@ public final class Polygon {
     }
 
     /**
-     * Converts our {@link Polygon} to a {@link java.awt.Polygon} scaling from normalised using the given
+     * Converts our {@link Polyline} to a {@link java.awt.Polygon} scaling from normalised using the given
      * factors.
      *
      * TODO: fix for open polygons

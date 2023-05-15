@@ -6,11 +6,9 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -23,7 +21,7 @@ public class Model {
 
     // TODO get all model shapes as a set of vector segments
     private final ReentrantLock lock = new ReentrantLock();
-    private final List<Polygon> polygons;
+    private final List<Polyline> polylines;
     private final List<Point> points;
     private final String name;
 
@@ -31,8 +29,8 @@ public class Model {
         this("empty", new ArrayList<>(), new ArrayList<>());
     }
 
-    public Model(String name, List<Polygon> polygons, List<Point> points) {
-        this.polygons = polygons;
+    public Model(String name, List<Polyline> polylines, List<Point> points) {
+        this.polylines = polylines;
         this.points = points;
         this.name = name;
     }
@@ -43,7 +41,7 @@ public class Model {
 
     public static Model testPattern1() {
         Model m = new Model("test pattern 1");
-        m.add(Polygon.createMidSquare(Color.ORANGE));
+        m.add(Polyline.createMidSquare(Color.ORANGE));
         // centre dots
         for(float i=0; i<0.4; i+= 0.1) {
             m.add(new Point(0.0f, i, Color.MAGENTA));
@@ -51,26 +49,26 @@ public class Model {
 
         // top arrow
         Color c = Color.CYAN;
-        m.add(Polygon.open(c, new Point(-0.15f, -0.35f, c), new Point(0.0f, -0.5f, c), new Point(0.15f, -0.35f, c)));
+        m.add(Polyline.open(c, new Point(-0.15f, -0.35f, c), new Point(0.0f, -0.5f, c), new Point(0.15f, -0.35f, c)));
         // bottom right handle
         c = Color.PINK;
-        m.add(Polygon.open(c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
+        m.add(Polyline.open(c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
 
         // top right box
-        m.add(Polygon.box(0.9f, -1f, 1f, -0.9f, Color.GREEN));
+        m.add(Polyline.box(0.9f, -1f, 1f, -0.9f, Color.GREEN));
         // bottom right box
-        m.add(Polygon.box(0.9f, 0.9f, 1f, 1f, Color.GREEN));
+        m.add(Polyline.box(0.9f, 0.9f, 1f, 1f, Color.GREEN));
         // bottom left box
-        m.add(Polygon.box(-1f, 0.9f, -0.9f, 1f, Color.GREEN));
+        m.add(Polyline.box(-1f, 0.9f, -0.9f, 1f, Color.GREEN));
         // opt left box
-        m.add(Polygon.box(-1f, -1f, -0.9f, -0.9f, Color.GREEN));
+        m.add(Polyline.box(-1f, -1f, -0.9f, -0.9f, Color.GREEN));
         logger.info("created test pattern: " + m);
         return m;
     }
 
     public static Model midSquare(Color c) {
         Model m = new Model("mid square");
-        return m.add(Polygon.createMidSquare(c));
+        return m.add(Polyline.createMidSquare(c));
     }
 
     private Model add(Point point) {
@@ -83,10 +81,10 @@ public class Model {
         return this;
     }
 
-    private Model add(Polygon p) {
+    private Model add(Polyline p) {
         try {
             lock.lock();
-            polygons.add(p);
+            polylines.add(p);
         } finally {
             lock.unlock();
         }
@@ -98,17 +96,17 @@ public class Model {
      *
      * @return polygons.
      */
-    public Stream<Polygon> polygons() {
+    public Stream<Polyline> polygons() {
         try {
             lock.lock();
-            return new ArrayList<>(polygons).stream();
+            return new ArrayList<>(polylines).stream();
         } finally {
             lock.unlock();
         }
     }
 
-    List<Polygon> _polygons() {
-        return this.polygons;
+    List<Polyline> _polygons() {
+        return this.polylines;
     }
 
     public List<Point> _points() {
@@ -132,7 +130,7 @@ public class Model {
     public boolean isEmpty() {
         try {
             lock.lock();
-            return polygons.size() == 0 && points.size() == 0;
+            return polylines.size() == 0 && points.size() == 0;
         } finally {
             lock.unlock();
         }
@@ -141,7 +139,7 @@ public class Model {
     public int countVertices() {
         try {
             lock.lock();
-            return polygons.stream().mapToInt(Polygon::size).sum() + points.size();
+            return polylines.stream().mapToInt(Polyline::size).sum() + points.size();
         } finally {
             lock.unlock();
         }
@@ -150,7 +148,7 @@ public class Model {
     @Override
     public String toString() {
         return "Model{" +
-                "polygons=" + polygons +
+                "polygons=" + polylines +
                 ", points=" + points +
                 '}';
     }
@@ -160,7 +158,7 @@ public class Model {
     }
 
     public int countPolygons() {
-        return polygons.size();
+        return polylines.size();
     }
 
     public int countPoints() {
@@ -178,7 +176,7 @@ public class Model {
 
         TreeSet<Point> closestToRef = new TreeSet<>(ref.distToComparator());
         // for now only consider points and the first point of each polygon
-        closestToRef.addAll(polygons.stream().map(p -> p._points()[0]).toList());
+        closestToRef.addAll(polylines.stream().map(p -> p._points()[0]).toList());
         closestToRef.addAll(_points());
         return closestToRef.first();
     }

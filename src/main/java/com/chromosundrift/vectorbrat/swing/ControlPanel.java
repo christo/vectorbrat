@@ -3,7 +3,6 @@ package com.chromosundrift.vectorbrat.swing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -12,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -53,14 +53,17 @@ public class ControlPanel extends JPanel {
 
         JPanel pps = createPpsSlider(config, laserController);
 
+        StatPanel pathPlanStat = new StatPanel("path plan (μs)");
+        laserController.addUpdateListener(lc -> pathPlanStat.setValue(lc.getPathPlanTime()));
         JComponent[] details = new JComponent[]{
-                rLabel(Config.LASER_MAKE),
-                rLabel(Config.LASER_MODEL),
-                // TODO show model stats
+                new StatPanel("Make", Config.LASER_MAKE),
+                new StatPanel("Model", Config.LASER_MODEL),
+                pathPlanStat
         };
-        JPanel detail = new JPanel(new GridLayout(details.length, 1, 5, 5));
+
+        JPanel stats = new JPanel(new GridLayout(details.length, 1, 5, 5));
         for (JComponent item : details) {
-            detail.add(item);
+            stats.add(item);
         }
 
         JComponent[] items = new JComponent[]{
@@ -70,7 +73,7 @@ public class ControlPanel extends JPanel {
                 gb,
                 pps,
                 cb,
-                detail
+                stats
         };
 
         setLayout(new GridLayout(items.length, 1, 0, 5));
@@ -78,6 +81,13 @@ public class ControlPanel extends JPanel {
             add(item);
         }
         setPreferredSize(new Dimension(170, 600));
+    }
+
+    private static JLabel rLabel(String text) {
+        final JLabel label;
+        label = new JLabel(text, SwingConstants.RIGHT);
+        label.setBorder(new EmptyBorder(5, 0, 0, 10));
+        return label;
     }
 
     private static JPanel createPpsSlider(Config config, LaserController laserController) {
@@ -111,13 +121,6 @@ public class ControlPanel extends JPanel {
         pps.setMinimumSize(new Dimension(200, 150));
 
         return pps;
-    }
-
-    private static JLabel rLabel(String text) {
-        final JLabel label;
-        label = new JLabel(text, SwingConstants.RIGHT);
-        label.setBorder(new EmptyBorder(5, 0, 0, 10));
-        return label;
     }
 
     private JPanel createArmDisarm(final LaserController laserController) {

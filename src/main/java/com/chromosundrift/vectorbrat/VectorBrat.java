@@ -39,7 +39,7 @@ public class VectorBrat {
 
         laser = new LaserDisplay(config);
         DisplayController displayController = new DisplayController(false);
-        DisplayPanel displayPanel = new DisplayPanel(config, displayController);
+        DisplayPanel displayPanel = new DisplayPanel(config, displayController, laser);
         displayController.setRepaintDisplay(displayPanel::repaint);
         frame = new VectorBratFrame(config, displayPanel, displayController, laser);
     }

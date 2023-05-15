@@ -1,6 +1,10 @@
 package com.chromosundrift.vectorbrat.swing;
 
+import java.util.function.Consumer;
+
 public interface LaserController {
+
+    void addUpdateListener(Consumer<LaserController> clc);
 
     /**
      * Is the laser on or off?
@@ -45,4 +49,8 @@ public interface LaserController {
      * @return the number of samples in the buffer.
      */
     int getBufferSize();
+
+    long getPathPlanTime();
+
+    void setPathPlanTime(long planTime);
 }

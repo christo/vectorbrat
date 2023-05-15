@@ -7,9 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class PathPlannerTest {
 
     private static final Logger logger = LoggerFactory.getLogger(PathPlannerTest.class);
+    public static final double FLOAT_DELTA = 0.01;
 
     @Test
     public void testMaxPointDistance() {
@@ -40,13 +44,21 @@ public class PathPlannerTest {
                 tooBigs.add(mesg);
             }
         }
-
-        Assert.assertTrue("%s / %s pairs are too distant".formatted(tooBigs.size(), xs.size()), tooBigs.isEmpty());
+        Point first = new Point(xs.get(0), ys.get(0));
+        Point last = new Point(xs.get(xs.size() - 1), ys.get(ys.size() - 1));
+        assertEquals(0f, first.dist(last), FLOAT_DELTA);
+        assertTrue("%s / %s pairs are too distant".formatted(tooBigs.size(), xs.size()), tooBigs.isEmpty());
     }
 
     @Test
     public void testInterpolateTo() {
-        PathPlanner pp = new PathPlanner(5, 5);
+        PathPlanner pp = new PathPlanner(1, 5);
         pp.interpolate(new Point(0,0), new Point(1, 1), 5);
+        ArrayList<Float> xs = pp.getXs();
+        ArrayList<Float> ys = pp.getYs();
+        assertTrue(xs.size() == ys.size());
+        assertTrue(xs.size() > 5);
+
+
     }
 }

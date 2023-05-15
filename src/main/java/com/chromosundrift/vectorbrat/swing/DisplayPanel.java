@@ -31,7 +31,7 @@ import com.chromosundrift.vectorbrat.VectorDisplay;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.PathPlanner;
 import com.chromosundrift.vectorbrat.geom.Point;
-import com.chromosundrift.vectorbrat.geom.Polygon;
+import com.chromosundrift.vectorbrat.geom.Polyline;
 
 
 /**
@@ -51,6 +51,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private final Config config;
     private final BasicStroke strokeLine;
     private final DisplayController displayController;
+    private final LaserController laserController;
     private final Font fontHud;
     private Optional<BufferedImage> logo = Optional.empty();
     private static final BasicStroke STROKE_PATH = new BasicStroke(3f);
@@ -58,8 +59,9 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             new BasicStroke(3f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
     private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.6f, 0.3f);
 
-    public DisplayPanel(Config config, DisplayController displayController) {
+    public DisplayPanel(Config config, DisplayController displayController, LaserController laserController) {
         this.displayController = displayController;
+        this.laserController = laserController;
         logger.info("initialising DisplayPanel");
         this.config = config;
         try {
@@ -112,7 +114,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
     private void drawModel(Model model, BufferedImage im, Graphics2D g2) {
         g2.setStroke(strokeLine);
-        Stream<Polygon> polygons = model.polygons();
+        Stream<Polyline> polygons = model.polygons();
         polygons.forEach(p -> {
             g2.setColor(p.getColor());
             g2.drawPolygon(p.awt(im.getWidth(), im.getHeight()));
@@ -154,9 +156,12 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         int w = im.getWidth();
         int h = im.getHeight();
 
-        Point start = model.closestTo(new Point(0f, 0f));
-        PathPlanner p = new PathPlanner(5, 30f);
+        Point start = new Point(0f, 0f);
+        int pps = laserController.getPps();
+        PathPlanner p = new PathPlanner(pps * 0.02f, pps * 0.002f);
+        long startPlan = System.nanoTime();
         p.plan(model, start);
+        this.laserController.setPathPlanTime((System.nanoTime() - startPlan)/1000);
 
         ArrayList<Float> xs = p.getXs();
         ArrayList<Float> ys = p.getYs();
@@ -168,7 +173,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         // TODO move this to control panel
         String[] hudStats = new String[]{
                 s + " PATH POINTS",
-                model.countPolygons() + " POLYGONS",
+                model.countPolygons() + " POLYLINES",
                 model.countPoints() + " POINTS",
                 model.countVertices() + " VERTICES"
         };

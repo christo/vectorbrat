@@ -3,9 +3,13 @@ package com.chromosundrift.vectorbrat.laser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.Component;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.function.Consumer;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
@@ -49,8 +53,9 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      * Tracks whether the model changed and a new path plan must be generated.
      */
     private volatile boolean modelDirty;
-    private ThreadFactory threadFactory;
-    private boolean isDebug;
+    private final ThreadFactory threadFactory;
+    private long lastPathPlanTime;
+    private Set<Consumer<LaserController>> updateListeners;
 
     public LaserDisplay(Config config) throws VectorBratException {
         logger.info("initialising LaserDisplay");
@@ -62,6 +67,8 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
             t.setPriority(Thread.MAX_PRIORITY);
             return t;
         };
+        this.lastPathPlanTime = -1;
+        this.updateListeners = new LinkedHashSet<>();
     }
 
     /**
@@ -73,15 +80,13 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     private Void render(Model model) {
 
-        // calculate scan rate
-        float laserSpeed = 0.01f;
-
-
         if (modelDirty) {
-            // choose start point closest to 0,0
-            Point start = model.closestTo(new Point(0f, 0f));
-            PathPlanner p = new PathPlanner(pps / 0.1f, pps / laserSpeed);
+            Point start = new Point(0f, 0f);
+            // calculate scan rate
+            PathPlanner p = new PathPlanner(pps * 0.02f, pps * 0.002f);
+//            long startTime = System.nanoTime();
             p.plan(model, start);
+//            this.setPathPlanTime = System.nanoTime() - startTime;
             laserDriver.setPath(p);
             modelDirty = false;
         }
@@ -182,6 +187,13 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     @Override
     public void setOn(boolean on) {
         this.laserDriver.setOn(on);
+        this.tellListeners();
+    }
+
+    private void tellListeners() {
+        for (Consumer<LaserController> updateListener : this.updateListeners) {
+            updateListener.accept(this);
+        }
     }
 
     /**
@@ -202,6 +214,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     @Override
     public void setPps(int pps) {
         this.pps = pps;
+        this.tellListeners();
     }
 
     @Override
@@ -212,5 +225,21 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     @Override
     public int getBufferSize() {
         return laserDriver.getBufferSize();
+    }
+
+    @Override
+    public long getPathPlanTime() {
+        return lastPathPlanTime;
+    }
+
+    @Override
+    public void setPathPlanTime(long planTime) {
+        this.lastPathPlanTime = planTime;
+        this.tellListeners();   // TODO replace this mechanism with canonical listenable properties library
+    }
+
+    @Override
+    public void addUpdateListener(Consumer<LaserController> clc) {
+        this.updateListeners.add(clc);
     }
 }
