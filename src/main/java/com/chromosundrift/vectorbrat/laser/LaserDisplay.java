@@ -50,8 +50,6 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         this.vectorDisplay = new DoubleBufferedVectorDisplay();
         this.laserDriver = new LaserDriver(config);
         this.pps = config.getPps();
-
-
     }
 
     /**
