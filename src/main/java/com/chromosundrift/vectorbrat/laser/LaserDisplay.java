@@ -3,7 +3,6 @@ package com.chromosundrift.vectorbrat.laser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Component;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -56,6 +55,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private final ThreadFactory threadFactory;
     private long lastPathPlanTime;
     private Set<Consumer<LaserController>> updateListeners;
+    private PathPlanner pathPlanner;
 
     public LaserDisplay(Config config) throws VectorBratException {
         logger.info("initialising LaserDisplay");
@@ -69,6 +69,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         };
         this.lastPathPlanTime = -1;
         this.updateListeners = new LinkedHashSet<>();
+        this.modelDirty = true;
     }
 
     /**
@@ -83,11 +84,9 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         if (modelDirty) {
             Point start = new Point(0f, 0f);
             // calculate scan rate
-            PathPlanner p = new PathPlanner(pps * 0.02f, pps * 0.002f);
-//            long startTime = System.nanoTime();
-            p.plan(model, start);
-//            this.setPathPlanTime = System.nanoTime() - startTime;
-            laserDriver.setPath(p);
+            pathPlanner = new PathPlanner(5, 200);
+            pathPlanner.plan(model, start);
+            laserDriver.setPathPlanner(pathPlanner);
             modelDirty = false;
         }
 
@@ -241,5 +240,10 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     @Override
     public void addUpdateListener(Consumer<LaserController> clc) {
         this.updateListeners.add(clc);
+    }
+
+    @Override
+    public PathPlanner getPathPlanner() {
+        return this.pathPlanner;
     }
 }

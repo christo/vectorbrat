@@ -55,11 +55,13 @@ public final class LaserDriver {
     private float[] gBuffer;
     private float[] bBuffer;
 
+    private int index = 0;
 
     /**
      * Whether laser light and galvo motion should be on or off.
      */
     private boolean isOn;
+    private int sampleRate;
 
     /**
      * Uses the config but doesn't subscribe to all updates.
@@ -190,14 +192,30 @@ public final class LaserDriver {
     private boolean process(JackClient client, int nframes) {
         try {
             FloatBuffer xBuffer1 = xPort.getFloatBuffer();
-            FloatBuffer yBuffer1 = xPort.getFloatBuffer();
-            FloatBuffer rBuffer1 = xPort.getFloatBuffer();
-            FloatBuffer gBuffer1 = xPort.getFloatBuffer();
-            FloatBuffer bBuffer1 = xPort.getFloatBuffer();
+            FloatBuffer yBuffer1 = yPort.getFloatBuffer();
+            FloatBuffer rBuffer1 = rPort.getFloatBuffer();
+            FloatBuffer gBuffer1 = gPort.getFloatBuffer();
+            FloatBuffer bBuffer1 = bPort.getFloatBuffer();
 
-            if (this.isOn) {
-                int sampleRate = client.getSampleRate();
-                int framesPerSecond = sampleRate / nframes;
+            if (this.isOn && xBuffer != null && yBuffer != null && rBuffer != null && bBuffer != null) {
+                sampleRate = client.getSampleRate();
+                //int framesPerSecond = sampleRate / nframes;
+                try {
+                    bufferLock.lock();
+                    for (int i = 0; i < nframes; i++) {
+                        xBuffer1.put(i, xBuffer[index]);
+                        yBuffer1.put(i, yBuffer[index]);
+                        rBuffer1.put(i, rBuffer[index]);
+                        gBuffer1.put(i, gBuffer[index]);
+                        bBuffer1.put(i, bBuffer[index]);
+                        index++;
+                        if (index >= xBuffer.length) {
+                            index = 0;
+                        }
+                    }
+                } finally {
+                    bufferLock.unlock();
+                }
 
             } else {
                 // black silence
@@ -237,14 +255,7 @@ public final class LaserDriver {
     }
 
     public float getSampleRate() {
-        if (running) {
-            try {
-                return client.getSampleRate();
-            } catch (JackException ignored) {
-
-            }
-        }
-        return -1;
+        return this.sampleRate;
     }
 
     public int getBufferSize() {
@@ -259,12 +270,12 @@ public final class LaserDriver {
 
     }
 
-    public void setPath(PathPlanner p) {
+    public void setPathPlanner(PathPlanner p) {
         ArrayList<Float> xs = p.getXs();
-        ArrayList<Float> ys = p.getXs();
-        ArrayList<Float> rs = p.getXs();
-        ArrayList<Float> gs = p.getXs();
-        ArrayList<Float> bs = p.getXs();
+        ArrayList<Float> ys = p.getYs();
+        ArrayList<Float> rs = p.getRs();
+        ArrayList<Float> gs = p.getGs();
+        ArrayList<Float> bs = p.getBs();
         int size = xs.size();
         float[] bx = new float[size];
         float[] by = new float[size];

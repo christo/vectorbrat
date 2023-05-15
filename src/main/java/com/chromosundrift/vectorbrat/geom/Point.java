@@ -125,4 +125,8 @@ public final class Point {
     public Comparator<Point> distToComparator() {
         return (o1, o2) -> (int) (this.distSquared(o1) - this.distSquared(o2));
     }
+
+    public Point scale(float factor) {
+        return new Point(x * factor, y * factor, r, g, b);
+    }
 }

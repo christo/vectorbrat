@@ -11,7 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -31,11 +30,8 @@ public class ControlPanel extends JPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(ControlPanel.class);
 
-    private final Config config;
-
     public ControlPanel(final Config config, final LaserController laserController, DisplayController displayController) {
         logger.info("initialising ControlPanel");
-        this.config = config;
         setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // settings controls
@@ -45,20 +41,23 @@ public class ControlPanel extends JPanel {
 
         JCheckBox cb = new JCheckBox("debug");
         cb.setSelected(displayController.isDrawPathPlan());
-        cb.addActionListener(e -> {
-            // TODO repaint display panel when this changes
-            displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected());
-        });
+        cb.addActionListener(e -> displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected()));
 
 
         JPanel pps = createPpsSlider(config, laserController);
 
         StatPanel pathPlanStat = new StatPanel("path plan (μs)");
-        laserController.addUpdateListener(lc -> pathPlanStat.setValue(lc.getPathPlanTime()));
+        StatPanel sampleRateStat = new StatPanel("sample rate");
+        laserController.addUpdateListener(lc -> {
+            pathPlanStat.setValue(lc.getPathPlanTime());
+            sampleRateStat.setValue((int)lc.getSampleRate());
+        });
+
         JComponent[] details = new JComponent[]{
                 new StatPanel("Make", Config.LASER_MAKE),
                 new StatPanel("Model", Config.LASER_MODEL),
-                pathPlanStat
+                pathPlanStat,
+                sampleRateStat
         };
 
         JPanel stats = new JPanel(new GridLayout(details.length, 1, 5, 5));
@@ -76,11 +75,10 @@ public class ControlPanel extends JPanel {
                 stats
         };
 
-        setLayout(new GridLayout(items.length, 1, 0, 5));
+        setLayout(new GridLayout(items.length, 1, 0, 4));
         for (JComponent item : items) {
             add(item);
         }
-        setPreferredSize(new Dimension(170, 600));
     }
 
     private static JLabel rLabel(String text) {

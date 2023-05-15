@@ -9,7 +9,7 @@ public class StatPanel extends JPanel {
     private final JLabel value;
 
     public StatPanel(String label) {
-        this(label, "");
+        this(label, "?");
     }
 
     public StatPanel(String label, String initialValue) {
@@ -20,12 +20,15 @@ public class StatPanel extends JPanel {
         setBorder(new EmptyBorder(10, 0, 0, 5));
     }
 
-    public void setValue(long longValue) {
-        this.value.setText(Long.toString(longValue));
+    public void setValue(long v) {
+        this.value.setText(Long.toString(v));
     }
 
-    public void setValue(int intValue) {
-        this.value.setText(Integer.toString(intValue));
+    public void setValue(float v) {
+        this.value.setText(Float.toString(v));
     }
 
+    public void setValue(int v) {
+        this.value.setText(Integer.toString(v));
+    }
 }

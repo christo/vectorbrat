@@ -96,7 +96,7 @@ public class Model {
      *
      * @return polygons.
      */
-    public Stream<Polyline> polygons() {
+    public Stream<Polyline> polylines() {
         try {
             lock.lock();
             return new ArrayList<>(polylines).stream();
@@ -179,5 +179,15 @@ public class Model {
         closestToRef.addAll(polylines.stream().map(p -> p._points()[0]).toList());
         closestToRef.addAll(_points());
         return closestToRef.first();
+    }
+
+    public Model scale(float factor) {
+        Model m = new Model();
+        polylines().map(polyline -> polyline.scale(factor)).forEach(m::add);
+        points().map(point -> point.scale(factor)).forEach(m::add);
+        if (this.countVertices() != m.countVertices()) {
+            throw new IllegalStateException("scaled model should have same number of points");
+        }
+        return m;
     }
 }

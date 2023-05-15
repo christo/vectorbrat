@@ -43,10 +43,8 @@ public final class PathPlanner {
      * @param pointsPerUnit number of intermediate points per model unit.
      */
     public PathPlanner(float pointsPerPoint, float pointsPerUnit) {
-        logger.info("initialising PathPlanner with {} ppp and {} ppu", pointsPerPoint, pointsPerUnit);
         this.pointsPerPoint = pointsPerPoint;
         this.pointsPerUnit = pointsPerUnit;
-
     }
 
     /**

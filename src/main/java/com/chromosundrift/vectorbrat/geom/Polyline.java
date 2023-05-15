@@ -2,17 +2,17 @@ package com.chromosundrift.vectorbrat.geom;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
 public final class Polyline {
     private final Color color; // future: remove dep on java.awt.Color
-    private final boolean _closed;
     private final Point[] _points;
 
-    private Polyline(Color color, boolean closed, Point... points) {
+    private Polyline(Color color, Point... points) {
         this.color = color;
-        this._closed = closed;
         this._points = points;
     }
 
@@ -20,13 +20,13 @@ public final class Polyline {
         Point[] closedPoints = new Point[points.length + 1];
         System.arraycopy(points, 0, closedPoints, 0, points.length);
         closedPoints[points.length] = points[0];
-        Polyline polyline = new Polyline(color, true, closedPoints);
+        Polyline polyline = new Polyline(color, closedPoints);
 
         return polyline; // WART: assuming no retained points reference at call site
     }
 
     public static Polyline open(Color c, Point... points) {
-        return new Polyline(c, false, points); // WART: assuming no retained points reference at call site
+        return new Polyline(c, points);
     }
 
     static Polyline box(float x1, float y1, float x2, float y2, Color c) {
@@ -47,7 +47,7 @@ public final class Polyline {
     }
 
     public int size() {
-        return _closed ? _points.length : _points.length - 1;
+        return _points.length;
     }
 
     public Color getColor() {
@@ -77,12 +77,21 @@ public final class Polyline {
     public String toString() {
         return "Polygon{" +
                 "color=" + color +
-                ", _closed=" + _closed +
                 ", _points=" + Arrays.toString(_points) +
                 '}';
     }
 
     Point[] _points() {
         return this._points;
+    }
+
+    public Polyline scale(float factor) {
+        List<Point> points = points().map(point -> point.scale(factor)).collect(Collectors.toList());
+        Point[] newPoints = new Point[points.size()];
+        for (int i = 0; i < points.size(); i++) {
+            Point point = points.get(i);
+            newPoints[i] = point;
+        }
+        return new Polyline(this.color, newPoints);
     }
 }

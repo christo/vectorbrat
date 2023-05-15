@@ -30,7 +30,6 @@ import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorDisplay;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.PathPlanner;
-import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Polyline;
 
 
@@ -56,7 +55,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private Optional<BufferedImage> logo = Optional.empty();
     private static final BasicStroke STROKE_PATH = new BasicStroke(3f);
     private static final BasicStroke STROKE_PATH_OFF =
-            new BasicStroke(3f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
+            new BasicStroke(1f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
     private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.6f, 0.3f);
 
     public DisplayPanel(Config config, DisplayController displayController, LaserController laserController) {
@@ -114,7 +113,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
     private void drawModel(Model model, BufferedImage im, Graphics2D g2) {
         g2.setStroke(strokeLine);
-        Stream<Polyline> polygons = model.polygons();
+        Stream<Polyline> polygons = model.polylines();
         polygons.forEach(p -> {
             g2.setColor(p.getColor());
             g2.drawPolygon(p.awt(im.getWidth(), im.getHeight()));
@@ -153,68 +152,71 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     }
 
     private void drawPathPlan(final Model model, final BufferedImage im, final Graphics2D g2) {
-        int w = im.getWidth();
-        int h = im.getHeight();
+        PathPlanner p = getPathPlan();
+        if (p != null) {
+            int w = im.getWidth();
+            int h = im.getHeight();
 
-        Point start = new Point(0f, 0f);
-        int pps = laserController.getPps();
-        PathPlanner p = new PathPlanner(pps * 0.02f, pps * 0.002f);
-        long startPlan = System.nanoTime();
-        p.plan(model, start);
-        this.laserController.setPathPlanTime((System.nanoTime() - startPlan)/1000);
 
-        ArrayList<Float> xs = p.getXs();
-        ArrayList<Float> ys = p.getYs();
-        ArrayList<Float> rs = p.getRs();
-        ArrayList<Float> gs = p.getGs();
-        ArrayList<Float> bs = p.getBs();
-        int s = xs.size();
+            ArrayList<Float> xs = p.getXs();
+            ArrayList<Float> ys = p.getYs();
+            ArrayList<Float> rs = p.getRs();
+            ArrayList<Float> gs = p.getGs();
+            ArrayList<Float> bs = p.getBs();
+            int s = xs.size();
 
-        // TODO move this to control panel
-        String[] hudStats = new String[]{
-                s + " PATH POINTS",
-                model.countPolygons() + " POLYLINES",
-                model.countPoints() + " POINTS",
-                model.countVertices() + " VERTICES"
-        };
-        hudLines(g2, h, hudStats);
+            // TODO move this to control panel
+            String[] hudStats = new String[]{
+                    s + " PATH POINTS",
+                    model.countPolygons() + " POLYLINES",
+                    model.countPoints() + " POINTS",
+                    model.countVertices() + " VERTICES"
+            };
+            hudLines(g2, h, hudStats);
 
-        int r = 4; // dot size
-        float pointAlpha = 0.6f;
 
-        for (int i = 0; i < s; i++) {
+            float pointAlpha = 0.6f;
 
-            int x = (int) ((xs.get(i) / 2 + 0.5) * w);
-            int y = (int) ((ys.get(i) / 2 + 0.5) * h);
+            for (int i = 0; i < s; i++) {
 
-            if (rs.get(i) > 0.01 || gs.get(i) > 0.01 || bs.get(i) > 0.01) {
-                g2.setColor(new Color(rs.get(i), gs.get(i), bs.get(i), pointAlpha));
-                g2.setStroke(STROKE_PATH);
-            } else {
-                // point is too dark (probably pen up), draw debug line
-                g2.setColor(COL_PATH_OFF);
-                g2.setStroke(STROKE_PATH_OFF);
+                int x = (int) ((xs.get(i) / 2 + 0.5) * w);
+                int y = (int) ((ys.get(i) / 2 + 0.5) * h);
+
+                boolean laserOn = rs.get(i) > 0.01 || gs.get(i) > 0.01 || bs.get(i) > 0.01;
+                if (laserOn) {
+                    g2.setColor(new Color(rs.get(i), gs.get(i), bs.get(i), pointAlpha));
+                    g2.setStroke(STROKE_PATH);
+                } else {
+                    // point is too dark (probably pen up), draw debug line
+                    g2.setColor(COL_PATH_OFF);
+                    g2.setStroke(STROKE_PATH_OFF);
+                }
+                if (i != 0) {
+                    int px = (int) ((xs.get(i - 1) / 2 + 0.5) * w);
+                    int py = (int) ((ys.get(i - 1) / 2 + 0.5) * h);
+                    g2.drawLine(px, py, x, y);
+                }
+                // draw a dot at the point
+                int r = laserOn ? 4 : 2; // dot size
+                g2.fillOval(x - r, y - r, r + r, r + r);
+
             }
-            if (i != 0) {
-                int px = (int) ((xs.get(i-1) / 2 + 0.5) * w);
-                int py = (int) ((ys.get(i-1) / 2 + 0.5) * h);
-                g2.drawLine(px, py, x, y);
-            }
-            // draw a dot at the point
-            g2.fillOval(x - r, y - r, r + r, r + r);
-
+            g2.setColor(Color.WHITE);
+            // draw start and end markers
+            int markerRadius = 10;
+            int d = markerRadius + markerRadius;
+            int x = (int) ((xs.get(0) / 2 + 0.5) * w);
+            int y = (int) ((ys.get(0) / 2 + 0.5) * h);
+            g2.drawOval(x - markerRadius, y - markerRadius, d, d);
+            x = (int) ((xs.get(xs.size() - 1) / 2 + 0.5) * w);
+            y = (int) ((ys.get(ys.size() - 1) / 2 + 0.5) * h);
+            g2.drawLine(x - markerRadius, y - markerRadius, x + markerRadius, y + markerRadius);
+            g2.drawLine(x + markerRadius, y - markerRadius, x - markerRadius, y + markerRadius);
         }
-        g2.setColor(Color.WHITE);
-        // draw start and end markers
-        int markerRadius = 10;
-        int d = markerRadius + markerRadius;
-        int x = (int) ((start.x() / 2 + 0.5) * w);
-        int y = (int) ((start.y() / 2 + 0.5) * h);
-        g2.drawOval(x - markerRadius, y - markerRadius, d, d);
-        x = (int) ((xs.get(xs.size() -1) / 2 + 0.5) * w);
-        y = (int) ((ys.get(ys.size() -1) / 2 + 0.5) * h);
-        g2.drawLine(x - markerRadius, y - markerRadius, x + markerRadius, y + markerRadius);
-        g2.drawLine(x + markerRadius, y - markerRadius, x - markerRadius, y + markerRadius);
+    }
+
+    private PathPlanner getPathPlan() {
+        return laserController.getPathPlanner();
     }
 
     private void hudLines(Graphics2D g2, int h, String[] lines) {

@@ -14,6 +14,7 @@ import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
 import com.chromosundrift.vectorbrat.swing.DisplayController;
 import com.chromosundrift.vectorbrat.swing.DisplayPanel;
+import com.chromosundrift.vectorbrat.swing.LaserController;
 import com.chromosundrift.vectorbrat.swing.VectorBratFrame;
 
 public class VectorBrat {
@@ -38,7 +39,7 @@ public class VectorBrat {
         });
 
         laser = new LaserDisplay(config);
-        DisplayController displayController = new DisplayController(false);
+        DisplayController displayController = new DisplayController(true);
         DisplayPanel displayPanel = new DisplayPanel(config, displayController, laser);
         displayController.setRepaintDisplay(displayPanel::repaint);
         frame = new VectorBratFrame(config, displayPanel, displayController, laser);
@@ -49,7 +50,8 @@ public class VectorBrat {
         VectorBrat vectorBrat = null;
         try {
             vectorBrat = new VectorBrat();
-            vectorBrat.start(Model.testPattern1());
+            Model model = Model.testPattern1().scale(0.2f);
+            vectorBrat.start(model);
         } catch (VectorBratException e) {
             logger.error("can't create vectorbrat", e);
         }

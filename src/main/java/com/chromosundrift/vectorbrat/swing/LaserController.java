@@ -2,6 +2,8 @@ package com.chromosundrift.vectorbrat.swing;
 
 import java.util.function.Consumer;
 
+import com.chromosundrift.vectorbrat.geom.PathPlanner;
+
 public interface LaserController {
 
     void addUpdateListener(Consumer<LaserController> clc);
@@ -53,4 +55,6 @@ public interface LaserController {
     long getPathPlanTime();
 
     void setPathPlanTime(long planTime);
+
+    PathPlanner getPathPlanner();
 }
