@@ -71,8 +71,28 @@ public final class PathPlanner {
                 interpolate(prev, next);
                 prev = next;
             }
-            // TODO end of polygon, go to black for interconection to next Polygon
+            // end of polygon, go to black for interconection to next Polygon
             prev = prev.black();
+        }
+
+        // now plan points
+        List<Point> points = m._points();
+        for (Point point : points) {
+            // interpolate black path points to the point
+            interpolate(prev.black(), point);
+            float x = point.x();
+            float y = point.y();
+            float r = point.r();
+            float g = point.g();
+            float b = point.b();
+            for (int i=0; i<pointsPerPoint; i++) {
+                xs.add(x);
+                ys.add(y);
+                rs.add(r);
+                gs.add(g);
+                bs.add(b);
+            }
+            prev = point;
         }
 
         // return to the start point in black

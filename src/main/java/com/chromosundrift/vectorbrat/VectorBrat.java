@@ -38,8 +38,10 @@ public class VectorBrat {
         });
 
         laser = new LaserDisplay(config);
-        DisplayController displayController = new DisplayController(true);
-        frame = new VectorBratFrame(config, new DisplayPanel(config, displayController), displayController, laser);
+        DisplayController displayController = new DisplayController(false);
+        DisplayPanel displayPanel = new DisplayPanel(config, displayController);
+        displayController.setRepaintDisplay(displayPanel::repaint);
+        frame = new VectorBratFrame(config, displayPanel, displayController, laser);
     }
 
     public static void main(String[] args) {

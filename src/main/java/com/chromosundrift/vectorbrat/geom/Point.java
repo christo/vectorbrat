@@ -56,10 +56,14 @@ public final class Point {
 
     public float dist(Point other) {
         // pythagoras
+        return (float) Math.sqrt(distSquared(other));
+    }
+
+    private float distSquared(Point other) {
         final float xx = other.x - x;
         final float yy = other.y - y;
         final float d2 = xx * xx + yy * yy;
-        return (float) Math.sqrt(d2);
+        return d2;
     }
 
     public float x() {
@@ -119,6 +123,6 @@ public final class Point {
     }
 
     public Comparator<Point> distToComparator() {
-        return (o1, o2) -> (int) (this.dist(o1) - this.dist(o2));
+        return (o1, o2) -> (int) (this.distSquared(o1) - this.distSquared(o2));
     }
 }

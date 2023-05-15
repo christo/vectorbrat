@@ -55,8 +55,8 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private Optional<BufferedImage> logo = Optional.empty();
     private static final BasicStroke PATH_PLAN_STROKE = new BasicStroke(3f);
     private static final BasicStroke PATH_PLAN_OFF_STROKE =
-            new BasicStroke(2f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
-    private static final Color PATH_OFF_COLOR = new Color(0.3f, 0.3f, 0.3f);
+            new BasicStroke(3f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
+    private static final Color PATH_OFF_COLOR = new Color(0.6f, 0.6f, 0.6f, 0.3f);
 
     public DisplayPanel(Config config, DisplayController displayController) {
         this.displayController = displayController;
@@ -161,8 +161,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         int w = im.getWidth();
         int h = im.getHeight();
 
-        // TODO render black as a dark grey dotted line
-
         Point start = new Point(0f, 0f);
         PathPlanner p = new PathPlanner(5, 30f);
         p.plan(model, start);
@@ -172,6 +170,16 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         ArrayList<Float> gs = p.getGs();
         ArrayList<Float> bs = p.getBs();
         int s = xs.size();
+
+        // TODO move this to control panel
+        String[] hudStats = new String[]{
+                s + " PATH POINTS",
+                model.countPolygons() + " POLYGONS",
+                model.countPoints() + " POINTS",
+                model.countVertices() + " VERTICES"
+        };
+        hudLines(g2, h, hudStats);
+
         int r = 4; // dot size
         float pointAlpha = 0.7f;
         float lineAlpha = 0.6f;
@@ -202,14 +210,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             g2.fillOval(x - r, y - r, r + r, r + r);
 
         }
-        // TODO move this to control panel
-        String[] hudStats = new String[]{
-                s + " PATH POINTS",
-                model.countPolygons() + " POLYGONS",
-                model.countPoints() + " POINTS",
-                model.countVertices() + " VERTICES"
-        };
-        hudLines(g2, h, hudStats);
+
     }
 
     private void hudLines(Graphics2D g2, int h, String[] lines) {
@@ -218,7 +219,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         int lineHeight = 60;
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
-            int y = h - (lines.length - i) * lineHeight - 40;
+            int y = h - (lines.length - i) * lineHeight - 60;
             g2.drawString(line, 50, y);
         }
 

@@ -56,8 +56,14 @@ public class Model {
         c = Color.PINK;
         m.add(Polygon.open(c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
 
-        // bounding box
-        m.add(Polygon.box(-1f, -1f, 1f, 1f, Color.GREEN));
+        // top right box
+        m.add(Polygon.box(0.9f, -1f, 1f, -0.9f, Color.GREEN));
+        // bottom right box
+        m.add(Polygon.box(0.9f, 0.9f, 1f, 1f, Color.GREEN));
+        // bottom left box
+        m.add(Polygon.box(-1f, 0.9f, -0.9f, 1f, Color.GREEN));
+        // opt left box
+        m.add(Polygon.box(-1f, -1f, -0.9f, -0.9f, Color.GREEN));
         logger.info("created test pattern: " + m);
         return m;
     }

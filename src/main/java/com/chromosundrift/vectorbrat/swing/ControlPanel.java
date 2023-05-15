@@ -45,7 +45,10 @@ public class ControlPanel extends JPanel {
 
         JCheckBox cb = new JCheckBox("debug");
         cb.setSelected(displayController.isDrawPathPlan());
-        cb.addActionListener(e -> displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected()));
+        cb.addActionListener(e -> {
+            // TODO repaint display panel when this changes
+            displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected());
+        });
 
 
         JPanel pps = createPpsSlider(config, laserController);
@@ -70,11 +73,11 @@ public class ControlPanel extends JPanel {
                 detail
         };
 
-        setLayout(new GridLayout(items.length, 1, 5, 5));
+        setLayout(new GridLayout(items.length, 1, 0, 5));
         for (JComponent item : items) {
             add(item);
         }
-        setPreferredSize(new Dimension(170, 400));
+        setPreferredSize(new Dimension(170, 600));
     }
 
     private static JPanel createPpsSlider(Config config, LaserController laserController) {
@@ -101,11 +104,11 @@ public class ControlPanel extends JPanel {
             psl.setText(value + units);
         });
 
-        final JPanel pps = new JPanel(new BorderLayout(5, 0));
+        final JPanel pps = new JPanel(new BorderLayout(0, 0));
         pps.add(psl, BorderLayout.NORTH);
-        pps.add(ppsControl, BorderLayout.SOUTH);
+        pps.add(ppsControl, BorderLayout.CENTER);
 
-        pps.setMinimumSize(new Dimension(200, 50));
+        pps.setMinimumSize(new Dimension(200, 150));
 
         return pps;
     }
