@@ -1,4 +1,4 @@
-package com.chromosundrift.vectorbrat.audio;
+package com.chromosundrift.vectorbrat.geom;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -6,10 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-
-import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.geom.PathPlanner;
-import com.chromosundrift.vectorbrat.geom.Point;
 
 public class PathPlannerTest {
 
