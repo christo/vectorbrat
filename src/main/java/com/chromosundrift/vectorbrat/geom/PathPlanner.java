@@ -29,13 +29,9 @@ public class PathPlanner {
     public PathPlanner(Model m, float nPoints, float pointsPerUnit, Point start) {
         // future: add corner dwell param, maybe as function of angle
 
-        // number of points per point TODO: pull into caller
-        // number of points per unit TODO: pull into caller
+        // generate intermediate points along the course of the path to draw the model
 
-        // expand the model points into a new model
-
-
-        Point prev = new Point(start); // TODO extract param
+        Point prev = new Point(start);
 
         float prevx = start.x();
         float prevy = start.y();
@@ -51,10 +47,10 @@ public class PathPlanner {
 
 
             Point[] points = polygon._points();
-            for (int j = 0; j < points.length; j++) {
-                Point next = points[j];
-
+            for (Point next : points) {
+                // calculate number of points along line segment
                 int n = (int) (prev.dist(next) * pointsPerUnit);
+                // calculate x and y steps per interpolated point
                 float dx = (next.x() - prevx) / n;
                 float dy = (next.y() - prevy) / n;
 
