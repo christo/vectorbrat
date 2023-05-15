@@ -157,6 +157,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         Point start = model.closestTo(new Point(0f, 0f));
         PathPlanner p = new PathPlanner(5, 30f);
         p.plan(model, start);
+
         ArrayList<Float> xs = p.getXs();
         ArrayList<Float> ys = p.getYs();
         ArrayList<Float> rs = p.getRs();
@@ -174,8 +175,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         hudLines(g2, h, hudStats);
 
         int r = 4; // dot size
-        float pointAlpha = 0.7f;
-        float lineAlpha = 0.6f;
+        float pointAlpha = 0.6f;
 
         for (int i = 0; i < s; i++) {
 
@@ -221,8 +221,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             int y = h - (lines.length - i) * lineHeight - 60;
             g2.drawString(line, 50, y);
         }
-
-
     }
 
     @Override
