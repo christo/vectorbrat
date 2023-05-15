@@ -9,7 +9,7 @@ import java.util.List;
  */
 public final class Config {
 
-    public static final String DEFAULT_TITLE = "Vitalase";
+    public static final String DEFAULT_TITLE = "Vector Brat";
 
     /**
      * The look and feel to use for the ui.
