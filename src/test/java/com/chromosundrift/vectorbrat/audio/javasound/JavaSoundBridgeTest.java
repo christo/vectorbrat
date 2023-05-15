@@ -1,19 +1,19 @@
-package com.chromosundrift.vectorbrat.audio;
+package com.chromosundrift.vectorbrat.audio.javasound;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.VectorBratException;
+import com.chromosundrift.vectorbrat.audio.MissingAudioDevice;
+import com.chromosundrift.vectorbrat.audio.javasound.JavaSoundBridge;
+
 import junit.framework.AssertionFailedError;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.TargetDataLine;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;

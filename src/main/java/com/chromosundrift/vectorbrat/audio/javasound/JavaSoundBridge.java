@@ -1,4 +1,7 @@
-package com.chromosundrift.vectorbrat.audio;
+package com.chromosundrift.vectorbrat.audio.javasound;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -15,11 +18,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.audio.MissingAudioDevice;
+import com.chromosundrift.vectorbrat.audio.SoundBridge;
 
 /**
  * JavaSound implemention for getting required system sound resources.
  */
-public class JavaSoundBridge implements SoundBridge {
+public class JavaSoundBridge {
+
+    private static final Logger logger = LoggerFactory.getLogger(JavaSoundBridge.class);
 
     private static final Function<Optional<Mixer.Info>, Optional<Mixer>> systemMixerGetter = info -> info.map(AudioSystem::getMixer);
     private final Optional<Mixer> mixerXY;
@@ -31,11 +38,9 @@ public class JavaSoundBridge implements SoundBridge {
     public JavaSoundBridge(Function<Optional<Mixer.Info>, Optional<Mixer>> mixerGetter) {
 
         this.mixerGetter = mixerGetter;
-
         mixerXY = getMixer(Config.DEFAULT_XY);
         mixerRZ = getMixer(Config.DEFAULT_RZ);
         mixerGB = getMixer(Config.DEFAULT_GB);
-
     }
 
     public JavaSoundBridge() {
@@ -44,7 +49,7 @@ public class JavaSoundBridge implements SoundBridge {
 
     public static void main(String[] args) {
         JavaSoundBridge demo = new JavaSoundBridge();
-        System.out.println("----");
+        logger.info("finished");
     }
 
     public static void dump() {
@@ -110,7 +115,8 @@ public class JavaSoundBridge implements SoundBridge {
     }
 
     /**
-     * Will return one (unspecified) Mixer matching the given name precisely or empty.
+     * Will return one Mixer matching the given name precisely or empty. If more than one mixer match the name,
+     * returns an unspecified single one.
      */
     public Optional<Mixer> getMixer(final String deviceName) {
         return mixerGetter.apply(Arrays.stream(AudioSystem.getMixerInfo())

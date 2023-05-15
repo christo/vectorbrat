@@ -1,4 +1,4 @@
-package com.chromosundrift.vectorbrat.audio;
+package com.chromosundrift.vectorbrat.audio.audioservers;
 
 import com.google.common.collect.ImmutableList;
 import org.jaudiolibs.audioservers.AudioConfiguration;
@@ -16,6 +16,7 @@ import java.util.ServiceLoader;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.Util;
+import com.chromosundrift.vectorbrat.audio.MissingAudioDevice;
 
 public class ServiceBridge {
 

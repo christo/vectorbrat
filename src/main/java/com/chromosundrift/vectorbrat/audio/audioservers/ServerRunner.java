@@ -1,4 +1,4 @@
-package com.chromosundrift.vectorbrat.audio;
+package com.chromosundrift.vectorbrat.audio.audioservers;
 
 import org.jaudiolibs.audioservers.AudioServer;
 import org.slf4j.Logger;

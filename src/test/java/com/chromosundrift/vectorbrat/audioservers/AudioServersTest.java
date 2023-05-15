@@ -1,11 +1,9 @@
-package com.chromosundrift.vectorbrat.audio;
+package com.chromosundrift.vectorbrat.audioservers;
 
 import com.google.common.collect.ImmutableList;
 import junit.framework.AssertionFailedError;
 import org.jaudiolibs.audioservers.AudioConfiguration;
 import org.jaudiolibs.audioservers.ext.Device;
-import org.jaudiolibs.jnajack.examples.SineAudioSource;
-import org.jaudiolibs.jnajack.util.SimpleAudioClient;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,6 +17,8 @@ import static java.lang.String.join;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.Util;
+import com.chromosundrift.vectorbrat.audio.MissingAudioDevice;
+import com.chromosundrift.vectorbrat.audio.audioservers.ServiceBridge;
 
 /**
  * Sanity test of the jack stack. Needs jackd running and various devices configured and connected.
@@ -30,17 +30,6 @@ public class AudioServersTest {
     @BeforeClass
     public static void setup() {
         Util.setSystemLibraryPath();
-    }
-
-    @Test
-    public void baep() throws Exception {
-        SimpleAudioClient client = SimpleAudioClient.create("sine", new String[0],
-                new String[]{"output-L", "output-R"}, true, true, new SineAudioSource());
-        client.activate();
-        long stopTime = System.currentTimeMillis() + 1000;
-        while (System.currentTimeMillis() < stopTime) {
-            Thread.sleep(10);
-        }
     }
 
     @Test
