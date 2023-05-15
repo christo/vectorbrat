@@ -47,16 +47,16 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private final Color colBg = Color.getHSBColor(0, 0, 0.0f);
 
     private final DoubleBufferedVectorDisplay vectorDisplay;
-    private final Font brandingFont;
+    private final Font fontBranding;
     private final Config config;
-    private final BasicStroke lineStroke;
+    private final BasicStroke strokeLine;
     private final DisplayController displayController;
-    private final Font hudFont;
+    private final Font fontHud;
     private Optional<BufferedImage> logo = Optional.empty();
-    private static final BasicStroke PATH_PLAN_STROKE = new BasicStroke(3f);
-    private static final BasicStroke PATH_PLAN_OFF_STROKE =
+    private static final BasicStroke STROKE_PATH = new BasicStroke(3f);
+    private static final BasicStroke STROKE_PATH_OFF =
             new BasicStroke(3f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
-    private static final Color PATH_OFF_COLOR = new Color(0.6f, 0.6f, 0.6f, 0.3f);
+    private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.6f, 0.3f);
 
     public DisplayPanel(Config config, DisplayController displayController) {
         this.displayController = displayController;
@@ -70,11 +70,9 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         } catch (IOException e) {
             logger.warn("Unable to load logo from url " + config.logoUrl(), e);
         }
-        setBackground(Color.BLACK);
-        setForeground(Color.GREEN);
-        brandingFont = new Font("HelveticaNeue", Font.PLAIN, 130);
-        hudFont = new Font("HelveticaNeue", Font.PLAIN, 48);
-        lineStroke = new BasicStroke(config.getLineWidth());
+        fontBranding = new Font("HelveticaNeue", Font.PLAIN, 130);
+        fontHud = new Font("HelveticaNeue", Font.PLAIN, 48);
+        strokeLine = new BasicStroke(config.getLineWidth());
 
         setMinimumSize(new Dimension(400, 300));
         setPreferredSize(new Dimension(900, 700));
@@ -95,7 +93,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         BufferedImage im = new BufferedImage((int) (imWidth * imageScale), (int) (imHeight * imageScale), BufferedImage.TYPE_INT_ARGB);
         final Graphics2D g2 = im.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC); // TODO check performance
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g2.setBackground(colBg);
 
         g2.clearRect(0, 0, im.getWidth(), im.getHeight());
@@ -113,7 +111,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     }
 
     private void drawModel(Model model, BufferedImage im, Graphics2D g2) {
-        g2.setStroke(lineStroke);
+        g2.setStroke(strokeLine);
         Stream<Polygon> polygons = model.polygons();
         polygons.forEach(p -> {
             g2.setColor(p.getColor());
@@ -144,7 +142,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         // centred string
 
         final String mesg = config.getTitle().toUpperCase();
-        g2.setFont(brandingFont);
+        g2.setFont(fontBranding);
         final FontMetrics fontMetrics = g2.getFontMetrics();
         final Rectangle2D stringBounds = fontMetrics.getStringBounds(mesg, g2);
         final LineMetrics lineMetrics = fontMetrics.getLineMetrics(mesg, g2);
@@ -191,11 +189,11 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
             if (rs.get(i) > 0.01 || gs.get(i) > 0.01 || bs.get(i) > 0.01) {
                 g2.setColor(new Color(rs.get(i), gs.get(i), bs.get(i), pointAlpha));
-                g2.setStroke(PATH_PLAN_STROKE);
+                g2.setStroke(STROKE_PATH);
             } else {
                 // point is too dark (probably pen up), draw debug line
-                g2.setColor(PATH_OFF_COLOR);
-                g2.setStroke(PATH_PLAN_OFF_STROKE);
+                g2.setColor(COL_PATH_OFF);
+                g2.setStroke(STROKE_PATH_OFF);
             }
             if (i != 0) {
                 int px = (int) ((xs.get(i-1) / 2 + 0.5) * w);
@@ -215,7 +213,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
     private void hudLines(Graphics2D g2, int h, String[] lines) {
         g2.setColor(HUD_COLOR);
-        g2.setFont(hudFont);
+        g2.setFont(fontHud);
         int lineHeight = 60;
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
