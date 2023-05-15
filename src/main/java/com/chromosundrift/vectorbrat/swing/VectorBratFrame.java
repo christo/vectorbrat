@@ -56,11 +56,8 @@ public class VectorBratFrame extends JFrame {
         enginePanel = new JPanel();
         enginePanel.setLayout(new BorderLayout());
 
-        enginePanel.setBorder(UiUtil.titledBorder("Engine", UiUtil.HAlign.CENTRE));
-
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.setBorder(UiUtil.titledBorder("Vector Simulator", UiUtil.HAlign.CENTRE));
         mainPanel.add(displayPanel, BorderLayout.CENTER);
 
         split.setLeftComponent(enginePanel);
