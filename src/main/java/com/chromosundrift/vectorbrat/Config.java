@@ -215,7 +215,7 @@ public final class Config {
      * Represents a configured audio channel with our name and 1-based index.
      *
      * @param name   the name
-     * @param number the 1-based index
+     * @param number the 1-based index local to the audio device.
      */
     public record Channel(String name, int number) {
     }
