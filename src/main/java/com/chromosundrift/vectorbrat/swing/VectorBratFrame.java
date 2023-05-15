@@ -32,7 +32,7 @@ public class VectorBratFrame extends JFrame {
 
     private final DisplayPanel vd;
 
-    public VectorBratFrame(Config config, DisplayPanel displayPanel, LaserController laserController) {
+    public VectorBratFrame(Config config, DisplayPanel displayPanel, DisplayController displayController, LaserController laserController) {
         logger.info("initialising VectorBratFrame");
         this.config = config;
         this.vd = displayPanel;
@@ -72,7 +72,7 @@ public class VectorBratFrame extends JFrame {
         enginePanel.add(scrollPane, BorderLayout.NORTH);
         enginePanel.add(Box.createVerticalBox(), BorderLayout.CENTER);
 
-        ControlPanel controlPanel = new ControlPanel(config, laserController);
+        ControlPanel controlPanel = new ControlPanel(config, laserController, displayController);
         scrollPane.setViewportView(controlPanel);
 
         setContentPane(rootPanel);

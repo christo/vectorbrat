@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static java.awt.BasicStroke.CAP_BUTT;
+import static java.awt.BasicStroke.JOIN_BEVEL;
+
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorDisplay;
@@ -39,6 +42,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private static final Logger logger = LoggerFactory.getLogger(DisplayPanel.class);
     private static final int MIN_WIDTH = 100;
     private static final int MIN_HEIGHT = 100;
+    public static final Color HUD_COLOR = Color.WHITE;
     private final Color colText = Color.getHSBColor(0.83f, 0.5f, 0.9f);
     private final Color colBg = Color.getHSBColor(0, 0, 0.0f);
 
@@ -49,6 +53,10 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private final DisplayController displayController;
     private final Font hudFont;
     private Optional<BufferedImage> logo = Optional.empty();
+    private static final BasicStroke PATH_PLAN_STROKE = new BasicStroke(3f);
+    private static final BasicStroke PATH_PLAN_OFF_STROKE =
+            new BasicStroke(2f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
+    private static final Color PATH_OFF_COLOR = new Color(0.3f, 0.3f, 0.3f);
 
     public DisplayPanel(Config config, DisplayController displayController) {
         this.displayController = displayController;
@@ -124,10 +132,13 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         int targetCentreY = im.getHeight() / 2;
 
         logo.ifPresent(logo -> {
+            // TODO maintain aspect, but fill minimum of height or width
             float targeSide = Math.min(im.getWidth(), im.getHeight());
             float sourceSide = Math.min(logo.getWidth(), logo.getHeight());
 
-            g2.drawImage(logo, targetCentreX - logo.getWidth() / 2, targetCentreY - logo.getHeight() / 2, logo.getWidth(), logo.getHeight(), null);
+            int logoX = targetCentreX - logo.getWidth() / 2;
+            int logoY = targetCentreY - logo.getHeight() / 2;
+            g2.drawImage(logo, logoX, logoY, logo.getWidth(), logo.getHeight(), null);
         });
 
         // centred string
@@ -150,37 +161,68 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         int w = im.getWidth();
         int h = im.getHeight();
 
-        PathPlanner p = new PathPlanner(model, 5, 30f, new Point(0f, 0f));
+        // TODO render black as a dark grey dotted line
+
+        Point start = new Point(0f, 0f);
+        PathPlanner p = new PathPlanner(5, 30f);
+        p.plan(model, start);
         ArrayList<Float> xs = p.getXs();
         ArrayList<Float> ys = p.getYs();
         ArrayList<Float> rs = p.getRs();
         ArrayList<Float> gs = p.getGs();
         ArrayList<Float> bs = p.getBs();
         int s = xs.size();
-        int r = 4;
+        int r = 4; // dot size
         float pointAlpha = 0.7f;
         float lineAlpha = 0.6f;
-        int px = 0;
-        int py = 0;
-        g2.setStroke(new BasicStroke(3f));
+
         for (int i = 0; i < s; i++) {
-            g2.setColor(new Color(rs.get(i), gs.get(i), bs.get(i), pointAlpha));
-            double normalX = xs.get(i) / 2 + 0.5;
-            int x = (int) (normalX * w);
-            double normalY = ys.get(i) / 2 + 0.5;
-            int y = (int) (normalY * h);
-            g2.fillOval(x - r, y - r, r + r, r + r);
-            if (i != 0) {
-                g2.setColor(new Color(rs.get(i), gs.get(i), bs.get(i), lineAlpha));
-                g2.drawLine(px, py, x, y);
+
+            int x = (int) ((xs.get(i) / 2 + 0.5) * w);
+            int y = (int) ((ys.get(i) / 2 + 0.5) * h);
+
+            if (rs.get(i) > 0.01 || gs.get(i) > 0.01 || bs.get(i) > 0.01) {
+                g2.setColor(new Color(rs.get(i), gs.get(i), bs.get(i), pointAlpha));
+                g2.setStroke(PATH_PLAN_STROKE);
+            } else {
+                // point is too dark (probably pen up), draw debug line
+                g2.setColor(PATH_OFF_COLOR);
+                g2.setStroke(PATH_PLAN_OFF_STROKE);
             }
-            px = x;
-            py = y;
+            if (i != 0) {
+                int px = (int) ((xs.get(i-1) / 2 + 0.5) * w);
+                int py = (int) ((ys.get(i-1) / 2 + 0.5) * h);
+                g2.drawLine(px, py, x, y);
+            } else {
+                int startMarkerRadius = 10;
+                int d = startMarkerRadius + startMarkerRadius;
+                g2.drawOval(x - startMarkerRadius, y - startMarkerRadius, d, d);
+            }
+            // draw a dot at the point
+            g2.fillOval(x - r, y - r, r + r, r + r);
+
         }
-        String mesg = "PATH: " + s + " POINTS";
-        g2.setColor(Color.GREEN.brighter());
+        // TODO move this to control panel
+        String[] hudStats = new String[]{
+                s + " PATH POINTS",
+                model.countPolygons() + " POLYGONS",
+                model.countPoints() + " POINTS",
+                model.countVertices() + " VERTICES"
+        };
+        hudLines(g2, h, hudStats);
+    }
+
+    private void hudLines(Graphics2D g2, int h, String[] lines) {
+        g2.setColor(HUD_COLOR);
         g2.setFont(hudFont);
-        g2.drawString(mesg, 50, h - 50);
+        int lineHeight = 60;
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            int y = h - (lines.length - i) * lineHeight - 40;
+            g2.drawString(line, 50, y);
+        }
+
+
     }
 
     @Override

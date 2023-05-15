@@ -50,6 +50,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     private volatile boolean modelDirty;
     private ThreadFactory threadFactory;
+    private boolean isDebug;
 
     public LaserDisplay(Config config) throws VectorBratException {
         logger.info("initialising LaserDisplay");
@@ -77,9 +78,10 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
 
         if (modelDirty) {
-            // TODO figure out how to choose a start point
-            Point start = new Point(0f, 0f);
-            PathPlanner p = new PathPlanner(model, pps / 0.1f, pps / laserSpeed, start);
+            // choose start point closest to 0,0
+            Point start = model.closestTo(new Point(0f, 0f));
+            PathPlanner p = new PathPlanner(pps / 0.1f, pps / laserSpeed);
+            p.plan(model, start);
             laserDriver.setPath(p);
             modelDirty = false;
         }

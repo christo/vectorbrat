@@ -3,7 +3,9 @@ package com.chromosundrift.vectorbrat.swing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -30,18 +32,20 @@ public class ControlPanel extends JPanel {
     private static final Logger logger = LoggerFactory.getLogger(ControlPanel.class);
 
     private final Config config;
-    private final LaserController laserController;
 
-    public ControlPanel(Config config, LaserController laserController) {
+    public ControlPanel(final Config config, final LaserController laserController, DisplayController displayController) {
         logger.info("initialising ControlPanel");
         this.config = config;
-        this.laserController = laserController;
         setBorder(new EmptyBorder(5, 5, 5, 5));
 
         // settings controls
         JComponent xy = new DeviceSelector("X/Y Device");
         JComponent rz = new DeviceSelector("Red/Z Device");
         JComponent gb = new DeviceSelector("Green/Blue Device");
+
+        JCheckBox cb = new JCheckBox("debug");
+        cb.setSelected(displayController.isDrawPathPlan());
+        cb.addActionListener(e -> displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected()));
 
 
         JPanel pps = createPpsSlider(config, laserController);
@@ -62,6 +66,7 @@ public class ControlPanel extends JPanel {
                 rz,
                 gb,
                 pps,
+                cb,
                 detail
         };
 
@@ -73,13 +78,7 @@ public class ControlPanel extends JPanel {
     }
 
     private static JPanel createPpsSlider(Config config, LaserController laserController) {
-        final JPanel pps = new JPanel(new BorderLayout());
-        final JSlider ppsControl;
-        final String units = " PPS";
-        final JLabel psl = rLabel(laserController.getPps() + units);
-        pps.add(psl);
-        ppsControl = new JSlider(JSlider.HORIZONTAL, Config.MIN_PPS, Config.MAX_PPS, config.getPps());
-        ppsControl.setPaintLabels(true);
+
         Hashtable<Integer, JLabel> sliderLabels = new Hashtable<>(4);
         sliderLabels.put(5, new JLabel("5"));
         sliderLabels.put(10000, new JLabel("10k"));
@@ -87,16 +86,25 @@ public class ControlPanel extends JPanel {
         sliderLabels.put(30000, new JLabel("30k"));
         sliderLabels.put(40000, new JLabel("40k"));
 
+        final JSlider ppsControl = new JSlider(JSlider.HORIZONTAL, Config.MIN_PPS, Config.MAX_PPS, config.getPps());
+        ppsControl.setPaintLabels(true);
         ppsControl.setLabelTable(sliderLabels);
-        psl.setLabelFor(ppsControl);
-        pps.add(psl, BorderLayout.NORTH);
-        pps.add(ppsControl, BorderLayout.SOUTH);
         ppsControl.addChangeListener(new PpsListener(config.liveControls(), laserController));
+
+        final String units = " PPS";
+        final JLabel psl = rLabel(laserController.getPps() + units);
+        psl.setLabelFor(ppsControl);
+
         ppsControl.addChangeListener(e -> {
             JSlider slider = (JSlider) e.getSource();
             int value = slider.getValue();
             psl.setText(value + units);
         });
+
+        final JPanel pps = new JPanel(new BorderLayout(5, 0));
+        pps.add(psl, BorderLayout.NORTH);
+        pps.add(ppsControl, BorderLayout.SOUTH);
+
         pps.setMinimumSize(new Dimension(200, 50));
 
         return pps;

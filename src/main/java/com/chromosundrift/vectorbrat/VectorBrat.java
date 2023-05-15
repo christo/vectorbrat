@@ -38,7 +38,8 @@ public class VectorBrat {
         });
 
         laser = new LaserDisplay(config);
-        frame = new VectorBratFrame(config, new DisplayPanel(config, new DisplayController(true)), laser);
+        DisplayController displayController = new DisplayController(true);
+        frame = new VectorBratFrame(config, new DisplayPanel(config, displayController), displayController, laser);
     }
 
     public static void main(String[] args) {

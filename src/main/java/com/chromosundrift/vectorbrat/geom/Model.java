@@ -6,8 +6,11 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -148,5 +151,29 @@ public class Model {
 
     public String getName() {
         return name;
+    }
+
+    public int countPolygons() {
+        return polygons.size();
+    }
+
+    public int countPoints() {
+        return points.size();
+    }
+
+    /**
+     * Returns the closest model point to the given point.
+     * @param ref
+     * @return
+     */
+    public Point closestTo(Point ref) {
+
+        // TODO make polygons startable from any point, not just first
+
+        TreeSet<Point> closestToRef = new TreeSet<>(ref.distToComparator());
+        // for now only consider points and the first point of each polygon
+        closestToRef.addAll(polygons.stream().map(p -> p._points()[0]).toList());
+        closestToRef.addAll(_points());
+        return closestToRef.first();
     }
 }

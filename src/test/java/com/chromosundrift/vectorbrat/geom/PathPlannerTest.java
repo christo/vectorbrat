@@ -14,7 +14,10 @@ public class PathPlannerTest {
     @Test
     public void testMaxPointDistance() {
         int pointsPerUnit = 5;
-        PathPlanner pp = new PathPlanner(Model.testPattern1(), 5, pointsPerUnit, new Point(0f, 0f));
+        Model model = Model.testPattern1();
+        Point start = new Point(0f, 0f);
+        PathPlanner pp = new PathPlanner(5, pointsPerUnit);
+        pp.plan(model, start);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
         ArrayList<Float> rs = pp.getRs();
@@ -39,5 +42,11 @@ public class PathPlannerTest {
         }
 
         Assert.assertTrue("%s / %s pairs are too distant".formatted(tooBigs.size(), xs.size()), tooBigs.isEmpty());
+    }
+
+    @Test
+    public void testInterpolateTo() {
+        PathPlanner pp = new PathPlanner(5, 5);
+        pp.interpolate(new Point(0,0), new Point(1, 1), 5);
     }
 }

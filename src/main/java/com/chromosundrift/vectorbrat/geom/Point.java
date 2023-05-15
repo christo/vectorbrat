@@ -1,6 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
 import java.awt.Color;
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -108,4 +109,16 @@ public final class Point {
                 "b=" + b + ']';
     }
 
+    /**
+     * Returns a new point at the same location which is black.
+     *
+     * @return a black copy of this.
+     */
+    public Point black() {
+        return new Point(x, y, 0f, 0f, 0f);
+    }
+
+    public Comparator<Point> distToComparator() {
+        return (o1, o2) -> (int) (this.dist(o1) - this.dist(o2));
+    }
 }
