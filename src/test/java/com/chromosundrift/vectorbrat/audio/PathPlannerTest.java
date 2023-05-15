@@ -2,6 +2,8 @@ package com.chromosundrift.vectorbrat.audio;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -11,8 +13,10 @@ import com.chromosundrift.vectorbrat.geom.Point;
 
 public class PathPlannerTest {
 
+    private static final Logger logger = LoggerFactory.getLogger(PathPlannerTest.class);
+
     @Test
-    public void testBasic() {
+    public void testMaxPointDistance() {
         int pointsPerUnit = 5;
         PathPlanner pp = new PathPlanner(Model.testPattern1(), 5, pointsPerUnit, new Point(0f, 0f));
         ArrayList<Float> xs = pp.getXs();
@@ -20,8 +24,9 @@ public class PathPlannerTest {
         ArrayList<Float> rs = pp.getRs();
         ArrayList<Float> gs = pp.getGs();
         ArrayList<Float> bs = pp.getBs();
+        // calculcate the maximum permitted distance between interpolated points
         float maxDist = (float) (1.0 / pointsPerUnit) + 0.04f;
-        System.out.println("maxDist = " + maxDist);
+        logger.info("maxDist = " + maxDist);
         ArrayList<String> tooBigs = new ArrayList<>();
         for (int i = 0; i < xs.size(); i++) {
             Point p = new Point(xs.get(i), ys.get(i), rs.get(i), gs.get(i), bs.get(i));
@@ -32,7 +37,7 @@ public class PathPlannerTest {
             if (dist > maxDist) {
                 float diff = dist - maxDist;
                 String mesg = i + " dist " + dist + " (diff " + diff + ")" + " : " + p + " <-> " + neighbour;
-                System.out.println(mesg);
+                logger.info(mesg);
                 tooBigs.add(mesg);
             }
         }

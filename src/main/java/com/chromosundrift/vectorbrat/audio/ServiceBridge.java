@@ -63,10 +63,10 @@ public class ServiceBridge {
     public ImmutableList<AudioConfiguration> getConfigurations() throws MissingAudioDevice {
         Iterator<AudioConfiguration> iterator = ServiceLoader.load(AudioConfiguration.class).iterator();
         ImmutableList<AudioConfiguration> configurations = ImmutableList.copyOf(iterator);
-        System.out.println("configurations:");
+        logger.info("configurations:");
         for (AudioConfiguration c : configurations) {
             // dump. TODO fix this
-            System.out.println("c = " + c);
+            logger.info("c = " + c);
         }
         return configurations;
     }
@@ -74,7 +74,7 @@ public class ServiceBridge {
     public List<Device> getDevices() throws MissingAudioDevice {
         List<Device> all = new ArrayList<>();
         for (Device dev : getProvider().findAll(Device.class)) {
-            System.out.println(dev.getName() + " (inputs: " + dev.getMaxInputChannels() + ", outputs: " + dev.getMaxOutputChannels() + ")");
+            logger.info(dev.getName() + " (inputs: " + dev.getMaxInputChannels() + ", outputs: " + dev.getMaxOutputChannels() + ")");
             all.add(dev);
         }
         return all;

@@ -9,6 +9,8 @@ import org.jaudiolibs.jnajack.util.SimpleAudioClient;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,8 @@ import com.chromosundrift.vectorbrat.Util;
  * Sanity test of the jack stack. Needs jackd running and various devices configured and connected.
  */
 public class AudioServersTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(AudioServersTest.class);
 
     @BeforeClass
     public static void setup() {
@@ -58,7 +62,7 @@ public class AudioServersTest {
         ServiceBridge jb = new ServiceBridge(ServiceBridge.JACK);
         List<String> missing = new ArrayList<>(devices);
         missing.removeAll(jb.getDevices().stream()
-                .peek(d -> System.out.println(dump(d)))
+                .peek(d -> logger.info(dump(d)))
                 .map(Device::getName)
                 .toList());
         if (!missing.isEmpty()) {
