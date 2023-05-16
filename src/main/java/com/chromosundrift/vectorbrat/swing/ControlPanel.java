@@ -155,12 +155,12 @@ public class ControlPanel extends JPanel {
 
     private static class DeviceSelector extends JPanel {
 
-        final JComboBox combo;
+        final JComboBox<String> combo;
 
         public DeviceSelector(String text) {
             super(new GridLayout(2, 1, 0, 5), true);
             JLabel label = rLabel(text);
-            combo = new JComboBox(Config.knownDevices().toArray(new String[0]));
+            combo = new JComboBox<>(Config.knownDevices().toArray(new String[0]));
             combo.setAlignmentX(Component.RIGHT_ALIGNMENT);
             label.setLabelFor(combo);
             add(label, BorderLayout.NORTH);

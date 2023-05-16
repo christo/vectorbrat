@@ -2,36 +2,54 @@ package com.chromosundrift.vectorbrat.geom;
 
 import java.awt.Color;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Stream;
 
 
 public final class Polyline {
+    private final String name;
     private final Color color; // future: remove dep on java.awt.Color
     private final Point[] _points;
 
-    private Polyline(Color color, Point... points) {
+    private Polyline(String name, Color color, Point... points) {
+        this.name = name;
         this.color = color;
         this._points = points;
     }
 
-    public static Polyline closed(Color color, Point... points) {
+    /**
+     * Creates a closed polygon from the given points. This includes the join betwen last and first points.
+     *
+     * @param color  the color.
+     * @param points the points.
+     * @return the {@link Polyline}.
+     */
+    public static Polyline closed(String name, Color color, Point... points) {
         Point[] closedPoints = new Point[points.length + 1];
-        System.arraycopy(points, 0, closedPoints, 0, points.length);
-        closedPoints[points.length] = points[0];
-        Polyline polyline = new Polyline(color, closedPoints);
-
-        return polyline; // WART: assuming no retained points reference at call site
+        for (int i = 0; i < points.length; i++) {
+            closedPoints[i] = points[i].colored(color);
+        }
+        closedPoints[points.length] = points[0].colored(color);
+        return new Polyline(name, color, closedPoints);
     }
 
-    public static Polyline open(Color c, Point... points) {
-        return new Polyline(c, points);
+    /**
+     * Creaetes a sequence of connected lines with no implicit join from last to first.
+     *
+     * @param c      the color.
+     * @param points the points.
+     * @return the {@link Polyline}.
+     */
+    public static Polyline open(String name, Color c, Point... points) {
+        Point[] ps = new Point[points.length];
+        for (int i = 0; i < points.length; i++) {
+            ps[i] = points[i].colored(c);
+        }
+        return new Polyline(name, c, ps);
     }
 
-    static Polyline box(float x1, float y1, float x2, float y2, Color c) {
-        return closed(c,
+    static Polyline box(String name, float x1, float y1, float x2, float y2, Color c) {
+        return closed(name, c,
                 new Point(x1, y1, c),
                 new Point(x2, y1, c),
                 new Point(x2, y2, c),
@@ -39,14 +57,19 @@ public final class Polyline {
         );
     }
 
+    static Polyline box(float x1, float y1, float x2, float y2, Color c) {
+        return box("box", x1, y1, x2, y2, c);
+    }
+
     static Polyline createMidSquare(Color c) {
-        return box(-0.5f, -0.5f, 0.5f, 0.5f, c);
+        return box("mid square", -0.5f, -0.5f, 0.5f, 0.5f, c);
     }
 
-    public Stream<Point> points() {
-        return Arrays.stream(_points);
-    }
-
+    /**
+     * The number of points in the polyline, expect one extra if closed.
+     *
+     * @return the size.
+     */
     public int size() {
         return _points.length;
     }
@@ -55,26 +78,9 @@ public final class Polyline {
         return color;
     }
 
-    /**
-     * Converts our {@link Polyline} to a {@link java.awt.Polygon} scaling from normalised using the given
-     * factors.
-     *
-     * @param xScale the x-axis scaling factor
-     * @param yScale the y-axis scaling factor
-     * @return the awt Polygon
-     */
-    public java.awt.Polygon awt(final int xScale, final int yScale) {
-        final java.awt.Polygon awt = new java.awt.Polygon();
-        for (Point pt : _points) {
-            // normalise to 0-1 then multiply by scale
-            awt.addPoint((int) ((pt.x() / 2 + 0.5) * xScale), (int) ((pt.y() / 2 + 0.5) * yScale));
-        }
-        return awt;
-    }
-
     @Override
     public String toString() {
-        return "Polyline{" +
+        return "Polyline{'" + name + "' " +
                 "color=" + color +
                 ", _points=" + Arrays.toString(_points) +
                 '}';
@@ -91,19 +97,56 @@ public final class Polyline {
             Point point = points.get(i);
             newPoints[i] = point;
         }
-        return new Polyline(this.color, newPoints);
+        return new Polyline(this.name + " x " + factor, this.color, newPoints);
     }
 
-    public Set<Line> lines() {
+    /**
+     * Provides a new list of lines.
+     *
+     * @return this polyline as a list of lines.
+     */
+    public List<Line> lines() {
         Point previous = null;
-        HashSet<Line> lines = new HashSet();
+        LinkedList<Line> lines = new LinkedList<>();
         for (Point point : _points) {
-            if (previous == null) {
-                previous = point;
-            } else {
-                 lines.add(new Line(previous, point));
+            if (previous != null) {
+                // skip adding the line if the points are the same (i.e. closed polygon)
+                if (!previous.equals(point)) {
+                    lines.add(new Line(previous, point));
+                } else {
+                    System.out.println("skipping point = " + point);
+                }
             }
+            previous = point;
         }
+
         return lines;
+    }
+
+    /**
+     * Returns our point closest to other. Explodes if this Polyline has no points.
+     *
+     * @param other comparison point.
+     * @return closest point to the other.
+     */
+    public Point closest(Point other) {
+        //noinspection OptionalGetWithoutIsPresent
+        return Arrays.stream(_points).min(other.dist2Point()).get();
+    }
+
+    public int[] xZeroScaled(float scale) {
+        int[] xVals = new int[_points.length];
+        for (int i = 0; i < _points.length; i++) {
+            xVals[i] = (int) ((_points[i].x() / 2 + 0.5) * scale);
+        }
+        return xVals;
+    }
+
+    public int[] yZeroScaled(float scale) {
+        int[] yVals = new int[_points.length];
+        for (int i = 0; i < _points.length; i++) {
+            yVals[i] = (int) ((_points[i].y() / 2 + 0.5) * scale);
+        }
+        return yVals;
     }
 }

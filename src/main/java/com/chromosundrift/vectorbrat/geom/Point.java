@@ -50,16 +50,28 @@ public final class Point {
         this.color = copyMe.color;
     }
 
-    public Color color() {
+    public Color getColor() {
         return this.color;
     }
 
+    /**
+     * Returns the distance to the other point. See {@link #dist2(Point)}.
+     *
+     * @param other the other point.
+     * @return the distance.
+     */
     public float dist(Point other) {
         // pythagoras
-        return (float) Math.sqrt(distSquared(other));
+        return (float) Math.sqrt(dist2(other));
     }
 
-    private float distSquared(Point other) {
+    /**
+     * Returns the square of the distance to the other point. See {@link #dist(Point)}.
+     *
+     * @param other the other point.
+     * @return the square of the distance.
+     */
+    public float dist2(Point other) {
         final float xx = other.x - x;
         final float yy = other.y - y;
         final float d2 = xx * xx + yy * yy;
@@ -105,16 +117,12 @@ public final class Point {
 
     @Override
     public String toString() {
-        return "Point[" +
-                "x=" + x + ", " +
-                "y=" + y + ", " +
-                "r=" + r + ", " +
-                "g=" + g + ", " +
-                "b=" + b + ']';
+        return "Point[(" + x + "," + y + ") " +
+                "rgb(" + r + "," + g + "," + b + ")]";
     }
 
     /**
-     * Returns a new point at the same location which is black.
+     * Returns a new black point at the same location.
      *
      * @return a black copy of this.
      */
@@ -122,11 +130,53 @@ public final class Point {
         return new Point(x, y, 0f, 0f, 0f);
     }
 
-    public Comparator<Point> distToComparator() {
-        return (o1, o2) -> (int) (this.distSquared(o1) - this.distSquared(o2));
+    /**
+     * Actually uses the square of the distance.
+     *
+     * @return a comparator that orders by distance to this point.
+     */
+    public Comparator<Point> dist2Point() {
+        return (o1, o2) -> Float.compare(dist2(o1), dist2(o2));
     }
 
+
+    /**
+     * Returns a comparator that orders lines by which one's end point is closest to this.
+     *
+     * @return a {@link Comparator}
+     */
+    public Comparator<Line> minDist2End() {
+        return (l1, l2) -> {
+            float d2l1 = Math.min(dist2(l1.from()), dist2(l1.to()));
+            float d2l2 = Math.min(dist2(l2.from()), dist2(l2.to()));
+            return Float.compare(d2l1, d2l2);
+        };
+    }
+
+    /**
+     * Returns a new point in a space scaled by the given factor.
+     *
+     * @param factor scaling factor.
+     * @return the new point.
+     */
     public Point scale(float factor) {
         return new Point(x * factor, y * factor, r, g, b);
+    }
+
+    /**
+     * Returns the end point of the given line which is closest to this.
+     *
+     * @param line the line whose points are compared.
+     * @return one of the line's two points.
+     */
+    public Point closest(Line line) {
+        return line.closest(this);
+    }
+
+    /**
+     * Creates a new point with the given colour.
+     */
+    public Point colored(Color color) {
+        return new Point(this.x, this.y, color);
     }
 }

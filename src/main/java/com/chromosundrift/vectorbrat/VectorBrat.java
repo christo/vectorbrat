@@ -22,10 +22,8 @@ public class VectorBrat {
     private final VectorBratFrame frame;
     private final LaserDisplay laser;
     private final DisplayPanel displayPanel;
-    private float t;
-    private Model model;
 
-    public VectorBrat(Model model) throws VectorBratException {
+    public VectorBrat() throws VectorBratException {
         logger.info("initialising VectorBrat");
         final Config config = new Config();
         String laf = config.getLaf();
@@ -45,8 +43,6 @@ public class VectorBrat {
         displayPanel = new DisplayPanel(config, displayController, laser);
         displayController.setRepaintDisplay(displayPanel::repaint);
         frame = new VectorBratFrame(config, displayPanel, displayController, laser);
-        this.model = model;
-        this.t = System.currentTimeMillis() / 1000f;
     }
 
     public static void main(String[] args) {
@@ -54,9 +50,8 @@ public class VectorBrat {
 
         try {
             Model m = Model.testPattern1();
-            VectorBrat vectorBrat = new VectorBrat(m);
-            Model model = m.scale(0.5f);
-            vectorBrat.start(model);
+            VectorBrat vectorBrat = new VectorBrat();
+            vectorBrat.start(m);
         } catch (VectorBratException e) {
             logger.error("can't create vectorbrat", e);
         }
@@ -67,7 +62,7 @@ public class VectorBrat {
         this.displayPanel.setModel(model);
         this.laser.setModel(model);
         this.frame.start();
-        this.laser.start(model);
+        this.laser.start();
         logger.info("started VectorBrat");
     }
 

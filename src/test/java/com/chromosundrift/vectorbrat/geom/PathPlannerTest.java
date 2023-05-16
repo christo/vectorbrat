@@ -20,7 +20,7 @@ public class PathPlannerTest {
         Model model = Model.testPattern1();
         Point start = new Point(0f, 0f);
         PathPlanner pp = new PathPlanner(5, pointsPerUnit, 1, Interpolation.LINEAR);
-        pp.plan(model, start);
+        pp.planNextNearest(model, start);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
         ArrayList<Float> rs = pp.getRs();
@@ -51,7 +51,7 @@ public class PathPlannerTest {
     @Test
     public void testInterpolateTo() {
         PathPlanner pp = new PathPlanner(1, 5, 1, Interpolation.LINEAR);
-        pp.interpolate(new Point(0,0), new Point(1, 1), 5, 1);
+        pp.interpolate(new Point(0,0), new Point(1, 1), 1, 5);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
         assertTrue(xs.size() == ys.size());

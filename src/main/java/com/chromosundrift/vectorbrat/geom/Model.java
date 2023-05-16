@@ -19,7 +19,6 @@ public class Model {
 
     private static final Logger logger = LoggerFactory.getLogger(Model.class);
 
-    // TODO get all model shapes as a set of vector segments
     private final ReentrantLock lock = new ReentrantLock();
     private final List<Polyline> polylines;
     private final List<Point> points;
@@ -47,21 +46,18 @@ public class Model {
             m.add(new Point(0.0f, i, Color.MAGENTA));
         }
 
-        // top arrow
         Color c = Color.CYAN;
-        m.add(Polyline.open(c, new Point(-0.15f, -0.35f, c), new Point(0.0f, -0.5f, c), new Point(0.15f, -0.35f, c)));
+        m.add(Polyline.open("top arrow", c, new Point(-0.15f, -0.35f, c), new Point(0.0f, -0.5f, c), new Point(0.15f, -0.35f, c)));
+        // dot x-aligned with arrow point and y-aligned with wing tips
+        m.add(new Point(0.0f, -0.35f, Color.CYAN));
         // bottom right handle
         c = Color.PINK;
-        m.add(Polyline.open(c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
+        m.add(Polyline.open("pink handle", c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
 
-        // top right box
-        m.add(Polyline.box(0.9f, -1f, 1f, -0.9f, Color.GREEN));
-        // bottom right box
-        m.add(Polyline.box(0.9f, 0.9f, 1f, 1f, Color.GREEN));
-        // bottom left box
-        m.add(Polyline.box(-1f, 0.9f, -0.9f, 1f, Color.GREEN));
-        // opt left box
-        m.add(Polyline.box(-1f, -1f, -0.9f, -0.9f, Color.GREEN));
+        m.add(Polyline.box("topright", 0.9f, -1f, 1f, -0.9f, Color.GREEN));
+        m.add(Polyline.box("bottomright", 0.9f, 0.9f, 1f, 1f, Color.GREEN));
+        m.add(Polyline.box("bottomleft",-1f, 0.9f, -0.9f, 1f, Color.GREEN));
+        m.add(Polyline.box("topleft",-1f, -1f, -0.9f, -0.9f, Color.GREEN));
         logger.info("created test pattern: " + m);
         return m;
     }
@@ -167,12 +163,10 @@ public class Model {
 
     /**
      * Returns the closest model point to the given point.
-     * @param ref
-     * @return
      */
-    public Point closestTo(Point ref) {
+    public Point closestTo(Point other) {
         // TODO make polylines startable from any point, not just first
-        TreeSet<Point> closestToRef = new TreeSet<>(ref.distToComparator());
+        TreeSet<Point> closestToRef = new TreeSet<>(other.dist2Point());
         // for now only consider points and the first point of each polyline
         closestToRef.addAll(polylines.stream().map(p -> p._points()[0]).toList());
         closestToRef.addAll(_points());

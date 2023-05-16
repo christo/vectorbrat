@@ -114,14 +114,18 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private void drawModel(Model model, BufferedImage im, Graphics2D g2) {
         g2.setStroke(strokeLine);
         Stream<Polyline> polylines = model.polylines();
+        int xScale = im.getWidth();
+        int yScale = im.getHeight();
         polylines.forEach(p -> {
             g2.setColor(p.getColor());
-            g2.drawPolygon(p.awt(im.getWidth(), im.getHeight()));
+            int[] xPoints = p.xZeroScaled(xScale);
+            int[] yPoints = p.yZeroScaled(yScale);
+            g2.drawPolyline(xPoints, yPoints, xPoints.length);
         });
         model.points().forEach(point -> {
-            int x = (int) ((point.x() / 2 + 0.5) * im.getWidth());
-            int y = (int) ((point.y() / 2 + 0.5) * im.getHeight());
-            g2.setColor(point.color());
+            int x = (int) ((point.x() / 2 + 0.5) * xScale);
+            int y = (int) ((point.y() / 2 + 0.5) * yScale);
+            g2.setColor(point.getColor());
             g2.drawLine(x, y, x, y);
         });
     }
@@ -165,18 +169,8 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             ArrayList<Float> bs = p.getBs();
             int s = xs.size();
 
-            // TODO move this to control panel
-            String[] hudStats = new String[]{
-                    s + " PATH POINTS",
-                    model.countPolylines() + " POLYLINES",
-                    model.countPoints() + " POINTS",
-                    model.countVertices() + " VERTICES"
-            };
-            hudLines(g2, h, hudStats);
-
-
             float pointAlpha = 0.6f;
-
+            int blackPoints = 0;
             for (int i = 0; i < s; i++) {
 
                 int x = (int) ((xs.get(i) / 2 + 0.5) * w);
@@ -190,6 +184,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
                     // point is too dark (probably pen up), draw debug line
                     g2.setColor(COL_PATH_OFF);
                     g2.setStroke(STROKE_PATH_OFF);
+                    blackPoints++;
                 }
                 if (i != 0) {
                     int px = (int) ((xs.get(i - 1) / 2 + 0.5) * w);
@@ -212,6 +207,16 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             y = (int) ((ys.get(ys.size() - 1) / 2 + 0.5) * h);
             g2.drawLine(x - markerRadius, y - markerRadius, x + markerRadius, y + markerRadius);
             g2.drawLine(x + markerRadius, y - markerRadius, x - markerRadius, y + markerRadius);
+
+            // TODO move this to control panel
+            String[] hudStats = new String[]{
+                    s + " PATH POINTS",
+                    model.countPolylines() + " POLYLINES",
+                    model.countPoints() + " POINTS",
+                    model.countVertices() + " VERTICES",
+                    blackPoints + " BLACK POINTS"
+            };
+            hudLines(g2, h, hudStats);
         }
     }
 

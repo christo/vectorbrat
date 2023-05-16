@@ -75,7 +75,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     /**
      * Renders the model once at the configured rate while holding the lock for model updates, if the laserDriver is
-     * off, does nothing.
+     * off, does nothing. Called by VectorDisplay using its model.
      *
      * @param model the model to render
      * @return null
@@ -85,8 +85,8 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         if (modelDirty) {
             Point start = new Point(0f, 0f);
             // calculate scan rate
-            pathPlanner = new PathPlanner(25, 200, 20, Interpolation.QUINTIC);
-            pathPlanner.plan(model, start);
+            pathPlanner = new PathPlanner(50, 200, 10, Interpolation.QUINTIC);
+            pathPlanner.planNextNearest(model, start);
             laserDriver.setPathPlanner(pathPlanner);
             modelDirty = false;
         }
@@ -147,15 +147,13 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     /**
      * Starts in its own thread. Call stop to shutdown.
-     *
-     * @param model the initial model.
      */
-    public void start(Model model) {
+    public void start() {
         if (exec != null && !exec.isShutdown()) {
             logger.warn("start requested but already running");
         } else {
             logger.info("starting laser display");
-            vectorDisplay.setModel(model);
+
             exec = Executors.newSingleThreadExecutor(threadFactory);
             exec.submit(() -> {
                 try {
@@ -165,7 +163,6 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
                     stop();
                 }
             });
-
         }
     }
 

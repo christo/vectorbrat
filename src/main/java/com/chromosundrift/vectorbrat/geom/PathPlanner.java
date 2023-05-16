@@ -1,9 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.chromosundrift.vectorbrat.Util;
@@ -18,7 +16,7 @@ public final class PathPlanner {
      * Initial size of path in total points including interpolation. Big enough to reduce allocations
      * during time-sensitive loop.
      */
-    public static final int INITIAL_CAPACITY = 10000;
+    public static final int INITIAL_CAPACITY = 1000;
 
     /**
      * Number of to replicated path points per given isolated point.
@@ -53,15 +51,97 @@ public final class PathPlanner {
     }
 
     /**
-     * Fill out the model with interpolated intermediate path points based on the scanning speed in units per second.
-     * The path will be constructed as a loop with interpolation from the last point to the first, including black
-     * steps between gaps.
+     * Plan the path based on next nearest unvisited model point. Polylines may be rendered in parts. Fill out the
+     * model with interpolated intermediate path points based on the scanning speed in units per second. The path will
+     * be constructed as a loop with interpolation from the last point to the first, including black steps between gaps.
      *
      * @param m     the model to plan.
-     * @param start the start point, will draw the model from the closest point to this.
+     * @param start the start point, will draw the model from its closest point to this.
      */
-    public void plan(Model m, Point start) {
-        planStupid(m, start);
+    public void planNextNearest(Model m, Point start) {
+        Point prev = start;
+
+        // TODO color change time compensation?
+
+        LinkedList<Line> lines = new LinkedList<>();
+        for (Polyline pl : m._polylines()) {
+            lines.addAll(pl.lines());
+        }
+        List<Point> points = new LinkedList<>(m._points());
+        while(!lines.isEmpty() && !points.isEmpty()) {
+            // if a line is closest, this will contain it, otherwise null
+            Line closestLine = null;
+            // if a point is closest, this contains it, otherwise null
+            Point closestPoint = null;
+            // true if a line is closest by its "to" point rather than its "from" point, thus must be reversed in plan
+            boolean reverseLine = false;
+            float closestD2 = Float.MAX_VALUE;
+            // using square distance throughout
+            // TODO decide whether to store the index of the closest to make removal speedy
+            // do lines first, spidey guess for average case
+            int s = lines.size();
+            for (int i = 0; i < s; i++) {
+                Line line = lines.get(i);
+                float fromDist = line.from().dist2(prev);
+                float toDist = line.to().dist2(prev);
+                if (fromDist < closestD2) {
+                    closestD2 = fromDist;
+                    closestLine = line;
+                    reverseLine = false;
+                }
+                if (toDist < closestD2) {
+                    closestD2 = toDist;
+                    closestLine = line;
+                    reverseLine = true;
+                }
+                if (closestD2 == 0f) {
+                    break;
+                }
+            }
+            // got the closest line
+
+            // find point closest to prev point
+            s = points.size();
+            for (int i = 0; i < s; i++) {
+                Point point = points.get(i);
+                float dist = point.dist2(prev);
+                if (dist < closestD2) {
+                    closestD2 = dist;
+                    closestLine = null;
+                    closestPoint = point;
+                }
+                if (closestD2 == 0f) {
+                    break;
+                }
+            }
+            if (closestLine == null && closestPoint == null) {
+                throw new IllegalStateException("no line or point closest! model:%s".formatted(m));
+            }
+            // now add the line or point to the path plan
+            if (closestLine != null) {
+                // remove the line from the lines list and add it to the path plan
+                lines.remove(closestLine);
+                if (reverseLine) {
+                    closestLine = closestLine.reversed();
+                }
+                // if point is not the same as prev, interpolate to it first
+                if (!prev.equals(closestLine.from())) {
+                    interpolate(prev.black(), closestLine.from());
+                }
+                // interpolate the line
+                interpolate(closestLine.from(), closestLine.to());
+                prev = closestLine.to();
+            } else {
+                // remove from the points list and add the point to the path plan
+                points.remove(closestPoint);
+                // interpolate to the new point, dwelling on arrival
+                interpolate(prev.black(), closestPoint, pointsPerPoint);
+                prev = closestPoint;
+            }
+        }
+        if (xs.size() != ys.size() || xs.size() != rs.size() || xs.size() != gs.size() || xs.size() != bs.size()) {
+            throw new IllegalStateException("BUG! all internal lists should be the same size");
+        }
     }
 
     /**
@@ -70,9 +150,9 @@ public final class PathPlanner {
      * steps between gaps.
      *
      * @param m     the model to plan.
-     * @param start the start point, will draw the model from the closest point to this.
+     * @param start the start point, will draw the model from its closest point to this.
      */
-    public void planStupid(Model m, Point start) {
+    public void planNaive(Model m, Point start) {
         // generate intermediate points along the course of the path to draw the model
         Point prev = m.closestTo(start);
 
@@ -93,44 +173,39 @@ public final class PathPlanner {
         List<Point> points = m._points();
         for (Point point : points) {
             // interpolate black path points to the point
-            interpolate(prev.black(), point);
-            float x = point.x();
-            float y = point.y();
-            float r = point.r();
-            float g = point.g();
-            float b = point.b();
-            for (int i = 0; i < pointsPerPoint; i++) {
-                xs.add(x);
-                ys.add(y);
-                rs.add(r);
-                gs.add(g);
-                bs.add(b);
-            }
+            interpolate(prev.black(), point, pointsPerPoint);
             prev = point;
         }
 
         // return to the start point in black
-        interpolate(prev.black(), start);
+        interpolate(prev.black(), start); // BUG: we always dwell assuming start was a vertex
 
-
-        if (xs.size() != ys.size() && xs.size() != rs.size() && xs.size() != gs.size() && xs.size() != bs.size()) {
+        if (xs.size() != ys.size() || xs.size() != rs.size() || xs.size() != gs.size() || xs.size() != bs.size()) {
             throw new IllegalStateException("BUG! all internal lists should be the same size");
         }
     }
 
     void interpolate(Point source, Point target) {
-        interpolate(source, target, (int) (source.dist(target) * pointsPerUnit), vertexPoints);
+        interpolate(source, target, vertexPoints, (int) (source.dist(target) * pointsPerUnit));
     }
 
     /**
-     * Adds nPoints along the line from source to target plus the target point. Interpolated points are the same colour
+     * Add a number of interpolated points (derived from pointsPerUnit and the distance) along the line
+     * from source to target and dwell at the target with vertexPoints extra points.
+     */
+    void interpolate(Point source, Point target, float vertexPoints) {
+        interpolate(source, target, vertexPoints, (int) (source.dist(target) * pointsPerUnit));
+    }
+
+    /**
+     * Adds n Points along the line from source to target plus the target point. Interpolated points are the same colour
      * as the source, end point is its own colour.
      *
      * @param source the origin point along the line (not added to the path)
      * @param target the destination point along the line (explicitly added).
      * @param n      the number of interpolation points.
      */
-    void interpolate(Point source, Point target, float n, float vertexPoints) {
+    void interpolate(Point source, Point target, float vertexPoints, float n) {
         float prevx = source.x();
         float prevy = source.y();
         float prevr = source.r();
@@ -163,7 +238,7 @@ public final class PathPlanner {
             gs.add(prevg);
             bs.add(prevb);
         }
-        // now add the end points
+        // now add the end points in the end point colour
         for (int i = 0; i < vertexPoints; i++) {
             xs.add(targetX);
             ys.add(targetY);
