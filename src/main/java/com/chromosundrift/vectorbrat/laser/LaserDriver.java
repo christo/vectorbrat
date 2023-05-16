@@ -72,7 +72,6 @@ public final class LaserDriver {
     public LaserDriver(Config config) throws VectorBratException {
         logger.info("initialising LaserDriver");
         this.config = config;
-        String title = config.getTinyTitle();
 
         Config.Channel channelX = config.getChannelX();
         Config.Channel channelY = config.getChannelY();
@@ -84,7 +83,7 @@ public final class LaserDriver {
 
         try {
             int maxName = jack.getMaximumPortNameSize();
-            client = openClient(jack, title);
+            client = openClient(jack, config.getTinyTitle());
 
             xPort = registerPort(channelX, client, maxName);
             yPort = registerPort(channelY, client, maxName);
