@@ -251,7 +251,7 @@ public final class LaserDriver {
      */
     public void setOn(boolean on) {
         isOn = on;
-        logger.info("laser %s".formatted(isOn ? "armed" : "disarmed"));
+        logger.info("laser %s".formatted(isOn ? "armed" : "safe"));
     }
 
     public float getSampleRate() {
