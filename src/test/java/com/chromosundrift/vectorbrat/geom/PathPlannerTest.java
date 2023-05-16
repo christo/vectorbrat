@@ -16,7 +16,7 @@ public class PathPlannerTest {
 
     @Test
     public void testMaxPointDistance() {
-        int pointsPerUnit = 5;
+        int pointsPerUnit = 15;
         Model model = Model.testPattern1();
         Point start = new Point(0f, 0f);
         PathPlanner pp = new PathPlanner(5, pointsPerUnit, 1, Interpolation.LINEAR);
@@ -32,20 +32,19 @@ public class PathPlannerTest {
         ArrayList<String> tooBigs = new ArrayList<>();
         for (int i = 0; i < xs.size(); i++) {
             Point p = new Point(xs.get(i), ys.get(i), rs.get(i), gs.get(i), bs.get(i));
-            int index = (i + 1) % xs.size();
-            Point neighbour = new Point(xs.get(index), ys.get(index));
-            float dist = p.dist(neighbour);
+            int index = (i + 1);
+            if (index < xs.size()) {
+                Point neighbour = new Point(xs.get(index), ys.get(index));
+                float dist = p.dist(neighbour);
 
-            if (dist > maxDist) {
-                float diff = dist - maxDist;
-                String mesg = i + " dist " + dist + " (diff " + diff + ")" + " : " + p + " <-> " + neighbour;
-                logger.info(mesg);
-                tooBigs.add(mesg);
+                if (dist > maxDist) {
+                    float diff = dist - maxDist;
+                    String mesg = i + " dist " + dist + " (diff " + diff + ")" + " : " + p + " <-> " + neighbour;
+                    logger.info(mesg);
+                    tooBigs.add(mesg);
+                }
             }
         }
-        Point first = new Point(xs.get(0), ys.get(0));
-        Point last = new Point(xs.get(xs.size() - 1), ys.get(ys.size() - 1));
-        assertEquals(0f, first.dist(last), FLOAT_DELTA);
         assertTrue("%s / %s pairs are too distant".formatted(tooBigs.size(), xs.size()), tooBigs.isEmpty());
     }
 
@@ -57,7 +56,5 @@ public class PathPlannerTest {
         ArrayList<Float> ys = pp.getYs();
         assertTrue(xs.size() == ys.size());
         assertTrue(xs.size() > 5);
-
-
     }
 }

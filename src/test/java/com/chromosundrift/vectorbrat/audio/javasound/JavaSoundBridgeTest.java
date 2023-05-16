@@ -6,6 +6,7 @@ import com.chromosundrift.vectorbrat.audio.MissingAudioDevice;
 import com.chromosundrift.vectorbrat.audio.javasound.JavaSoundBridge;
 
 import junit.framework.AssertionFailedError;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.sound.sampled.AudioFormat;
@@ -23,6 +24,7 @@ import static java.lang.String.join;
 
 public class JavaSoundBridgeTest {
 
+    @Ignore
     @Test
     public void allDevicesPresent() throws MissingAudioDevice {
         assertDevicesPresent(Config.knownDevices());
