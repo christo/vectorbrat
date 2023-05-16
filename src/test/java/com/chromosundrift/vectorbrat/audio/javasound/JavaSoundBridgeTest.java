@@ -22,21 +22,24 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.join;
 
+/**
+ * Requires audio devices connected and jackd running.
+ */
 public class JavaSoundBridgeTest {
 
     @Ignore
     @Test
-    public void allDevicesPresent() throws MissingAudioDevice {
+    public void allDevicesPresent(){
         assertDevicesPresent(Config.knownDevices());
     }
 
     @Test
-    public void requiredDevicesPresent() throws MissingAudioDevice {
+    public void requiredDevicesPresent() {
         assertDevicesPresent(Config.requiredDevices());
     }
 
     @Test
-    public void expectedDevicesPresent() throws MissingAudioDevice {
+    public void expectedDevicesPresent() {
         assertDevicesPresent(Config.expectedDevices());
     }
 
