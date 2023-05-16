@@ -24,7 +24,7 @@ public class PathPlannerTest {
         Point start = new Point(0f, 0f);
         Config c = getTestConfig();
         PathPlanner pp = new PathPlanner(c);
-        pp.planNextNearest(model, start);
+        pp.planNextNearest(model);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
         ArrayList<Float> rs = pp.getRs();
@@ -80,8 +80,7 @@ public class PathPlannerTest {
         c.setInterpolation(Interpolation.QUINTIC);
         PathPlanner pp = new PathPlanner(c);
         Model m = Model.boxGrid(5, 5, Color.YELLOW);
-        Point origin = new Point(0f, 0f);
-        pp.planNextNearest(m, origin);
+        pp.planNextNearest(m);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
         ArrayList<Float> rs = pp.getRs();
