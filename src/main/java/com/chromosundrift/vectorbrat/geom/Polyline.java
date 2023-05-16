@@ -2,8 +2,9 @@ package com.chromosundrift.vectorbrat.geom;
 
 import java.awt.Color;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 import java.util.stream.Stream;
 
 
@@ -91,5 +92,18 @@ public final class Polyline {
             newPoints[i] = point;
         }
         return new Polyline(this.color, newPoints);
+    }
+
+    public Set<Line> lines() {
+        Point previous = null;
+        HashSet<Line> lines = new HashSet();
+        for (Point point : _points) {
+            if (previous == null) {
+                previous = point;
+            } else {
+                 lines.add(new Line(previous, point));
+            }
+        }
+        return lines;
     }
 }
