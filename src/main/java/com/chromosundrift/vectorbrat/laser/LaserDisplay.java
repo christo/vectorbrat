@@ -14,6 +14,7 @@ import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.VectorDisplay;
+import com.chromosundrift.vectorbrat.geom.Interpolation;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.PathPlanner;
 import com.chromosundrift.vectorbrat.geom.Point;
@@ -84,7 +85,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         if (modelDirty) {
             Point start = new Point(0f, 0f);
             // calculate scan rate
-            pathPlanner = new PathPlanner(5, 200);
+            pathPlanner = new PathPlanner(20, 250, 20, Interpolation.QUINTIC);
             pathPlanner.plan(model, start);
             laserDriver.setPathPlanner(pathPlanner);
             modelDirty = false;

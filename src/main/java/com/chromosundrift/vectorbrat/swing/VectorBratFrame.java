@@ -23,18 +23,10 @@ public class VectorBratFrame extends JFrame {
 
     private static final Logger logger = LoggerFactory.getLogger(VectorBratFrame.class);
 
-    private final Config config;
-    private final JPanel rootPanel;
-
-    private final JSplitPane split;
-    private final JPanel enginePanel;
-    private final JScrollPane scrollPane;
-
     private final DisplayPanel vd;
 
     public VectorBratFrame(Config config, DisplayPanel displayPanel, DisplayController displayController, LaserController laserController) {
         logger.info("initialising VectorBratFrame");
-        this.config = config;
         this.vd = displayPanel;
         this.setTitle(config.getTitle());
         setBackground(Color.BLACK);
@@ -45,15 +37,15 @@ public class VectorBratFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(5, 5));
 
-        rootPanel = new JPanel(new BorderLayout(), true);
+        JPanel rootPanel = new JPanel(new BorderLayout(), true);
         rootPanel.setMinimumSize(new Dimension(200, 100));
 
-        split = new JSplitPane();
+        JSplitPane split = new JSplitPane();
         split.setContinuousLayout(true);
         split.setDividerLocation(0.4);
         rootPanel.add(split, BorderLayout.CENTER);
 
-        enginePanel = new JPanel();
+        JPanel enginePanel = new JPanel();
         enginePanel.setLayout(new BorderLayout());
 
         JPanel mainPanel = new JPanel();
@@ -64,7 +56,7 @@ public class VectorBratFrame extends JFrame {
         split.setRightComponent(mainPanel);
         split.setOneTouchExpandable(true);
 
-        scrollPane = new JScrollPane();
+        JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         enginePanel.add(scrollPane, BorderLayout.NORTH);
         enginePanel.add(Box.createVerticalBox(), BorderLayout.CENTER);
@@ -75,8 +67,7 @@ public class VectorBratFrame extends JFrame {
         setContentPane(rootPanel);
     }
 
-    public void start(Model model) {
-        vd.setModel(model);
+    public void start() {
         JFrame f = this;
         pack();
         UiUtil.centerFrame(f);

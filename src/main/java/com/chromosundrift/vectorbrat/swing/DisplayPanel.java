@@ -242,5 +242,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     @Override
     public void setModel(final Model model) {
         vectorDisplay.setModel(model);
+        this.repaint();
     }
 }

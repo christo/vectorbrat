@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.chromosundrift.vectorbrat.Util;
+
 /**
  * Holds the trace path for rendering shapes.
  * future: implement best-effort scan order.
@@ -29,22 +31,27 @@ public final class PathPlanner {
      * The linear density of interpolation points along a unit line.
      */
     private final float pointsPerUnit;
+    private final float vertexPoints;
+    private final Interpolation interpolation;
 
     // future consider preallocating arrays big enough via configured maximum
 
-    private ArrayList<Float> xs = new ArrayList<>(INITIAL_CAPACITY);
-    private ArrayList<Float> ys = new ArrayList<>(INITIAL_CAPACITY);
-    private ArrayList<Float> rs = new ArrayList<>(INITIAL_CAPACITY);
-    private ArrayList<Float> gs = new ArrayList<>(INITIAL_CAPACITY);
-    private ArrayList<Float> bs = new ArrayList<>(INITIAL_CAPACITY);
+    private final ArrayList<Float> xs = new ArrayList<>(INITIAL_CAPACITY);
+    private final ArrayList<Float> ys = new ArrayList<>(INITIAL_CAPACITY);
+    private final ArrayList<Float> rs = new ArrayList<>(INITIAL_CAPACITY);
+    private final ArrayList<Float> gs = new ArrayList<>(INITIAL_CAPACITY);
+    private final ArrayList<Float> bs = new ArrayList<>(INITIAL_CAPACITY);
 
     /**
-     * @param pointsPerPoint       number of render points to have per model point
-     * @param pointsPerUnit number of intermediate points per model unit.
+     * @param pointsPerPoint number of render points to have per model point.
+     * @param pointsPerUnit  number of intermediate points per model unit.
+     * @param vertexPoints   number of render points to have per polyline vertex.
      */
-    public PathPlanner(float pointsPerPoint, float pointsPerUnit) {
+    public PathPlanner(float pointsPerPoint, float pointsPerUnit, float vertexPoints, Interpolation interpolation) {
         this.pointsPerPoint = pointsPerPoint;
         this.pointsPerUnit = pointsPerUnit;
+        this.vertexPoints = vertexPoints;
+        this.interpolation = interpolation;
     }
 
     /**
@@ -52,7 +59,7 @@ public final class PathPlanner {
      * The path will be constructed as a loop with interpolation from the last point to the first, including black
      * steps between gaps.
      *
-     * @param m the model to plan.
+     * @param m     the model to plan.
      * @param start the start point, will draw the model from the closest point to this.
      */
     public void plan(Model m, Point start) {
@@ -65,9 +72,6 @@ public final class PathPlanner {
         List<Polyline> polylines = m._polygons();
         for (int i = 0; i < polylines.size(); i++) {
             Polyline polyline = polylines.get(i);
-            // for polygons, use the colour of the whole polygon
-            float[] rgb = polyline.getColor().getRGBComponents(null);
-
             Point[] points = polyline._points();
             for (Point next : points) {
                 // interpolate points along line segment
@@ -88,7 +92,7 @@ public final class PathPlanner {
             float r = point.r();
             float g = point.g();
             float b = point.b();
-            for (int i=0; i<pointsPerPoint; i++) {
+            for (int i = 0; i < pointsPerPoint; i++) {
                 xs.add(x);
                 ys.add(y);
                 rs.add(r);
@@ -108,7 +112,7 @@ public final class PathPlanner {
     }
 
     void interpolate(Point source, Point target) {
-        interpolate(source, target, (int) (source.dist(target) * pointsPerUnit));
+        interpolate(source, target, (int) (source.dist(target) * pointsPerUnit), vertexPoints);
     }
 
     /**
@@ -117,9 +121,9 @@ public final class PathPlanner {
      *
      * @param source the origin point along the line (not added to the path)
      * @param target the destination point along the line (explicitly added).
-     * @param n the number of interpolation points.
+     * @param n      the number of interpolation points.
      */
-    void interpolate(Point source, Point target, float n) {
+    void interpolate(Point source, Point target, float n, float vertexPoints) {
         float prevx = source.x();
         float prevy = source.y();
         float prevr = source.r();
@@ -128,26 +132,38 @@ public final class PathPlanner {
 
         final float targetX = target.x();
         final float targetY = target.y();
+        final float targetR = target.r();
+        final float targetG = target.g();
+        final float targetB = target.b();
 
-        final float dx = (targetX - prevx) / n;
-        final float dy = (targetY - prevy) / n;
+        float sx = prevx;
+        float sy = prevy;
+        float xDist = targetX - prevx;
+        float yDist = targetY - prevy;
 
         // intepolate n intermediate points
         for (int i = 0; i < n; i++) {
-            prevx += dx;
-            prevy += dy;
+            if (interpolation == Interpolation.LINEAR) {
+                prevx = sx + i * xDist / n;
+                prevy = sy + i * yDist / n;
+            } else if (interpolation == Interpolation.QUINTIC) {
+                prevx = sx + Util.quintic(i / n) * xDist;
+                prevy = sy + Util.quintic(i / n) * yDist;
+            }
             xs.add(prevx);
             ys.add(prevy);
             rs.add(prevr);
             gs.add(prevg);
             bs.add(prevb);
         }
-        // now add the end point
-        xs.add(targetX);
-        ys.add(targetY);
-        rs.add(target.r());
-        gs.add(target.g());
-        bs.add(target.b());
+        // now add the end points
+        for (int i = 0; i < vertexPoints; i++) {
+            xs.add(targetX);
+            ys.add(targetY);
+            rs.add(targetR);
+            gs.add(targetG);
+            bs.add(targetB);
+        }
     }
 
     public ArrayList<Float> getXs() {

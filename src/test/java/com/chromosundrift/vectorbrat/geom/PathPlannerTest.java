@@ -1,6 +1,5 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ public class PathPlannerTest {
         int pointsPerUnit = 5;
         Model model = Model.testPattern1();
         Point start = new Point(0f, 0f);
-        PathPlanner pp = new PathPlanner(5, pointsPerUnit);
+        PathPlanner pp = new PathPlanner(5, pointsPerUnit, 1, Interpolation.LINEAR);
         pp.plan(model, start);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
@@ -52,8 +51,8 @@ public class PathPlannerTest {
 
     @Test
     public void testInterpolateTo() {
-        PathPlanner pp = new PathPlanner(1, 5);
-        pp.interpolate(new Point(0,0), new Point(1, 1), 5);
+        PathPlanner pp = new PathPlanner(1, 5, 1, Interpolation.LINEAR);
+        pp.interpolate(new Point(0,0), new Point(1, 1), 5, 1);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
         assertTrue(xs.size() == ys.size());

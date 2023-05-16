@@ -14,7 +14,6 @@ import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
 import com.chromosundrift.vectorbrat.swing.DisplayController;
 import com.chromosundrift.vectorbrat.swing.DisplayPanel;
-import com.chromosundrift.vectorbrat.swing.LaserController;
 import com.chromosundrift.vectorbrat.swing.VectorBratFrame;
 
 public class VectorBrat {
@@ -22,8 +21,11 @@ public class VectorBrat {
     private static final Logger logger = LoggerFactory.getLogger(VectorBrat.class);
     private final VectorBratFrame frame;
     private final LaserDisplay laser;
+    private final DisplayPanel displayPanel;
+    private float t;
+    private Model model;
 
-    public VectorBrat() throws VectorBratException {
+    public VectorBrat(Model model) throws VectorBratException {
         logger.info("initialising VectorBrat");
         final Config config = new Config();
         String laf = config.getLaf();
@@ -40,17 +42,20 @@ public class VectorBrat {
 
         laser = new LaserDisplay(config);
         DisplayController displayController = new DisplayController(true);
-        DisplayPanel displayPanel = new DisplayPanel(config, displayController, laser);
+        displayPanel = new DisplayPanel(config, displayController, laser);
         displayController.setRepaintDisplay(displayPanel::repaint);
         frame = new VectorBratFrame(config, displayPanel, displayController, laser);
+        this.model = model;
+        this.t = System.currentTimeMillis() / 1000f;
     }
 
     public static void main(String[] args) {
         setSystemLibraryPath();
-        VectorBrat vectorBrat = null;
+
         try {
-            vectorBrat = new VectorBrat();
-            Model model = Model.testPattern1().scale(0.2f);
+            Model m = Model.testPattern1();
+            VectorBrat vectorBrat = new VectorBrat(m);
+            Model model = m.scale(0.5f);
             vectorBrat.start(model);
         } catch (VectorBratException e) {
             logger.error("can't create vectorbrat", e);
@@ -59,8 +64,10 @@ public class VectorBrat {
     }
 
     private void start(Model model) {
-        frame.start(model);
-        laser.start(model);
+        this.displayPanel.setModel(model);
+        this.laser.setModel(model);
+        this.frame.start();
+        this.laser.start(model);
         logger.info("started VectorBrat");
     }
 

@@ -24,5 +24,22 @@ public class Util {
         return Math.min(Math.max(min, freqL), max);
     }
 
+    /**
+     * Input domain 0-1
+     * @param x input value
+     * @return quintic ease in and out
+     */
+    public static float quintic(float x) {
+        return (float)(x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2);
+    }
+
+    /**
+     * Input domain 0-1
+     * @param x input value
+     * @return quintic ease in and out
+     */
+    public static double quintic(double x) {
+        return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
+    }
 
 }
