@@ -9,16 +9,9 @@ Experimental software for live interactive installations using ILDA lasers and x
 If you don't know why you want to play with lasers and vector graphics and 
 what's the big deal anyway, start with [background info](background.md).
 
-### Hack Mode: ON
-
-Mere days to showtime, hack mode is gaffa-taped into the **on** position. All manner of sins are going into the code
-as of May 2023. If you're reading this more than a few months later, I must have drifted
-on to pastures shinier and you should proceed at your peril.
-
 ## How To
 
 * make sure default system audio device is set to ES-9
-* (confirm) qjackctl shows Input Device and Output Device as ES-9
 
 ## TODO
 
@@ -94,7 +87,7 @@ running the alternative 1010
 * distingEX - modulation  
 * Pams + pexp2 - clocks, lfo
 * data - signal analysis, waveform generator
-* zoia - everthing
+* zoia - everything
 * mult - sharing clock
 * (possibly?) poly hector (general duties)
 

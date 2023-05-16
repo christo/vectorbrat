@@ -4,8 +4,11 @@
   * [ ] brightness
   * [ ] configurable points per second
 * [ ] collect credits to do some kind of credit screen
-* [ ] vitalise branding
+* [ ] vitalise branding - general svg translation
 * [ ] debug colour bleed (caused by path planner error or hardware?)
+* [ ] gamepads / other control surface (midi? cv?)
+* [ ] text rendering
+* [ ] circles
 
 ## Done
 
