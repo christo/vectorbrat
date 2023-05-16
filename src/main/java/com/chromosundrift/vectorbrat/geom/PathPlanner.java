@@ -57,8 +57,7 @@ public final class PathPlanner {
      * @param m     the model to plan.
      * @param start the start point, will draw the model from its closest point to this.
      */
-    public void planNextNearest(Model m, Point start) {
-        Point prev = start;
+    public void planNextNearest(Model m) {
 
         // TODO color change time compensation?
 
@@ -67,6 +66,14 @@ public final class PathPlanner {
             lines.addAll(pl.lines());
         }
         List<Point> points = new LinkedList<>(m._points());
+        Point prev;
+        if (!lines.isEmpty())  {
+            prev = lines.get(0).from();
+        } else if (!points.isEmpty()) {
+            prev = points.get(0);
+        } else {
+            prev = new Point(0, 0); // shouldn't happen
+        }
         while (!lines.isEmpty() || !points.isEmpty()) {
             // if a line is closest, this will contain it, otherwise null
             Line closestLine = null;

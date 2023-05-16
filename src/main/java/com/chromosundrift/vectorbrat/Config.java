@@ -12,6 +12,7 @@ import com.chromosundrift.vectorbrat.geom.Interpolation;
 public final class Config {
 
     public static final String DEFAULT_TITLE = "Vector Brat";
+    public static final String DEFAULT_TINY_TITLE = "VBrat";
 
     /**
      * The look and feel to use for the ui.
@@ -100,7 +101,7 @@ public final class Config {
     private static final float DEFAULT_POINTS_PER_POINT  = 8f;
     private static final float DEFAULT_POINTS_PER_UNIT = 120f;
     private static final float DEFAULT_VERTEX_POINTS = 10f;
-    private static final float DEFAULT_BLACK_POINTS = 10f;
+    private static final float DEFAULT_BLACK_POINTS = 20f;
     private static final float DEFAULT_POINTS_PER_UNIT_OFFSET = 10f;
     private static final Interpolation DEFAULT_INTERPOLATION = Interpolation.QUINTIC;
 
@@ -118,21 +119,17 @@ public final class Config {
     private final Channel channelG;
     private final Channel channelB;
     private final String title;
+    private final String tinyTitle;
+
     private final boolean liveControls;
-    private String xy;
-    private String rz;
-    private String gb;
     private int pps;
     private boolean lockout;
     private float lineWidth;
 
-    public Config(String title) {
+    public Config(String title, String tinyTitle) {
         this.title = title;
-        this.xy = DEFAULT_XY;
-        this.rz = DEFAULT_RZ;
-        this.gb = DEFAULT_GB;
+        this.tinyTitle = tinyTitle;
         this.pps = DEFAULT_PPS;
-        this.lockout = true;
         this.channelX = new Channel("X-channel", DEFAULT_ES9_CHANNEL_X);
         this.channelY = new Channel("Y-channel", DEFAULT_ES9_CHANNEL_Y);
         this.channelR = new Channel("R-channel", DEFAULT_ES9_CHANNEL_R);
@@ -143,7 +140,7 @@ public final class Config {
     }
 
     public Config() {
-        this(DEFAULT_TITLE);
+        this(DEFAULT_TITLE, DEFAULT_TINY_TITLE);
     }
 
     public static List<String> requiredDevices() {
@@ -156,30 +153,6 @@ public final class Config {
 
     public static List<String> knownDevices() {
         return Arrays.asList(ES9, ES8, DEFAULT_XY, DEFAULT_RZ, DEFAULT_GB);
-    }
-
-    public String getXy() {
-        return xy;
-    }
-
-    public void setXy(String xy) {
-        this.xy = xy;
-    }
-
-    public String getRz() {
-        return rz;
-    }
-
-    public void setRz(String rz) {
-        this.rz = rz;
-    }
-
-    public String getGb() {
-        return gb;
-    }
-
-    public void setGb(String gb) {
-        this.gb = gb;
     }
 
     public String getTitle() {
@@ -196,14 +169,6 @@ public final class Config {
 
     public void setPps(int pps) {
         this.pps = pps;
-    }
-
-    public boolean isLockout() {
-        return lockout;
-    }
-
-    public void setLockout(boolean lockout) {
-        this.lockout = lockout;
     }
 
     public Channel getChannelX() {
@@ -288,6 +253,10 @@ public final class Config {
 
     public float getPointsPerUnitOffset() {
         return this.pointsPerUnitOffset;
+    }
+
+    public String getTinyTitle() {
+        return this.tinyTitle;
     }
 
     /**

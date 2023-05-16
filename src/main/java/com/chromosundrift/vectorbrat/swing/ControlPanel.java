@@ -25,12 +25,13 @@ import java.awt.GridLayout;
 import java.util.Hashtable;
 
 import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.laser.LaserController;
 
 public class ControlPanel extends JPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(ControlPanel.class);
 
-    public ControlPanel(final Config config, final LaserController laserController, DisplayController displayController) {
+    public ControlPanel(final Config config, final Controllers controllers) {
         logger.info("initialising ControlPanel");
         setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -40,10 +41,12 @@ public class ControlPanel extends JPanel {
         JComponent gb = new DeviceSelector("Green/Blue Device");
 
         JCheckBox cb = new JCheckBox("debug");
+        DisplayController displayController = controllers.displayController;
         cb.setSelected(displayController.isDrawPathPlan());
         cb.addActionListener(e -> displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected()));
 
 
+        LaserController laserController = controllers.laserController;
         JPanel pps = createPpsSlider(config, laserController);
 
         StatPanel pathPlanStat = new StatPanel("path plan (μs)");

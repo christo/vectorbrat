@@ -179,4 +179,16 @@ public final class Point {
     public Point colored(Color color) {
         return new Point(this.x, this.y, color);
     }
+
+    static class PointFactory {
+        private final Color color;
+
+        public PointFactory(Color color) {
+            this.color = color;
+        }
+
+        Point p(float x, float y) {
+            return new Point(x, y, color);
+        }
+    }
 }

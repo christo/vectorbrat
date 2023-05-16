@@ -31,6 +31,7 @@ import com.chromosundrift.vectorbrat.VectorDisplay;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.PathPlanner;
 import com.chromosundrift.vectorbrat.geom.Polyline;
+import com.chromosundrift.vectorbrat.laser.LaserController;
 
 
 /**
@@ -157,7 +158,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
     private void drawPathPlan(final Model model, final BufferedImage im, final Graphics2D g2) {
         PathPlanner p = getPathPlan();
-        if (p != null) {
+        if (p != null && p.getXs().size() > 0) {
             int w = im.getWidth();
             int h = im.getHeight();
 
@@ -200,7 +201,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             // draw start and end markers
             int markerRadius = 10;
             int d = markerRadius + markerRadius;
-            int x = (int) ((xs.get(0) / 2 + 0.5) * w);
+            int x = (int) ((xs.get(0) / 2 + 0.5) * w);      // TODO IndexOutOfBoundsException
             int y = (int) ((ys.get(0) / 2 + 0.5) * h);
             g2.drawOval(x - markerRadius, y - markerRadius, d, d);
             x = (int) ((xs.get(xs.size() - 1) / 2 + 0.5) * w);

@@ -1,4 +1,4 @@
-package com.chromosundrift.vectorbrat.swing;
+package com.chromosundrift.vectorbrat.laser;
 
 import java.util.function.Consumer;
 

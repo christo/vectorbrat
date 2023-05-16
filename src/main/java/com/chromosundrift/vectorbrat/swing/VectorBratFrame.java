@@ -16,8 +16,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
+import com.chromosundrift.vectorbrat.AppRunnable;
 import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.geom.Model;
 
 public class VectorBratFrame extends JFrame {
 
@@ -25,7 +25,7 @@ public class VectorBratFrame extends JFrame {
 
     private final DisplayPanel vd;
 
-    public VectorBratFrame(Config config, DisplayPanel displayPanel, DisplayController displayController, LaserController laserController) {
+    public VectorBratFrame(Config config, DisplayPanel displayPanel, Controllers controllers) {
         logger.info("initialising VectorBratFrame");
         this.vd = displayPanel;
         this.setTitle(config.getTitle());
@@ -61,7 +61,7 @@ public class VectorBratFrame extends JFrame {
         enginePanel.add(scrollPane, BorderLayout.NORTH);
         enginePanel.add(Box.createVerticalBox(), BorderLayout.CENTER);
 
-        ControlPanel controlPanel = new ControlPanel(config, laserController, displayController);
+        ControlPanel controlPanel = new ControlPanel(config, controllers);
         scrollPane.setViewportView(controlPanel);
 
         setContentPane(rootPanel);

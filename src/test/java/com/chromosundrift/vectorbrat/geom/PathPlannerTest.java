@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.chromosundrift.vectorbrat.Config;
@@ -57,7 +56,7 @@ public class PathPlannerTest {
     public void testInterpolateTo() {
         Config c = getTestConfig();
         PathPlanner pp = new PathPlanner(c);
-        pp.interpolate(new Point(0,0), new Point(1, 1), 1, 5);
+        pp.interpolate(new Point(0, 0), new Point(1, 1), 1, 5);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
         assertTrue(xs.size() == ys.size());

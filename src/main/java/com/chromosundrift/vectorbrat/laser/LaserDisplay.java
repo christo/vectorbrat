@@ -14,14 +14,13 @@ import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.VectorDisplay;
-import com.chromosundrift.vectorbrat.geom.Interpolation;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.PathPlanner;
 import com.chromosundrift.vectorbrat.geom.Point;
-import com.chromosundrift.vectorbrat.swing.LaserController;
 
 /**
- * Handles path planning and vector drawing on a laser or scope. Delegates signal details to {@link LaserDriver}.
+ * Top level VectorDisplay for laser or scope. Delegates path interpolation to {@link PathPlanner} and signal details
+ * to {@link LaserDriver}.
  */
 public final class LaserDisplay implements VectorDisplay, LaserController {
 
@@ -85,10 +84,10 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private Void render(Model model) {
 
         if (modelDirty) {
-            Point start = new Point(0f, 0f);
+
             // calculate scan rate
             pathPlanner = new PathPlanner(this.config);
-            pathPlanner.planNextNearest(model, start);
+            pathPlanner.planNextNearest(model);
             laserDriver.setPathPlanner(pathPlanner);
             modelDirty = false;
         }

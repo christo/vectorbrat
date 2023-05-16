@@ -72,7 +72,7 @@ public final class LaserDriver {
     public LaserDriver(Config config) throws VectorBratException {
         logger.info("initialising LaserDriver");
         this.config = config;
-        String title = config.getTitle();
+        String title = config.getTinyTitle();
 
         Config.Channel channelX = config.getChannelX();
         Config.Channel channelY = config.getChannelY();
@@ -203,15 +203,16 @@ public final class LaserDriver {
                 try {
                     bufferLock.lock();
                     for (int i = 0; i < nframes; i++) {
-                        xBuffer1.put(i, xBuffer[index]);
+                        if (index >= xBuffer.length) {
+                            index = 0;
+                        }
+                        xBuffer1.put(i, xBuffer[index]); // TODO throws ArrayIndexOutOfBoundsException on model change
                         yBuffer1.put(i, yBuffer[index]);
                         rBuffer1.put(i, rBuffer[index]);
                         gBuffer1.put(i, gBuffer[index]);
                         bBuffer1.put(i, bBuffer[index]);
                         index++;
-                        if (index >= xBuffer.length) {
-                            index = 0;
-                        }
+
                     }
                 } finally {
                     bufferLock.unlock();
@@ -297,7 +298,6 @@ public final class LaserDriver {
             this.rBuffer = br;
             this.gBuffer = bg;
             this.bBuffer = bb;
-
         } finally {
             bufferLock.unlock();
         }
