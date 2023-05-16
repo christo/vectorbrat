@@ -88,7 +88,7 @@ public class VectorBrat {
         setModel(empty);
         this.frame.start();
         this.laser.start();
-        this.appRunnable.setAnimator("Box Grid");
+        this.appRunnable.setAnimator("Test Pattern 1");
         this.motion.submit(appRunnable);
         logger.info("started VectorBrat");
     }
