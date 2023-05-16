@@ -14,13 +14,11 @@ import com.chromosundrift.vectorbrat.Util;
  */
 public final class PathPlanner {
 
-    private static final Logger logger = LoggerFactory.getLogger(PathPlanner.class);
-
     /**
      * Initial size of path in total points including interpolation. Big enough to reduce allocations
      * during time-sensitive loop.
      */
-    public static final int INITIAL_CAPACITY = 1000;
+    public static final int INITIAL_CAPACITY = 10000;
 
     /**
      * Number of to replicated path points per given isolated point.
