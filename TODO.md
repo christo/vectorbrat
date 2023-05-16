@@ -1,20 +1,21 @@
 # vectorbrat TODO List
 
 * [ ] sanity check
-  * [x] audio device detection
-  * [ ] colour
-  * [ ] off/on
   * [ ] brightness
-  * [ ] dwell points
   * [ ] configurable points per second
-* [ ] define deployment setup
-  * [x] laptop
-  * [x] modular rig:
 * [ ] collect credits to do some kind of credit screen
 * [ ] vitalise branding
+* [ ] debug colour bleed (caused by path planner error or hardware?)
 
 ## Done
 
+* [x] define deployment setup
+  * [x] laptop
+  * [x] modular rig
+* [x] audio device detection
+* [x] colour
+* [x] off/on
+* [x] dwell points
 * [x] review and collect prior art
 * [x] attempt to build best existing
 * [x] compare existing to rebuild option
