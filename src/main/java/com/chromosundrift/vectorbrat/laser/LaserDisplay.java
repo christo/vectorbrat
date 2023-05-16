@@ -85,7 +85,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         if (modelDirty) {
             Point start = new Point(0f, 0f);
             // calculate scan rate
-            pathPlanner = new PathPlanner(20, 250, 20, Interpolation.QUINTIC);
+            pathPlanner = new PathPlanner(25, 200, 20, Interpolation.QUINTIC);
             pathPlanner.plan(model, start);
             laserDriver.setPathPlanner(pathPlanner);
             modelDirty = false;
