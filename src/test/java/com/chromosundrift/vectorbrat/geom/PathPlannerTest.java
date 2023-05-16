@@ -1,13 +1,17 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import com.chromosundrift.vectorbrat.Config;
 
 public class PathPlannerTest {
 
@@ -19,7 +23,8 @@ public class PathPlannerTest {
         int pointsPerUnit = 15;
         Model model = Model.testPattern1();
         Point start = new Point(0f, 0f);
-        PathPlanner pp = new PathPlanner(5, pointsPerUnit, 1, Interpolation.LINEAR);
+        Config c = getTestConfig();
+        PathPlanner pp = new PathPlanner(c);
         pp.planNextNearest(model, start);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
@@ -50,11 +55,42 @@ public class PathPlannerTest {
 
     @Test
     public void testInterpolateTo() {
-        PathPlanner pp = new PathPlanner(1, 5, 1, Interpolation.LINEAR);
+        Config c = getTestConfig();
+        PathPlanner pp = new PathPlanner(c);
         pp.interpolate(new Point(0,0), new Point(1, 1), 1, 5);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
         assertTrue(xs.size() == ys.size());
         assertTrue(xs.size() > 5);
+    }
+
+    private static Config getTestConfig() {
+        Config c = new Config();
+        c.setBlackPoints(0);
+        c.setInterpolation(Interpolation.LINEAR);
+        c.setPointsPerPoint(1);
+        c.setPointsPerUnit(5);
+        return c;
+    }
+
+    @Test
+    public void testPlanNextNearest() {
+        Config c = getTestConfig();
+        c.setInterpolation(Interpolation.QUINTIC);
+        PathPlanner pp = new PathPlanner(c);
+        Model m = Model.boxGrid(5, 5, Color.YELLOW);
+        Point origin = new Point(0f, 0f);
+        pp.planNextNearest(m, origin);
+        ArrayList<Float> xs = pp.getXs();
+        ArrayList<Float> ys = pp.getYs();
+        ArrayList<Float> rs = pp.getRs();
+        ArrayList<Float> gs = pp.getGs();
+        ArrayList<Float> bs = pp.getBs();
+        Assert.assertEquals(xs.size(), ys.size());
+        Assert.assertEquals(xs.size(), rs.size());
+        Assert.assertEquals(xs.size(), gs.size());
+        Assert.assertEquals(xs.size(), bs.size());
+        logger.info("number of path points: {}", xs.size());
+        Assert.assertTrue(xs.size() > 0);
     }
 }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.UnsupportedLookAndFeelException;
+import java.awt.Color;
 import java.util.Arrays;
 
 import static com.chromosundrift.vectorbrat.Util.setSystemLibraryPath;
@@ -50,6 +51,7 @@ public class VectorBrat {
 
         try {
             Model m = Model.testPattern1();
+//            Model m = Model.boxGrid(5, 4, Color.YELLOW);
             VectorBrat vectorBrat = new VectorBrat();
             vectorBrat.start(m);
         } catch (VectorBratException e) {

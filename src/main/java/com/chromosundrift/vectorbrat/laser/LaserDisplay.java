@@ -57,6 +57,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private long lastPathPlanTime;
     private Set<Consumer<LaserController>> updateListeners;
     private PathPlanner pathPlanner;
+    private Config config;
 
     public LaserDisplay(Config config) throws VectorBratException {
         logger.info("initialising LaserDisplay");
@@ -71,6 +72,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         this.lastPathPlanTime = -1;
         this.updateListeners = new LinkedHashSet<>();
         this.modelDirty = true;
+        this.config = config;
     }
 
     /**
@@ -85,7 +87,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         if (modelDirty) {
             Point start = new Point(0f, 0f);
             // calculate scan rate
-            pathPlanner = new PathPlanner(50, 200, 10, Interpolation.QUINTIC);
+            pathPlanner = new PathPlanner(this.config);
             pathPlanner.planNextNearest(model, start);
             laserDriver.setPathPlanner(pathPlanner);
             modelDirty = false;

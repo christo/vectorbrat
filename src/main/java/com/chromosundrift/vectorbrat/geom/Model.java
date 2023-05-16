@@ -38,11 +38,36 @@ public class Model {
         this(name, new ArrayList<>(), new ArrayList<>());
     }
 
+    /**
+     * Creates a box grid in the given color with boxes the same size as
+     * the gaps between them.
+     *
+     * @param nx number of boxes in x axis
+     * @param ny number of boxes in y axis
+     * @param c  color
+     * @return the Model
+     */
+    public static Model boxGrid(int nx, int ny, Color c) {
+        Model m = new Model();
+        float extent = 2f;  // total width or height
+        float offset = -1;  // add to extent to get coordinate range
+        float w = extent/(nx*2+1);
+        float h = extent/(ny*2+1);
+        for (int i = 0; i < nx; i++) {
+            for (int j = 0; j < ny; j++) {
+                float x = i * w * extent + offset + w;
+                float y = j * h * extent + offset + h;
+                m.add(Polyline.box(x, y, x + w, y + h, c));
+            }
+        }
+        return m;
+    }
+
     public static Model testPattern1() {
         Model m = new Model("test pattern 1");
         m.add(Polyline.createMidSquare(Color.ORANGE));
         // centre dots
-        for(float i=0; i<0.4; i+= 0.1) {
+        for (float i = 0; i < 0.4; i += 0.1) {
             m.add(new Point(0.0f, i, Color.MAGENTA));
         }
 
@@ -56,8 +81,8 @@ public class Model {
 
         m.add(Polyline.box("topright", 0.9f, -1f, 1f, -0.9f, Color.GREEN));
         m.add(Polyline.box("bottomright", 0.9f, 0.9f, 1f, 1f, Color.GREEN));
-        m.add(Polyline.box("bottomleft",-1f, 0.9f, -0.9f, 1f, Color.GREEN));
-        m.add(Polyline.box("topleft",-1f, -1f, -0.9f, -0.9f, Color.GREEN));
+        m.add(Polyline.box("bottomleft", -1f, 0.9f, -0.9f, 1f, Color.GREEN));
+        m.add(Polyline.box("topleft", -1f, -1f, -0.9f, -0.9f, Color.GREEN));
         logger.info("created test pattern: " + m);
         return m;
     }

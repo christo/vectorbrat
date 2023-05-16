@@ -3,6 +3,8 @@ package com.chromosundrift.vectorbrat;
 import java.util.Arrays;
 import java.util.List;
 
+import com.chromosundrift.vectorbrat.geom.Interpolation;
+
 
 /**
  * Some config items are just constants.
@@ -94,6 +96,18 @@ public final class Config {
 
     private static final int DEFAULT_PPS = 30000;
     private static final float DEFAULT_LINE_WIDTH = 5.5f;
+
+    private static final float DEFAULT_POINTS_PER_POINT  = 50f;
+    private static final float DEFAULT_POINTS_PER_UNIT =120f;
+    private static final float DEFAULT_VERTEX_POINTS =15f;
+    private static final float DEFAULT_BLACK_POINTS = 70f;
+    private static final Interpolation DEFAULT_INTERPOLATION = Interpolation.QUINTIC;
+
+    private float pointsPerPoint = DEFAULT_POINTS_PER_POINT;
+    private float pointsPerUnit = DEFAULT_POINTS_PER_UNIT;
+    private float vertexPoints = DEFAULT_VERTEX_POINTS;
+    private float blackPoints = DEFAULT_BLACK_POINTS;
+    private Interpolation interpolation = DEFAULT_INTERPOLATION;
 
     private final Channel channelX;
     private final Channel channelY;
@@ -223,6 +237,46 @@ public final class Config {
 
     public String getLaf() {
         return LAF;
+    }
+
+    public float getPointsPerPoint() {
+        return pointsPerPoint;
+    }
+
+    public float getPointsPerUnit() {
+        return pointsPerUnit;
+    }
+
+    public float getVertexPoints() {
+        return vertexPoints;
+    }
+
+    public float getBlackPoints() {
+        return blackPoints;
+    }
+
+    public Interpolation getInterpolation() {
+        return interpolation;
+    }
+
+    public void setPointsPerPoint(float pointsPerPoint) {
+        this.pointsPerPoint = pointsPerPoint;
+    }
+
+    public void setPointsPerUnit(float pointsPerUnit) {
+        this.pointsPerUnit = pointsPerUnit;
+    }
+
+    public void setVertexPoints(float vertexPoints) {
+        this.vertexPoints = vertexPoints;
+    }
+
+    public void setBlackPoints(float blackPoints) {
+        this.blackPoints = blackPoints;
+    }
+
+    public void setInterpolation(Interpolation interpolation) {
+        this.interpolation = interpolation;
     }
 
     /**

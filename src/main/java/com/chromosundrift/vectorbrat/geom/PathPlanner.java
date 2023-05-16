@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.Util;
 
 /**
@@ -39,15 +40,13 @@ public final class PathPlanner {
     private final ArrayList<Float> bs = new ArrayList<>(INITIAL_CAPACITY);
 
     /**
-     * @param pointsPerPoint number of render points to have per model point.
-     * @param pointsPerUnit  number of intermediate points per model unit.
-     * @param vertexPoints   number of render points to have per polyline vertex.
+     * @param config configuration.
      */
-    public PathPlanner(float pointsPerPoint, float pointsPerUnit, float vertexPoints, Interpolation interpolation) {
-        this.pointsPerPoint = pointsPerPoint;
-        this.pointsPerUnit = pointsPerUnit;
-        this.vertexPoints = vertexPoints;
-        this.interpolation = interpolation;
+    public PathPlanner(Config config) {
+        this.pointsPerPoint = config.getPointsPerPoint();
+        this.pointsPerUnit = config.getPointsPerUnit();
+        this.vertexPoints = config.getVertexPoints();
+        this.interpolation = config.getInterpolation();
     }
 
     /**
@@ -68,7 +67,7 @@ public final class PathPlanner {
             lines.addAll(pl.lines());
         }
         List<Point> points = new LinkedList<>(m._points());
-        while(!lines.isEmpty() && !points.isEmpty()) {
+        while (!lines.isEmpty() || !points.isEmpty()) {
             // if a line is closest, this will contain it, otherwise null
             Line closestLine = null;
             // if a point is closest, this contains it, otherwise null
@@ -126,6 +125,7 @@ public final class PathPlanner {
                 }
                 // if point is not the same as prev, interpolate to it first
                 if (!prev.equals(closestLine.from())) {
+                    penUp(pointsPerPoint);
                     interpolate(prev.black(), closestLine.from());
                 }
                 // interpolate the line
@@ -135,10 +135,14 @@ public final class PathPlanner {
                 // remove from the points list and add the point to the path plan
                 points.remove(closestPoint);
                 // interpolate to the new point, dwelling on arrival
+                penUp(pointsPerPoint);
                 interpolate(prev.black(), closestPoint, pointsPerPoint);
                 prev = closestPoint;
             }
         }
+        // now interpolate back to the beginning
+        penUp(pointsPerPoint);
+        interpolate(prev.black(), new Point(xs.get(0), ys.get(0)));
         if (xs.size() != ys.size() || xs.size() != rs.size() || xs.size() != gs.size() || xs.size() != bs.size()) {
             throw new IllegalStateException("BUG! all internal lists should be the same size");
         }
@@ -167,17 +171,20 @@ public final class PathPlanner {
             }
             // end of polyline, go to black for interconection to next Polyline
             prev = prev.black();
+            penUp(pointsPerPoint);
         }
 
         // now plan points
         List<Point> points = m._points();
         for (Point point : points) {
             // interpolate black path points to the point
+            penUp(pointsPerPoint);
             interpolate(prev.black(), point, pointsPerPoint);
             prev = point;
         }
 
         // return to the start point in black
+        penUp(pointsPerPoint);
         interpolate(prev.black(), start); // BUG: we always dwell assuming start was a vertex
 
         if (xs.size() != ys.size() || xs.size() != rs.size() || xs.size() != gs.size() || xs.size() != bs.size()) {
@@ -245,6 +252,19 @@ public final class PathPlanner {
             rs.add(targetR);
             gs.add(targetG);
             bs.add(targetB);
+        }
+    }
+
+    void penUp(float n) {
+        int last = xs.size() - 1;
+        if (last >= 0) {
+            for (int i = 0; i < vertexPoints; i++) {
+                xs.add(xs.get(last));
+                ys.add(ys.get(last));
+                rs.add(0f);
+                gs.add(0f);
+                bs.add(0f);
+            }
         }
     }
 
