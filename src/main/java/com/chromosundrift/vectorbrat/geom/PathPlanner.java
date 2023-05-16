@@ -193,7 +193,7 @@ public final class PathPlanner {
     }
 
     void interpolate(Point source, Point target) {
-        interpolate(source, target, vertexPoints, (int) (source.dist(target) * pointsPerUnit));
+        interpolate(source, target, vertexPoints);
     }
 
     /**
