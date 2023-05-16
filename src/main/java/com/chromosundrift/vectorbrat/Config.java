@@ -98,15 +98,18 @@ public final class Config {
     private static final float DEFAULT_LINE_WIDTH = 5.5f;
 
     private static final float DEFAULT_POINTS_PER_POINT  = 8f;
-    private static final float DEFAULT_POINTS_PER_UNIT = 170f;
-    private static final float DEFAULT_VERTEX_POINTS = 13f;
-    private static final float DEFAULT_BLACK_POINTS = 20f;
+    private static final float DEFAULT_POINTS_PER_UNIT = 120f;
+    private static final float DEFAULT_VERTEX_POINTS = 10f;
+    private static final float DEFAULT_BLACK_POINTS = 10f;
+    private static final float DEFAULT_POINTS_PER_UNIT_OFFSET = 10f;
     private static final Interpolation DEFAULT_INTERPOLATION = Interpolation.QUINTIC;
 
     private float pointsPerPoint = DEFAULT_POINTS_PER_POINT;
     private float pointsPerUnit = DEFAULT_POINTS_PER_UNIT;
     private float vertexPoints = DEFAULT_VERTEX_POINTS;
     private float blackPoints = DEFAULT_BLACK_POINTS;
+    private float pointsPerUnitOffset = DEFAULT_POINTS_PER_UNIT_OFFSET;
+    
     private Interpolation interpolation = DEFAULT_INTERPOLATION;
 
     private final Channel channelX;
@@ -277,6 +280,14 @@ public final class Config {
 
     public void setInterpolation(Interpolation interpolation) {
         this.interpolation = interpolation;
+    }
+
+    public void setPointsPerUnitOffset(float pointsPerUnitOffset) {
+        this.pointsPerUnitOffset = pointsPerUnitOffset;
+    }
+
+    public float getPointsPerUnitOffset() {
+        return this.pointsPerUnitOffset;
     }
 
     /**

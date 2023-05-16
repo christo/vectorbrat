@@ -70,6 +70,7 @@ public class PathPlannerTest {
         c.setInterpolation(Interpolation.LINEAR);
         c.setPointsPerPoint(1);
         c.setPointsPerUnit(5);
+        c.setPointsPerUnitOffset(0);
         c.setVertexPoints(1f);
         return c;
     }

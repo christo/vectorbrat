@@ -25,19 +25,18 @@ public final class PathPlanner {
     private final float pointsPerPoint;
 
     /**
-     * The linear density of interpolation points along a unit line.
+     * The average density of interpolation points along a unit line.
      */
     private final float pointsPerUnit;
     private final float vertexPoints;
     private final Interpolation interpolation;
-
-    // future consider preallocating arrays big enough via configured maximum
 
     private final ArrayList<Float> xs = new ArrayList<>(INITIAL_CAPACITY);
     private final ArrayList<Float> ys = new ArrayList<>(INITIAL_CAPACITY);
     private final ArrayList<Float> rs = new ArrayList<>(INITIAL_CAPACITY);
     private final ArrayList<Float> gs = new ArrayList<>(INITIAL_CAPACITY);
     private final ArrayList<Float> bs = new ArrayList<>(INITIAL_CAPACITY);
+    private float pointsPerUnitOffset;
 
     /**
      * @param config configuration.
@@ -47,6 +46,7 @@ public final class PathPlanner {
         this.pointsPerUnit = config.getPointsPerUnit();
         this.vertexPoints = config.getVertexPoints();
         this.interpolation = config.getInterpolation();
+        this.pointsPerUnitOffset = config.getPointsPerUnitOffset();
     }
 
     /**
@@ -201,7 +201,7 @@ public final class PathPlanner {
      * from source to target and dwell at the target with vertexPoints extra points.
      */
     void interpolate(Point source, Point target, float vertexPoints) {
-        interpolate(source, target, vertexPoints, (int) (source.dist(target) * pointsPerUnit));
+        interpolate(source, target, vertexPoints, (int) (source.dist(target) * pointsPerUnit + pointsPerUnitOffset));
     }
 
     /**
