@@ -113,8 +113,8 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
     private void drawModel(Model model, BufferedImage im, Graphics2D g2) {
         g2.setStroke(strokeLine);
-        Stream<Polyline> polygons = model.polylines();
-        polygons.forEach(p -> {
+        Stream<Polyline> polylines = model.polylines();
+        polylines.forEach(p -> {
             g2.setColor(p.getColor());
             g2.drawPolygon(p.awt(im.getWidth(), im.getHeight()));
         });
@@ -168,7 +168,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             // TODO move this to control panel
             String[] hudStats = new String[]{
                     s + " PATH POINTS",
-                    model.countPolygons() + " POLYLINES",
+                    model.countPolylines() + " POLYLINES",
                     model.countPoints() + " POINTS",
                     model.countVertices() + " VERTICES"
             };

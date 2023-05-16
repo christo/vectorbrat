@@ -61,13 +61,22 @@ public final class PathPlanner {
      * @param start the start point, will draw the model from the closest point to this.
      */
     public void plan(Model m, Point start) {
-        // future: add corner dwell param, maybe as function of angle
+        planStupid(m, start);
+    }
 
+    /**
+     * Fill out the model with interpolated intermediate path points based on the scanning speed in units per second.
+     * The path will be constructed as a loop with interpolation from the last point to the first, including black
+     * steps between gaps.
+     *
+     * @param m     the model to plan.
+     * @param start the start point, will draw the model from the closest point to this.
+     */
+    public void planStupid(Model m, Point start) {
         // generate intermediate points along the course of the path to draw the model
-
         Point prev = m.closestTo(start);
 
-        List<Polyline> polylines = m._polygons();
+        List<Polyline> polylines = m._polylines();
         for (int i = 0; i < polylines.size(); i++) {
             Polyline polyline = polylines.get(i);
             Point[] points = polyline._points();
@@ -76,7 +85,7 @@ public final class PathPlanner {
                 interpolate(prev, next);
                 prev = next;
             }
-            // end of polygon, go to black for interconection to next Polygon
+            // end of polyline, go to black for interconection to next Polyline
             prev = prev.black();
         }
 

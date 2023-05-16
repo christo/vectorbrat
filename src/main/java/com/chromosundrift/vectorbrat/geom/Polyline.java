@@ -58,8 +58,6 @@ public final class Polyline {
      * Converts our {@link Polyline} to a {@link java.awt.Polygon} scaling from normalised using the given
      * factors.
      *
-     * TODO: fix for open polygons
-     *
      * @param xScale the x-axis scaling factor
      * @param yScale the y-axis scaling factor
      * @return the awt Polygon
@@ -75,7 +73,7 @@ public final class Polyline {
 
     @Override
     public String toString() {
-        return "Polygon{" +
+        return "Polyline{" +
                 "color=" + color +
                 ", _points=" + Arrays.toString(_points) +
                 '}';
@@ -86,7 +84,7 @@ public final class Polyline {
     }
 
     public Polyline scale(float factor) {
-        List<Point> points = points().map(point -> point.scale(factor)).collect(Collectors.toList());
+        List<Point> points = Arrays.stream(_points).map(point -> point.scale(factor)).toList();
         Point[] newPoints = new Point[points.size()];
         for (int i = 0; i < points.size(); i++) {
             Point point = points.get(i);

@@ -92,9 +92,9 @@ public class Model {
     }
 
     /**
-     * Stream of just the polygons (not points).
+     * Stream of just the polylines (not points).
      *
-     * @return polygons.
+     * @return polylines.
      */
     public Stream<Polyline> polylines() {
         try {
@@ -105,7 +105,7 @@ public class Model {
         }
     }
 
-    List<Polyline> _polygons() {
+    List<Polyline> _polylines() {
         return this.polylines;
     }
 
@@ -114,7 +114,7 @@ public class Model {
     }
 
     /**
-     * Stream of just the points (not polygons)
+     * Stream of just the points (not polylines)
      *
      * @return points.
      */
@@ -148,7 +148,7 @@ public class Model {
     @Override
     public String toString() {
         return "Model{" +
-                "polygons=" + polylines +
+                "polyliness=" + polylines +
                 ", points=" + points +
                 '}';
     }
@@ -157,7 +157,7 @@ public class Model {
         return name;
     }
 
-    public int countPolygons() {
+    public int countPolylines() {
         return polylines.size();
     }
 
@@ -171,11 +171,9 @@ public class Model {
      * @return
      */
     public Point closestTo(Point ref) {
-
-        // TODO make polygons startable from any point, not just first
-
+        // TODO make polylines startable from any point, not just first
         TreeSet<Point> closestToRef = new TreeSet<>(ref.distToComparator());
-        // for now only consider points and the first point of each polygon
+        // for now only consider points and the first point of each polyline
         closestToRef.addAll(polylines.stream().map(p -> p._points()[0]).toList());
         closestToRef.addAll(_points());
         return closestToRef.first();
