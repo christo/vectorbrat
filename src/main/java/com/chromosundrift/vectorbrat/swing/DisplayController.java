@@ -15,7 +15,7 @@ public class DisplayController {
     public void setDrawPathPlan(boolean drawPathPlan) {
         this.drawPathPlan = drawPathPlan;
         if (repaintDisplay != null) {
-            repaintDisplay.run();       // TODO check repaint() can be called from ui thread
+            repaintDisplay.run();
         }
     }
 
