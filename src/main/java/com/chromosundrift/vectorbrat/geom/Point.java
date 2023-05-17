@@ -191,4 +191,8 @@ public final class Point {
             return new Point(x, y, color);
         }
     }
+
+    public Point offset(float dx, float dy) {
+        return new Point(x + dx, y + dy, this.color);
+    }
 }

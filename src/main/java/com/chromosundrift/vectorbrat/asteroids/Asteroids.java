@@ -17,8 +17,13 @@ public class Asteroids implements ModelAnimator {
     public static final float MAX_Y = 1.0f;
     public static final Color COL_ASTEROID = Color.YELLOW.darker();
     public static final int NUM_ASTEROIDS = 10;
+    public static final String NAME = "Asteroids";
     private LinkedList<Asteroid> asteroids = new LinkedList<>();
 
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
     @Override
     public void start() {
@@ -42,6 +47,6 @@ public class Asteroids implements ModelAnimator {
             polyLines.add(asteroid.toPolyline());
         }
         List<Point> points  = new ArrayList<>();
-        return new GlobalModel("Asteroids", polyLines, points);
+        return new GlobalModel(NAME, polyLines, points);
     }
 }

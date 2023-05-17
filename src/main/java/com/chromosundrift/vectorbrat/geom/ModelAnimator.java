@@ -7,6 +7,8 @@ import com.chromosundrift.vectorbrat.VectorBratException;
  */
 public interface ModelAnimator {
 
+    String getName();
+
     /**
      * Will be called to initialise everything.
      */

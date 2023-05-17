@@ -3,6 +3,7 @@ package com.chromosundrift.vectorbrat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -10,21 +11,28 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.chromosundrift.vectorbrat.geom.Crash;
-import com.chromosundrift.vectorbrat.geom.GlobalModel;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.ModelAnimator;
+import com.chromosundrift.vectorbrat.geom.StaticAnimator;
 
-public class AppRunnable implements Runnable, AppController {
+/**
+ * Holds a number of {@link ModelAnimator ModelAnimators} of which one is active at a time. Exceptions are handled and
+ * their lifecycles are managed. If the active one dies, it's replaced with a {@link Crash} that shows the exception
+ * message. The active {@link ModelAnimator} can be changed with {@link #setAnimator(String)}. Model changes can be
+ * subscribed to and a clock is also provided to the constructor via parameter which supplies animators with a common
+ * time reference.
+ */
+public class AppMap implements Runnable, AppController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AppRunnable.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppMap.class);
 
     private final Map<String, ModelAnimator> animators;
-    private final String defaultAnimator;
+    private String defaultAnimator;
     private final Consumer<Model> modelConsumer;
     private final Supplier<Long> clock;
     private String animator;
 
-    public AppRunnable(
+    public AppMap(
             Map<String, ModelAnimator> animators,
             String defaultAnimator,
             Consumer<Model> modelConsumer,
@@ -32,13 +40,16 @@ public class AppRunnable implements Runnable, AppController {
     ) {
         this.modelConsumer = modelConsumer;
         this.clock = clock;
-        if (animators.get(defaultAnimator) == null) {
-            throw new IllegalArgumentException("default animator must be in the animators map");
-        }
+        this.defaultAnimator = defaultAnimator;
         this.animators = new TreeMap<>();
         this.animators.putAll(animators);
-        this.defaultAnimator = defaultAnimator;
     }
+
+    public AppMap(Consumer<Model> modelConsumer,
+                  Supplier<Long> clock) {
+        this(new HashMap<String, ModelAnimator>(), "", modelConsumer, clock);
+    }
+
 
     @Override
     public List<String> getAnimators() {
@@ -88,6 +99,9 @@ public class AppRunnable implements Runnable, AppController {
 
     @Override
     public void run() {
+        if (defaultAnimator == null || defaultAnimator.equals("") || animators.isEmpty()) {
+            throw new RuntimeException("cannot start, animators are a mess");
+        }
         logger.info("starting");
         boolean running = true;
         ModelAnimator deadAnimator = null;
@@ -115,5 +129,21 @@ public class AppRunnable implements Runnable, AppController {
 
         }
         logger.info("exiting");
+    }
+
+    public void add(Model m) {
+        this.add(new StaticAnimator(m.getName(), m));
+    }
+
+    public void add(ModelAnimator ma) {
+        if (this.animators.isEmpty()) {
+            this.defaultAnimator = ma.getName();
+        }
+        this.animators.put(ma.getName(), ma);
+
+    }
+
+    public void setDefaultAnimator() throws VectorBratException {
+        this.setAnimator(this.defaultAnimator);
     }
 }

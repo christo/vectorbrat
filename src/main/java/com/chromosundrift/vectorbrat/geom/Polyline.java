@@ -87,16 +87,6 @@ public final class Polyline {
         return this._points;
     }
 
-    public Polyline scale(float factorX, float factorY) {
-        List<Point> points = Arrays.stream(_points).map(point -> point.scale(factorX, factorY)).toList();
-        Point[] newPoints = new Point[points.size()];
-        for (int i = 0; i < points.size(); i++) {
-            Point point = points.get(i);
-            newPoints[i] = point;
-        }
-        return new Polyline(this.name, this.color, newPoints);
-    }
-
     /**
      * Provides a new list of lines.
      *
@@ -110,8 +100,6 @@ public final class Polyline {
                 // skip adding the line if the points are the same (i.e. closed polygon)
                 if (!previous.equals(point)) {
                     lines.add(new Line(previous, point));
-                } else {
-                    System.out.println("skipping point = " + point);
                 }
             }
             previous = point;
@@ -129,6 +117,16 @@ public final class Polyline {
     public Point closest(Point other) {
         //noinspection OptionalGetWithoutIsPresent
         return Arrays.stream(_points).min(other.dist2Point()).get();
+    }
+
+    public Polyline scale(float factorX, float factorY) {
+        List<Point> points = Arrays.stream(_points).map(point -> point.scale(factorX, factorY)).toList();
+        Point[] newPoints = new Point[points.size()];
+        for (int i = 0; i < points.size(); i++) {
+            Point point = points.get(i);
+            newPoints[i] = point;
+        }
+        return new Polyline(this.name, this.color, newPoints);
     }
 
     public int[] xZeroScaled(float scale) {
@@ -149,5 +147,26 @@ public final class Polyline {
 
     public Stream<Line> lines() {
         return lineList().stream();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Polyline offset(float dx, float dy) {
+        // this array shit is bugging me
+        Point[] points = new Point[this._points.length];
+        for (int i = 0; i < this._points.length; i++) {
+            points[i] = this._points[i].offset(dx, dy);
+        }
+        return new Polyline(name, color, points);
+    }
+
+    public Polyline colored(Color c) {
+        Point[] points = new Point[this._points.length];
+        for (int i = 0; i < this._points.length; i++) {
+            points[i] = this._points[i].colored(c);
+        }
+        return new Polyline(this.name, c, points);
     }
 }

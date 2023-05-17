@@ -6,7 +6,7 @@ import java.util.Collections;
 
 public class Crash extends StaticAnimator {
     public Crash(String message) {
-        super(redX(message));
+        super("crash", redX(message));
     }
 
     private static Model redX(String message) {

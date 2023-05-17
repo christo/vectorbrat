@@ -16,7 +16,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-import com.chromosundrift.vectorbrat.AppRunnable;
 import com.chromosundrift.vectorbrat.Config;
 
 public class VectorBratFrame extends JFrame {

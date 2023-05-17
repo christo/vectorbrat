@@ -99,9 +99,9 @@ public final class Config {
     private static final float DEFAULT_LINE_WIDTH = 5.5f;
 
     private static final float DEFAULT_POINTS_PER_POINT  = 8f;
-    private static final float DEFAULT_POINTS_PER_UNIT = 50f;
-    private static final float DEFAULT_VERTEX_POINTS = 2f;
-    private static final float DEFAULT_BLACK_POINTS = 10f;
+    private static final float DEFAULT_POINTS_PER_UNIT = 150f;
+    private static final float DEFAULT_VERTEX_POINTS = 5f;
+    private static final float DEFAULT_BLACK_POINTS = 15f;
     private static final float DEFAULT_POINTS_PER_UNIT_OFFSET = 10f;
     private static final Interpolation DEFAULT_INTERPOLATION = Interpolation.QUINTIC;
 
@@ -153,6 +153,10 @@ public final class Config {
 
     public static List<String> knownDevices() {
         return Arrays.asList(ES9, ES8, DEFAULT_XY, DEFAULT_RZ, DEFAULT_GB);
+    }
+
+    public static boolean inSampleRange(float value) {
+        return value >= SAMPLE_MIN && value <= SAMPLE_MAX;
     }
 
     public String getTitle() {

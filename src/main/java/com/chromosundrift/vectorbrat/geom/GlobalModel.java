@@ -5,10 +5,12 @@ import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -156,7 +158,7 @@ public class GlobalModel implements Model {
 
     @Override
     public Model scale(float factorX, float factorY) {
-        GlobalModel m = new GlobalModel();
+        GlobalModel m = new GlobalModel(this.name);
         polylines().map(polyline -> polyline.scale(factorX, factorY)).forEach(m::add);
         points().map(point -> point.scale(factorX, factorY)).forEach(m::add);
         if (this.countVertices() != m.countVertices()) {
@@ -177,5 +179,19 @@ public class GlobalModel implements Model {
         List<Point> allPoints = new ArrayList<>(this.points);
         other.points().forEach(allPoints::add);
         return new GlobalModel(name + other.getName(), allPolylines, allPoints);
+    }
+
+    @Override
+    public Model offset(float dx, float dy) {
+        List<Polyline> allPolylines = this.polylines.stream().map(pl -> pl.offset(dx, dy)).collect(Collectors.toList());
+        List<Point> allPoints = this.points.stream().map(p -> p.offset(dx, dy)).collect(Collectors.toList());
+        return new GlobalModel(name, allPolylines, allPoints);
+    }
+
+    @Override
+    public Model colored(Color color) {
+        List<Polyline> polylines = this.polylines.stream().map(polyline -> polyline.colored(color)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = this.points.stream().map(p -> p.colored(color)).collect(Collectors.toList());
+        return new GlobalModel(this.name, polylines, allPoints);
     }
 }

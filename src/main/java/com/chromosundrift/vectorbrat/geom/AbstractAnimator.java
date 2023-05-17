@@ -5,6 +5,17 @@ package com.chromosundrift.vectorbrat.geom;
  */
 public abstract class AbstractAnimator implements ModelAnimator {
 
+    private final String name;
+
+    public AbstractAnimator(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
     @Override
     public void start() {
 

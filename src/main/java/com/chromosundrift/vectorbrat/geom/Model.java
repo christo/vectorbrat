@@ -1,5 +1,6 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import java.awt.Color;
 import java.util.stream.Stream;
 
 public interface Model {
@@ -28,4 +29,17 @@ public interface Model {
      * @return a new Model.
      */
     Model merge(Model other);
+
+    /**
+     * Returns a new Model offset by the given x and y. They're just added to all coordinates.
+     */
+    Model offset(float dx, float dy);
+
+    /**
+     * Returns a new model with everything this colour.
+     *
+     * @param color the color.
+     * @return the new Model.
+     */
+    Model colored(Color color);
 }
