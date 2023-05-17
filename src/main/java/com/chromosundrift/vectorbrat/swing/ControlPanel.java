@@ -78,7 +78,7 @@ public class ControlPanel extends JPanel {
                 stats
         };
 
-        setLayout(new GridLayout(items.length, 1, 0, 4));
+        setLayout(new GridLayout(items.length, 1, 0, 0));
         for (JComponent item : items) {
             add(item);
         }
@@ -115,11 +115,9 @@ public class ControlPanel extends JPanel {
             psl.setText(value + units);
         });
 
-        final JPanel pps = new JPanel(new BorderLayout(0, 0));
+        final JPanel pps = new JPanel(new BorderLayout());
         pps.add(psl, BorderLayout.NORTH);
         pps.add(ppsControl, BorderLayout.CENTER);
-
-        pps.setMinimumSize(new Dimension(200, 150));
 
         return pps;
     }
@@ -161,7 +159,7 @@ public class ControlPanel extends JPanel {
         final JComboBox<String> combo;
 
         public DeviceSelector(String text) {
-            super(new GridLayout(2, 1, 0, 5), true);
+            super(new GridLayout(2, 1, 0, 0), true);
             JLabel label = rLabel(text);
             combo = new JComboBox<>(Config.knownDevices().toArray(new String[0]));
             combo.setAlignmentX(Component.RIGHT_ALIGNMENT);

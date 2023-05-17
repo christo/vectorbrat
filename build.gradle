@@ -27,7 +27,10 @@ dependencies {
     implementation 'org.jaudiolibs:audioservers-jack:1.2.0'
     implementation 'org.jaudiolibs:audioservers-javasound:1.2.0'
 
-    implementation "com.google.guava:guava:31.1-jre"
+    implementation "com.google.guava:guava:31.1-jre" // TODO reconsider
+
+    implementation 'io.github.vincenzopalazzo:material-ui-swing:1.1.2'
+    implementation 'io.github.material-ui-swing:DarkStackOverflowTheme:0.0.1-rc3'
 
     // logging using slf4j api and logback implementation
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
