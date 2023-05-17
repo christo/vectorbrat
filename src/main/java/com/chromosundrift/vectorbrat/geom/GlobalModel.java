@@ -142,10 +142,9 @@ public class GlobalModel implements Model {
     }
 
     /**
-     * Returns the closest model point to the given point.
+     * Returns the closest model point to the given point - only considers isolated Points and Polyline start points.
      */
-    public Point closestTo(Point other) {
-        // TODO make polylines startable from any point, not just first
+    public Point closeish(Point other) {
         TreeSet<Point> closestToRef = new TreeSet<>(other.dist2Point());
         // for now only consider points and the first point of each polyline
         closestToRef.addAll(polylines.stream().map(p -> p._points()[0]).toList());
