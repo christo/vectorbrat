@@ -43,7 +43,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private static final Logger logger = LoggerFactory.getLogger(DisplayPanel.class);
     private static final int MIN_WIDTH = 100;
     private static final int MIN_HEIGHT = 100;
-    public static final Color HUD_COLOR = Color.WHITE;
+    public static final Color HUD_COLOR = new Color(255, 255, 255, 80);
     private final Color colText = Color.getHSBColor(0.83f, 0.5f, 0.9f);
     private final Color colBg = Color.getHSBColor(0, 0, 0.0f);
 
@@ -214,7 +214,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             String[] hudStats = new String[]{
                     s + " PATH POINTS",
                     model.countPolylines() + " POLYLINES",
-                    model.countPoints() + " POINTS",
+                    model.countPoints() + " ISOPOINTS",
                     model.countVertices() + " VERTICES",
                     blackPoints + " BLACK POINTS"
             };
@@ -230,10 +230,12 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         g2.setColor(HUD_COLOR);
         g2.setFont(fontHud);
         int lineHeight = 60;
+        int bottomPad = 20;
+        int leftPad = 50;
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
-            int y = h - (lines.length - i) * lineHeight - 60;
-            g2.drawString(line, 50, y);
+            int y = h - (lines.length - i) * lineHeight - bottomPad;
+            g2.drawString(line, leftPad, y);
         }
     }
 
