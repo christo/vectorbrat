@@ -16,7 +16,7 @@ public class Pattern {
         for (int i = 0; i < n; i++) {
             Point[] points = new Point[n];
             for (int j = 0; j < n; j++) {
-                points[j] = new Point((float) (i*0.05 - 0.4) + (float) (Math.sin(j * Math.TAU/n) * 0.03f*i), (float) (j*0.09-0.7), c);
+                points[j] = new Point((float) (i*0.05 - 0.4) + (float) (Math.sin(j * Math.TAU/n) * -0.015f*i), (float) (j*0.09-0.7), c);
             }
             polylines.add(Polyline.open("sin_" + i, c, points));
         }
@@ -38,10 +38,10 @@ public class Pattern {
         Color c = Color.CYAN;
         m.add(Polyline.open("-y arrow", c, new Point(-0.15f, -0.35f, c), new Point(0.0f, -0.5f, c), new Point(0.15f, -0.35f, c)));
         // dot x-aligned with arrow point and y-aligned with wing tips
-        m.add(new Point(0.0f, -0.35f, Color.CYAN));
+        m.add(new Point(0.0f, -0.35f, Color.RED));
         // bottom right handle
-        c = Color.PINK;
-        m.add(Polyline.open("++pink handle", c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
+        c = Color.BLUE;
+        m.add(Polyline.open("++ handle", c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
 
         m.add(Polyline.box("+-box", 0.8f, -1f, 1f, -0.8f, Color.GREEN));
         m.add(Polyline.box("++box", 0.8f, 0.8f, 1f, 1f, Color.GREEN));
