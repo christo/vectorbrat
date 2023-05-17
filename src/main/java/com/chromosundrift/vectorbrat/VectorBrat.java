@@ -32,6 +32,7 @@ import com.chromosundrift.vectorbrat.swing.VectorBratFrame;
 public class VectorBrat {
 
     private static final Logger logger = LoggerFactory.getLogger(VectorBrat.class);
+    public static final String THREAD_ANIMATION = "Animation";
     private final VectorBratFrame frame;
     private final LaserDisplay laser;
     private final DisplayPanel displayPanel;
@@ -51,7 +52,7 @@ public class VectorBrat {
         appRunnable = makeAppRunnable();
         Controllers controllers = new Controllers(displayController, laser, appRunnable);
         frame = new VectorBratFrame(config, displayPanel, controllers);
-        motion = Executors.newSingleThreadExecutor(r -> new Thread(r, "Animation"));
+        motion = Executors.newSingleThreadExecutor(r -> new Thread(r, THREAD_ANIMATION));
     }
 
     private static void setLookAndFeel() throws VectorBratException {
@@ -67,7 +68,7 @@ public class VectorBrat {
         TreeMap<String, ModelAnimator> animators = new TreeMap<>();
         animators.put("Test Pattern 1", new StaticAnimator(Pattern.testPattern1().scale(0.8f)));
         animators.put("Sine Waves", new StaticAnimator(Pattern.sineWaves(Color.RED)));
-        animators.put("Box Grid", new StaticAnimator(Pattern.boxGrid(6, 4, Color.CYAN)));
+        animators.put("Box Grid", new StaticAnimator(Pattern.boxGrid(3, 2, Color.CYAN)));
         animators.put("Asteroids", new Asteroids());
         // TODO move the time supplier out of here (use jack)
 
@@ -89,7 +90,7 @@ public class VectorBrat {
         setModel(empty);
         this.frame.start();
         this.laser.start();
-        this.appRunnable.setAnimator("Test Pattern 1");
+        this.appRunnable.setAnimator("Box Grid");
         this.motion.submit(appRunnable);
         logger.info("started VectorBrat");
     }
