@@ -1,10 +1,15 @@
 # vectorbrat TODO List
 
-* [ ] sanity check
-  * [ ] brightness
-  * [ ] configurable points per second
+* [ ] brightness
+* [ ] text rendering, fonts
+* [ ] configurable x and y flip for DisplayPanel
+* [ ] scale markers in debug mode
+* [ ] grid in debug mode
+* [ ] dynamic parameter changing
+* [ ] x and y positive arrows in debug mode
+* [ ] configurable points per second
 * [ ] collect credits to do some kind of credit screen
-* [ ] vitalise branding - general svg translation
+* [ ] vitalise branding - svg translation
 * [ ] debug colour bleed (caused by path planner error or hardware?)
 * [ ] gamepads / other control surface (midi? cv?)
 * [ ] text rendering
