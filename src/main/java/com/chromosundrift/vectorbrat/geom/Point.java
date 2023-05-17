@@ -159,8 +159,8 @@ public final class Point {
      * @param factor scaling factor.
      * @return the new point.
      */
-    public Point scale(float factor) {
-        return new Point(x * factor, y * factor, r, g, b);
+    public Point scale(float factorX, float factorY) {
+        return new Point(x * factorX, y * factorY, r, g, b);
     }
 
     /**

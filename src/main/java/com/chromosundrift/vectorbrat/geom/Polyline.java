@@ -87,14 +87,14 @@ public final class Polyline {
         return this._points;
     }
 
-    public Polyline scale(float factor) {
-        List<Point> points = Arrays.stream(_points).map(point -> point.scale(factor)).toList();
+    public Polyline scale(float factorX, float factorY) {
+        List<Point> points = Arrays.stream(_points).map(point -> point.scale(factorX, factorY)).toList();
         Point[] newPoints = new Point[points.size()];
         for (int i = 0; i < points.size(); i++) {
             Point point = points.get(i);
             newPoints[i] = point;
         }
-        return new Polyline(this.name + " x " + factor, this.color, newPoints);
+        return new Polyline(this.name, this.color, newPoints);
     }
 
     /**

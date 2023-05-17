@@ -11,11 +11,21 @@ public interface Model {
 
     int countVertices();
 
+    String getName();
+
     int countPolylines();
 
     int countPoints();
 
-    Model scale(float factor);
+    Model scale(float factorX, float factorY);
 
     Stream<Line> lines();
+
+    /**
+     * Returns a new model with all the content of this and the other model.
+     *
+     * @param other the other model.
+     * @return a new Model.
+     */
+    Model merge(Model other);
 }

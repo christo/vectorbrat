@@ -66,7 +66,7 @@ public class VectorBrat {
 
     private AppRunnable makeAppRunnable() {
         TreeMap<String, ModelAnimator> animators = new TreeMap<>();
-        animators.put("Test Pattern 1", new StaticAnimator(Pattern.testPattern1().scale(0.8f)));
+        animators.put("Test Pattern 1", new StaticAnimator(Pattern.testPattern1().scale(0.8f, 0.8f)));
         animators.put("Sine Waves", new StaticAnimator(Pattern.sineWaves(Color.RED)));
         animators.put("Box Grid", new StaticAnimator(Pattern.boxGrid(3, 2, Color.CYAN)));
         animators.put("Asteroids", new Asteroids());

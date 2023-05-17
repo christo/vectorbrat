@@ -1,6 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
 
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,6 +128,7 @@ public class GlobalModel implements Model {
                 '}';
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -153,10 +155,10 @@ public class GlobalModel implements Model {
     }
 
     @Override
-    public Model scale(float factor) {
+    public Model scale(float factorX, float factorY) {
         GlobalModel m = new GlobalModel();
-        polylines().map(polyline -> polyline.scale(factor)).forEach(m::add);
-        points().map(point -> point.scale(factor)).forEach(m::add);
+        polylines().map(polyline -> polyline.scale(factorX, factorY)).forEach(m::add);
+        points().map(point -> point.scale(factorX, factorY)).forEach(m::add);
         if (this.countVertices() != m.countVertices()) {
             throw new IllegalStateException("scaled model should have same number of points");
         }
@@ -166,5 +168,14 @@ public class GlobalModel implements Model {
     @Override
     public Stream<Line> lines() {
         return this.polylines().flatMap(Polyline::lines);
+    }
+
+    @Override
+    public Model merge(Model other) {
+        List<Polyline> allPolylines = new ArrayList<>(this.polylines);
+        other.polylines().forEach(allPolylines::add);
+        List<Point> allPoints = new ArrayList<>(this.points);
+        other.points().forEach(allPoints::add);
+        return new GlobalModel(name + other.getName(), allPolylines, allPoints);
     }
 }
