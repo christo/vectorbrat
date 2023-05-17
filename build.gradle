@@ -27,7 +27,7 @@ dependencies {
     implementation 'org.jaudiolibs:audioservers-jack:1.2.0'
     implementation 'org.jaudiolibs:audioservers-javasound:1.2.0'
 
-    implementation "com.google.guava:guava:31.1-jre" // TODO reconsider
+    implementation "com.google.guava:guava:31.1-jre" // TODO reconsider using guava - try vavr?
 
     implementation 'io.github.vincenzopalazzo:material-ui-swing:1.1.2'
     implementation 'io.github.material-ui-swing:DarkStackOverflowTheme:0.0.1-rc3'
