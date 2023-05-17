@@ -99,7 +99,7 @@ public final class Config {
     private static final float DEFAULT_LINE_WIDTH = 5.5f;
 
     private static final float DEFAULT_POINTS_PER_POINT  = 8f;
-    private static final float DEFAULT_POINTS_PER_UNIT = 120f;
+    private static final float DEFAULT_POINTS_PER_UNIT = 100f;
     private static final float DEFAULT_VERTEX_POINTS = 10f;
     private static final float DEFAULT_BLACK_POINTS = 20f;
     private static final float DEFAULT_POINTS_PER_UNIT_OFFSET = 10f;

@@ -1,13 +1,11 @@
 package com.chromosundrift.vectorbrat;
 
-import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.Color;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,8 +15,10 @@ import static javax.swing.UIManager.getInstalledLookAndFeels;
 import static javax.swing.UIManager.setLookAndFeel;
 
 import com.chromosundrift.vectorbrat.asteroids.Asteroids;
+import com.chromosundrift.vectorbrat.geom.GlobalModel;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.ModelAnimator;
+import com.chromosundrift.vectorbrat.geom.Pattern;
 import com.chromosundrift.vectorbrat.geom.StaticAnimator;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
 import com.chromosundrift.vectorbrat.swing.Controllers;
@@ -62,12 +62,13 @@ public class VectorBrat {
 
     private AppRunnable makeAppRunnable() {
         TreeMap<String, ModelAnimator> animators = new TreeMap<>();
-        animators.put("Test Pattern 1", new StaticAnimator(Model.testPattern1().scale(0.5f)));
-        animators.put("Box Grid", new StaticAnimator(Model.boxGrid(6, 4, Color.CYAN)));
+        animators.put("Test Pattern 1", new StaticAnimator(Pattern.testPattern1().scale(0.5f)));
+        animators.put("Sine Waves", new StaticAnimator(Pattern.sineWaves(Color.RED)));
+        animators.put("Box Grid", new StaticAnimator(Pattern.boxGrid(6, 4, Color.CYAN)));
         animators.put("Asteroids", new Asteroids());
         // TODO move the time supplier out of here (use jack)
 
-        return new AppRunnable(animators, "Box Grid", this::setModel, System::nanoTime);
+        return new AppRunnable(animators, "Sine Waves", this::setModel, System::nanoTime);
     }
 
     public static void main(String[] args) {
@@ -84,7 +85,7 @@ public class VectorBrat {
     }
 
     private void start() throws VectorBratException {
-        Model empty = new Model();
+        GlobalModel empty = new GlobalModel();
         setModel(empty);
         this.frame.start();
         this.laser.start();

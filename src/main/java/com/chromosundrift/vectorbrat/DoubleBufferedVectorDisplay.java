@@ -3,6 +3,7 @@ package com.chromosundrift.vectorbrat;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 
+import com.chromosundrift.vectorbrat.geom.GlobalModel;
 import com.chromosundrift.vectorbrat.geom.Model;
 
 /**
@@ -21,7 +22,7 @@ public final class DoubleBufferedVectorDisplay implements VectorDisplay {
     }
 
     public DoubleBufferedVectorDisplay() {
-        this(new Model());
+        this(new GlobalModel());
     }
 
     /**

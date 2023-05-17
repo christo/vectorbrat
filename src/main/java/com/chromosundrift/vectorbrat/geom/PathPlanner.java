@@ -55,17 +55,16 @@ public final class PathPlanner {
      * be constructed as a loop with interpolation from the last point to the first, including black steps between gaps.
      *
      * @param m     the model to plan.
-     * @param start the start point, will draw the model from its closest point to this.
      */
     public void planNextNearest(Model m) {
 
         // TODO color change time compensation?
 
         LinkedList<Line> lines = new LinkedList<>();
-        for (Polyline pl : m._polylines()) {
-            lines.addAll(pl.lines());
+        for (Polyline pl : m.polylines().toList()) {
+            lines.addAll(pl.lineList());
         }
-        List<Point> points = new LinkedList<>(m._points());
+        List<Point> points = new LinkedList<>(m.points().toList());
         Point prev;
         if (!lines.isEmpty())  {
             prev = lines.get(0).from();
@@ -163,7 +162,7 @@ public final class PathPlanner {
      * @param m     the model to plan.
      * @param start the start point, will draw the model from its closest point to this.
      */
-    public void planNaive(Model m, Point start) {
+    public void planNaive(GlobalModel m, Point start) {
         // generate intermediate points along the course of the path to draw the model
         Point prev = m.closestTo(start);
 

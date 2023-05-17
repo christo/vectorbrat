@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 public final class Polyline {
@@ -61,10 +62,6 @@ public final class Polyline {
         return box("box", x1, y1, x2, y2, c);
     }
 
-    static Polyline createMidSquare(Color c) {
-        return box("mid square", -0.5f, -0.5f, 0.5f, 0.5f, c);
-    }
-
     /**
      * The number of points in the polyline, expect one extra if closed.
      *
@@ -105,7 +102,7 @@ public final class Polyline {
      *
      * @return this polyline as a list of lines.
      */
-    public List<Line> lines() {
+    public List<Line> lineList() {
         Point previous = null;
         LinkedList<Line> lines = new LinkedList<>();
         for (Point point : _points) {
@@ -148,5 +145,9 @@ public final class Polyline {
             yVals[i] = (int) ((_points[i].y() / 2 + 0.5) * scale);
         }
         return yVals;
+    }
+
+    public Stream<Line> lines() {
+        return lineList().stream();
     }
 }

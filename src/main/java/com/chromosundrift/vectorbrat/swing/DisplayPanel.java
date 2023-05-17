@@ -28,6 +28,7 @@ import static java.awt.BasicStroke.JOIN_BEVEL;
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorDisplay;
+import com.chromosundrift.vectorbrat.geom.GlobalModel;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.PathPlanner;
 import com.chromosundrift.vectorbrat.geom.Polyline;

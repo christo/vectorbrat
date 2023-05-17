@@ -20,7 +20,7 @@ public class PolylineTest {
     public void testClosedLines() {
         Polyline p = Polyline.closed("orange triangle", Color.ORANGE, new Point(0, 0), new Point(1, 1), new Point(1, 0));
         assertEquals(p.size(), 4); // 3 points plus start point as end
-        List<Line> lines = p.lines();
+        List<Line> lines = p.lineList();
         int nLines = lines.size();
         assertEquals(nLines, 3); // 3 sides
         for (int i = 0; i < nLines; i++) {

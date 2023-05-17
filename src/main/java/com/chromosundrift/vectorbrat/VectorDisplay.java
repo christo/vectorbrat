@@ -1,5 +1,6 @@
 package com.chromosundrift.vectorbrat;
 
+import com.chromosundrift.vectorbrat.geom.GlobalModel;
 import com.chromosundrift.vectorbrat.geom.Model;
 
 public interface VectorDisplay {

@@ -11,10 +11,10 @@ public class ModelTest {
     public void testGridLines() {
         int cols = 4;
         int rows = 4;
-        Model model = Model.boxGrid(cols, rows, Color.CYAN);
+        GlobalModel model = Pattern.boxGrid(cols, rows, Color.CYAN);
         LinkedList<Line> lines = new LinkedList<>();
         for (Polyline pl : model._polylines()) {
-            lines.addAll(pl.lines());
+            lines.addAll(pl.lineList());
         }
         int boxSides = 4;
         lines.forEach(line -> System.out.println("line = " + line));

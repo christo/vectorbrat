@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.chromosundrift.vectorbrat.geom.Crash;
+import com.chromosundrift.vectorbrat.geom.GlobalModel;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.ModelAnimator;
 
