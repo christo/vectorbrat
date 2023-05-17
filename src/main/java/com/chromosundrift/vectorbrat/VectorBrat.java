@@ -42,12 +42,7 @@ public class VectorBrat {
         logger.info("initialising VectorBrat");
         final Config config = new Config();
 
-        try {
-            UIManager.setLookAndFeel(new MaterialLookAndFeel(new DarkStackOverflowTheme()));
-        } catch (UnsupportedLookAndFeelException e) {
-            throw new VectorBratException(e);
-        }
-
+        setLookAndFeel();
 
         laser = new LaserDisplay(config);
         DisplayController displayController = new DisplayController(false);
@@ -56,7 +51,16 @@ public class VectorBrat {
         appRunnable = makeAppRunnable();
         Controllers controllers = new Controllers(displayController, laser, appRunnable);
         frame = new VectorBratFrame(config, displayPanel, controllers);
-        motion = Executors.newSingleThreadExecutor(r -> new Thread(r, "VBrat-Motion"));
+        motion = Executors.newSingleThreadExecutor(r -> new Thread(r, "Animation"));
+    }
+
+    private static void setLookAndFeel() throws VectorBratException {
+        try {
+            logger.info("setting look and feel");
+            UIManager.setLookAndFeel(new MaterialLookAndFeel(new DarkStackOverflowTheme()));
+        } catch (UnsupportedLookAndFeelException e) {
+            throw new VectorBratException(e);
+        }
     }
 
     private AppRunnable makeAppRunnable() {
@@ -72,15 +76,12 @@ public class VectorBrat {
 
     public static void main(String[] args) {
         setSystemLibraryPath();
-
         try {
-
             VectorBrat vectorBrat = new VectorBrat();
             vectorBrat.start();
         } catch (VectorBratException e) {
             logger.error("can't create vectorbrat", e);
         }
-
     }
 
     private void start() throws VectorBratException {
