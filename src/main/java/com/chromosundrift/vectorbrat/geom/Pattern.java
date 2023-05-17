@@ -43,10 +43,10 @@ public class Pattern {
         c = Color.PINK;
         m.add(Polyline.open("++pink handle", c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
 
-        m.add(Polyline.box("+-box", 0.9f, -1f, 1f, -0.9f, Color.GREEN));
-        m.add(Polyline.box("++box", 0.9f, 0.9f, 1f, 1f, Color.GREEN));
-        m.add(Polyline.box("-+box", -1f, 0.9f, -0.9f, 1f, Color.GREEN));
-        m.add(Polyline.box("--box", -1f, -1f, -0.9f, -0.9f, Color.GREEN));
+        m.add(Polyline.box("+-box", 0.8f, -1f, 1f, -0.8f, Color.GREEN));
+        m.add(Polyline.box("++box", 0.8f, 0.8f, 1f, 1f, Color.GREEN));
+        m.add(Polyline.box("-+box", -1f, 0.8f, -0.8f, 1f, Color.GREEN));
+        m.add(Polyline.box("--box", -1f, -1f, -0.8f, -0.8f, Color.GREEN));
         logger.info("created test pattern: " + m);
         return m;
     }
