@@ -164,7 +164,7 @@ public final class PathPlanner {
      */
     public void planNaive(GlobalModel m, Point start) {
         // generate intermediate points along the course of the path to draw the model
-        Point prev = m.closestTo(start);
+        Point prev = m.closeish(start);
 
         List<Polyline> polylines = m._polylines();
         for (int i = 0; i < polylines.size(); i++) {
