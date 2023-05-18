@@ -20,8 +20,8 @@ public class Util {
         System.setProperty("jna.library.path", "/opt/homebrew/lib");
     }
 
-    public static float clamp(float freqL, float min, float max) {
-        return Math.min(Math.max(min, freqL), max);
+    public static float clamp(float x, float min, float max) {
+        return Math.min(Math.max(min, x), max);
     }
 
 }
