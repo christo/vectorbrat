@@ -419,6 +419,7 @@ public class AsteroidsFont implements Typeface {
         lfqmark.addLine(2, 5, 2, 6);
         charMap.put('?', lfqmark.toModel('?'));
 
+        charMap.put(' ', new Letter().toModel(' '));
         return charMap;
     }
 
