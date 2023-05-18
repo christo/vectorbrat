@@ -36,7 +36,7 @@ public final class PathPlanner {
     private final ArrayList<Float> rs = new ArrayList<>(INITIAL_CAPACITY);
     private final ArrayList<Float> gs = new ArrayList<>(INITIAL_CAPACITY);
     private final ArrayList<Float> bs = new ArrayList<>(INITIAL_CAPACITY);
-    private float pointsPerUnitOffset;
+    private final float pointsPerUnitOffset;
 
     /**
      * @param config configuration.
@@ -51,15 +51,17 @@ public final class PathPlanner {
 
     /**
      * Input domain 0-1
+     *
      * @param x input value
      * @return quintic ease in and out
      */
     public static float quintic(float x) {
-        return (float)(x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2);
+        return (float) (x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2);
     }
 
     /**
      * Input domain 0-1
+     *
      * @param x input value
      * @return quintic ease in and out
      */

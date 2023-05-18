@@ -2,7 +2,6 @@ package com.chromosundrift.vectorbrat.geom;
 
 /**
  * Doesn't actually animate.
- *
  */
 public class StaticAnimator extends AbstractAnimator {
 

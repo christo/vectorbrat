@@ -5,11 +5,10 @@ import org.slf4j.LoggerFactory;
 
 public class Util {
 
-    private static final Logger logger = LoggerFactory.getLogger(Util.class);
-
     public static final long MILLI = 1000L;
-    public static final long MICRO = 1000* MILLI;
+    public static final long MICRO = 1000 * MILLI;
     public static final long NANO = 1000L * MICRO;
+    private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
     /**
      * Needed for jna to load jack native libraries, must be called before jack initialisation. Depends on

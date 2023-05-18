@@ -13,9 +13,12 @@ import com.chromosundrift.vectorbrat.Config;
 
 public class AsteroidsFont implements Typeface {
 
+    private static final Model MISSING_CHAR = createMissingChar();
     Map<Character, Model> chars;
 
-    private static final Model MISSING_CHAR = createMissingChar();
+    public AsteroidsFont() {
+        chars = buildCharMap();
+    }
 
     private static Model createMissingChar() {
         List<Polyline> polylines = new ArrayList<>();
@@ -34,25 +37,6 @@ public class AsteroidsFont implements Typeface {
                 new Point(SAMPLE_MIN, SAMPLE_MAX))
         );
         return new GlobalModel("[X]", polylines);
-    }
-
-    public AsteroidsFont() {
-        chars = buildCharMap();
-    }
-
-    @Override
-    public Model getChar(char c) {
-        Model model = chars.get(c);
-        return (model == null) ? MISSING_CHAR : model;
-    }
-
-    /**
-     * Current returns a constant gap.
-     * TODO support proportional spacing
-     */
-    @Override
-    public float gap(char c1, char c2) {
-        return 0.1f;
     }
 
     static Map<Character, Model> buildCharMap() {
@@ -423,6 +407,21 @@ public class AsteroidsFont implements Typeface {
         return charMap;
     }
 
+    @Override
+    public Model getChar(char c) {
+        Model model = chars.get(c);
+        return (model == null) ? MISSING_CHAR : model;
+    }
+
+    /**
+     * Current returns a constant gap.
+     * TODO support proportional spacing
+     */
+    @Override
+    public float gap(char c1, char c2) {
+        return 0.1f;
+    }
+
     static class Letter {
 
         List<Polyline> polylines = new ArrayList<>();
@@ -436,7 +435,7 @@ public class AsteroidsFont implements Typeface {
          */
         void addLine(float x1, float y1, float x2, float y2) {
             // map to the model coordinate range
-            float mx1 = (x1 - MIN_X) * Config.SAMPLE_RANGE / MAX_X+ SAMPLE_MIN;
+            float mx1 = (x1 - MIN_X) * Config.SAMPLE_RANGE / MAX_X + SAMPLE_MIN;
             float my1 = (y1 - MIN_Y) * Config.SAMPLE_RANGE / MAX_Y + SAMPLE_MIN;
             float mx2 = (x2 - MIN_X) * Config.SAMPLE_RANGE / MAX_X + SAMPLE_MIN;
             float my2 = (y2 - MIN_Y) * Config.SAMPLE_RANGE / MAX_Y + SAMPLE_MIN;

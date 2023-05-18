@@ -12,7 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.chromosundrift.vectorbrat.Util.setSystemLibraryPath;
-import static javax.swing.UIManager.setLookAndFeel;
 
 import com.chromosundrift.vectorbrat.asteroids.Asteroids;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
@@ -28,8 +27,8 @@ import com.chromosundrift.vectorbrat.swing.VectorBratFrame;
 
 public class VectorBrat {
 
-    private static final Logger logger = LoggerFactory.getLogger(VectorBrat.class);
     public static final String THREAD_ANIMATION = "Animation";
+    private static final Logger logger = LoggerFactory.getLogger(VectorBrat.class);
     private final VectorBratFrame frame;
     private final LaserDisplay laser;
     private final DisplayPanel displayPanel;
@@ -61,6 +60,16 @@ public class VectorBrat {
         }
     }
 
+    public static void main(String[] args) {
+        setSystemLibraryPath();
+        try {
+            VectorBrat vectorBrat = new VectorBrat();
+            vectorBrat.start();
+        } catch (VectorBratException e) {
+            logger.error("can't create vectorbrat", e);
+        }
+    }
+
     private AppMap makeAppMap() {
         // TODO move the time supplier out of here (use jack)
         AppMap ar = new AppMap(this::setModel, System::nanoTime);
@@ -73,16 +82,6 @@ public class VectorBrat {
         ar.add(Pattern.sineWaves(Color.RED));
         ar.add(Pattern.boxGrid(3, 2, Color.CYAN));
         return ar;
-    }
-
-    public static void main(String[] args) {
-        setSystemLibraryPath();
-        try {
-            VectorBrat vectorBrat = new VectorBrat();
-            vectorBrat.start();
-        } catch (VectorBratException e) {
-            logger.error("can't create vectorbrat", e);
-        }
     }
 
     private void start() throws VectorBratException {

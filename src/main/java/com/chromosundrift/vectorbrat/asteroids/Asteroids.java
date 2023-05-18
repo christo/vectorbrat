@@ -46,7 +46,7 @@ public class Asteroids implements ModelAnimator {
             asteroid.update(time);
             polyLines.add(asteroid.toPolyline());
         }
-        List<Point> points  = new ArrayList<>();
+        List<Point> points = new ArrayList<>();
         return new GlobalModel(NAME, polyLines, points);
     }
 }

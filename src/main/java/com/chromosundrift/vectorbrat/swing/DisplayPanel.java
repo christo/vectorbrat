@@ -28,7 +28,6 @@ import static java.awt.BasicStroke.JOIN_BEVEL;
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorDisplay;
-import com.chromosundrift.vectorbrat.geom.GlobalModel;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.PathPlanner;
 import com.chromosundrift.vectorbrat.geom.Polyline;
@@ -40,13 +39,16 @@ import com.chromosundrift.vectorbrat.laser.LaserController;
  */
 public final class DisplayPanel extends JPanel implements VectorDisplay {
 
+    public static final Color HUD_COLOR = new Color(255, 255, 255, 80);
     private static final Logger logger = LoggerFactory.getLogger(DisplayPanel.class);
     private static final int MIN_WIDTH = 100;
     private static final int MIN_HEIGHT = 100;
-    public static final Color HUD_COLOR = new Color(255, 255, 255, 80);
+    private static final BasicStroke STROKE_PATH = new BasicStroke(3f);
+    private static final BasicStroke STROKE_PATH_OFF =
+            new BasicStroke(1f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
+    private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.6f, 0.3f);
     private final Color colText = Color.getHSBColor(0.83f, 0.5f, 0.9f);
     private final Color colBg = Color.getHSBColor(0, 0, 0.0f);
-
     private final DoubleBufferedVectorDisplay vectorDisplay;
     private final Font fontBranding;
     private final Config config;
@@ -55,10 +57,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private final LaserController laserController;
     private final Font fontHud;
     private Optional<BufferedImage> logo = Optional.empty();
-    private static final BasicStroke STROKE_PATH = new BasicStroke(3f);
-    private static final BasicStroke STROKE_PATH_OFF =
-            new BasicStroke(1f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
-    private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.6f, 0.3f);
 
     public DisplayPanel(Config config, DisplayController displayController, LaserController laserController) {
         this.displayController = displayController;

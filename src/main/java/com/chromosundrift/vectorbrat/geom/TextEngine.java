@@ -37,7 +37,7 @@ public class TextEngine {
         gaps[0] = 0f;
         float spaceSpace = 0f;
         for (int i = 1; i < chars.length; i++) {
-            float gap = typeface.gap(chars[i-1], chars[i]);
+            float gap = typeface.gap(chars[i - 1], chars[i]);
             spaceSpace += gap;
             gaps[i] = gap;
         }

@@ -35,6 +35,7 @@ public class LissajouClient implements AudioClient {
     private int idxLeft;
     private int idxRight;
     private double amp;
+
     public LissajouClient(float freqL, float freqR, double amp) {
         this.freqL = clampFreq(freqL);
         this.freqR = clampFreq(freqR);

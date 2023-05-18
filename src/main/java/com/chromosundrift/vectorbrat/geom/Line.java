@@ -5,8 +5,8 @@ import java.util.Optional;
 /**
  * A coloured line.
  *
- * @param from  start point.
- * @param to    end point.
+ * @param from start point.
+ * @param to   end point.
  */
 public record Line(Point from, Point to) implements Geom {
 

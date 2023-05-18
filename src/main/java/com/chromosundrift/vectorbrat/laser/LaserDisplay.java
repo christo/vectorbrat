@@ -27,25 +27,21 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     private final DoubleBufferedVectorDisplay vectorDisplay;
     private final LaserDriver laserDriver;
-
+    private final ThreadFactory threadFactory;
+    private final Set<Consumer<LaserController>> updateListeners;
+    private final Config config;
     private int pps;
-
     private volatile boolean running;
-
     /**
      * Controls the thread that continually updates the model.
      */
     private ExecutorService exec;
-
     /**
      * Tracks whether the model changed and a new path plan must be generated.
      */
     private volatile boolean modelDirty;
-    private final ThreadFactory threadFactory;
     private long lastPathPlanTime;
-    private final Set<Consumer<LaserController>> updateListeners;
     private PathPlanner pathPlanner;
-    private final Config config;
 
     public LaserDisplay(Config config) throws VectorBratException {
         logger.info("initialising LaserDisplay");

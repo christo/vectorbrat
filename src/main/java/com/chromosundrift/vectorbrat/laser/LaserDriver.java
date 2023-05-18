@@ -44,11 +44,8 @@ public final class LaserDriver {
     private final Config config;
 
     private final JackClient client;
-
-    private volatile boolean running = false;
-
     private final ReentrantLock bufferLock = new ReentrantLock();
-
+    private volatile boolean running = false;
     private float[] xBuffer;
     private float[] yBuffer;
     private float[] rBuffer;

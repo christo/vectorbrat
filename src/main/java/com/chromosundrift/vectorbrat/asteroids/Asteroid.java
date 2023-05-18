@@ -17,6 +17,8 @@ public class Asteroid {
     private static final float MAX_DY = 0.1f;
     private static final float MIN_DROT = (float) (Math.TAU / 10);
     private static final float MAX_DROT = (float) (Math.TAU / 5);
+    private static final int TARGET_FRAMERATE = 60;
+    private static final double frameTimeMs = 1.0 * Util.MILLI / TARGET_FRAMERATE;
     private final Size size;
     private final float[] radii;
     private final float dx;
@@ -26,8 +28,6 @@ public class Asteroid {
     private float x;
     private float y;
     private long lastUpdate = -1;
-    private static int TARGET_FRAMERATE = 60;
-    private static double frameTimeMs = 1.0 * Util.MILLI / TARGET_FRAMERATE;
 
 
     public Asteroid(Size size) {
@@ -38,7 +38,6 @@ public class Asteroid {
         this.rot = 0;
         this.dx = r.nextFloat(Asteroid.MIN_DX, Asteroid.MAX_DX);
         this.dy = r.nextFloat(Asteroid.MIN_DY, Asteroid.MAX_DY);
-        ;
         this.drot = r.nextFloat(Asteroid.MIN_DROT, Asteroid.MAX_DROT) / size.sides;
 
         // create random points
@@ -58,7 +57,7 @@ public class Asteroid {
             // update the model params proportional to number of frames elapsed
             x += dx * frames;
             y += dy * frames;
-            rot += drot  * frames;
+            rot += drot * frames;
             if (x < Asteroids.MIN_X - Size.LARGE.units) {
                 x = Asteroids.MAX_X + Size.LARGE.units;
             }
@@ -81,7 +80,7 @@ public class Asteroid {
             float theta = (float) (i * Math.TAU / size.sides) + this.rot;
             float lx = (float) (radii[i] * Math.cos(theta));
             float ly = (float) (radii[i] * Math.sin(theta));
-            points[i] = new Point(x+lx, y+ly, Asteroids.COL_ASTEROID);
+            points[i] = new Point(x + lx, y + ly, Asteroids.COL_ASTEROID);
         }
         return Polyline.closed(size.name() + " asteroid", Asteroids.COL_ASTEROID, points);
     }
@@ -96,7 +95,7 @@ public class Asteroid {
         private final int score;
         private final int sides;
 
-        private Size(float units, int score, int sides) {
+        Size(float units, int score, int sides) {
             this.units = units;
             this.score = score;
             this.sides = sides;

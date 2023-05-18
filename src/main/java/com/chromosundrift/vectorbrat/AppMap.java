@@ -27,9 +27,9 @@ public class AppMap implements Runnable, AppController {
     private static final Logger logger = LoggerFactory.getLogger(AppMap.class);
 
     private final Map<String, ModelAnimator> animators;
-    private String defaultAnimator;
     private final Consumer<Model> modelConsumer;
     private final Supplier<Long> clock;
+    private String defaultAnimator;
     private String animator;
 
     public AppMap(

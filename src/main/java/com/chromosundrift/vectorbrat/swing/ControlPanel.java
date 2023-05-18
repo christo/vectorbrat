@@ -20,7 +20,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Hashtable;
 
@@ -53,7 +52,7 @@ public class ControlPanel extends JPanel {
         StatPanel sampleRateStat = new StatPanel("sample rate");
         laserController.addUpdateListener(lc -> {
             pathPlanStat.setValue(lc.getPathPlanTime());
-            sampleRateStat.setValue((int)lc.getSampleRate());
+            sampleRateStat.setValue((int) lc.getSampleRate());
         });
 
         JComponent[] details = new JComponent[]{

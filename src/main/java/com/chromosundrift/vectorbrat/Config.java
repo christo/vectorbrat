@@ -98,21 +98,12 @@ public final class Config {
     private static final int DEFAULT_PPS = 30000;
     private static final float DEFAULT_LINE_WIDTH = 5.5f;
 
-    private static final float DEFAULT_POINTS_PER_POINT  = 8f;
+    private static final float DEFAULT_POINTS_PER_POINT = 8f;
     private static final float DEFAULT_POINTS_PER_UNIT = 150f;
     private static final float DEFAULT_VERTEX_POINTS = 5f;
     private static final float DEFAULT_BLACK_POINTS = 15f;
     private static final float DEFAULT_POINTS_PER_UNIT_OFFSET = 10f;
     private static final Interpolation DEFAULT_INTERPOLATION = Interpolation.QUINTIC;
-
-    private float pointsPerPoint = DEFAULT_POINTS_PER_POINT;
-    private float pointsPerUnit = DEFAULT_POINTS_PER_UNIT;
-    private float vertexPoints = DEFAULT_VERTEX_POINTS;
-    private float blackPoints = DEFAULT_BLACK_POINTS;
-    private float pointsPerUnitOffset = DEFAULT_POINTS_PER_UNIT_OFFSET;
-    
-    private Interpolation interpolation = DEFAULT_INTERPOLATION;
-
     private final Channel channelX;
     private final Channel channelY;
     private final Channel channelR;
@@ -120,8 +111,13 @@ public final class Config {
     private final Channel channelB;
     private final String title;
     private final String tinyTitle;
-
     private final boolean liveControls;
+    private float pointsPerPoint = DEFAULT_POINTS_PER_POINT;
+    private float pointsPerUnit = DEFAULT_POINTS_PER_UNIT;
+    private float vertexPoints = DEFAULT_VERTEX_POINTS;
+    private float blackPoints = DEFAULT_BLACK_POINTS;
+    private float pointsPerUnitOffset = DEFAULT_POINTS_PER_UNIT_OFFSET;
+    private Interpolation interpolation = DEFAULT_INTERPOLATION;
     private int pps;
     private boolean lockout;
     private float lineWidth;
@@ -215,48 +211,48 @@ public final class Config {
         return pointsPerPoint;
     }
 
-    public float getPointsPerUnit() {
-        return pointsPerUnit;
-    }
-
-    public float getVertexPoints() {
-        return vertexPoints;
-    }
-
-    public float getBlackPoints() {
-        return blackPoints;
-    }
-
-    public Interpolation getInterpolation() {
-        return interpolation;
-    }
-
     public void setPointsPerPoint(float pointsPerPoint) {
         this.pointsPerPoint = pointsPerPoint;
+    }
+
+    public float getPointsPerUnit() {
+        return pointsPerUnit;
     }
 
     public void setPointsPerUnit(float pointsPerUnit) {
         this.pointsPerUnit = pointsPerUnit;
     }
 
+    public float getVertexPoints() {
+        return vertexPoints;
+    }
+
     public void setVertexPoints(float vertexPoints) {
         this.vertexPoints = vertexPoints;
+    }
+
+    public float getBlackPoints() {
+        return blackPoints;
     }
 
     public void setBlackPoints(float blackPoints) {
         this.blackPoints = blackPoints;
     }
 
+    public Interpolation getInterpolation() {
+        return interpolation;
+    }
+
     public void setInterpolation(Interpolation interpolation) {
         this.interpolation = interpolation;
     }
 
-    public void setPointsPerUnitOffset(float pointsPerUnitOffset) {
-        this.pointsPerUnitOffset = pointsPerUnitOffset;
-    }
-
     public float getPointsPerUnitOffset() {
         return this.pointsPerUnitOffset;
+    }
+
+    public void setPointsPerUnitOffset(float pointsPerUnitOffset) {
+        this.pointsPerUnitOffset = pointsPerUnitOffset;
     }
 
     public String getTinyTitle() {
