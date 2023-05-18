@@ -3,11 +3,12 @@ package com.chromosundrift.vectorbrat.geom;
 import java.awt.Color;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Immutable float-precision point.
  */
-public final class Point {
+public final class Point implements Geom {
     private final float x;
     private final float y;
     private final float r;
@@ -16,7 +17,7 @@ public final class Point {
     private final Color color;
 
     /**
-     *
+     * Constructs a new point with given x and y coordinates and red, green, blue color components.
      */
     public Point(float x, float y, float r, float g, float b) {
         this.x = x;
@@ -27,6 +28,12 @@ public final class Point {
         this.color = new Color(r, g, b);
     }
 
+    /**
+     * Returns a white point at the given location.
+     *
+     * @param x x coordinate.
+     * @param y y coordinate.
+     */
     public Point(float x, float y) {
         this(x, y, 1f, 1f, 1f);
     }
@@ -74,8 +81,7 @@ public final class Point {
     public float dist2(Point other) {
         final float xx = other.x - x;
         final float yy = other.y - y;
-        final float d2 = xx * xx + yy * yy;
-        return d2;
+        return xx * xx + yy * yy;
     }
 
     public float x() {
@@ -117,8 +123,7 @@ public final class Point {
 
     @Override
     public String toString() {
-        return "Point[(" + x + "," + y + ") " +
-                "rgb(" + r + "," + g + "," + b + ")]";
+        return "Point[" + x + "," + y + " rgb(" + r + "," + g + "," + b + ")]";
     }
 
     /**
@@ -127,7 +132,7 @@ public final class Point {
      * @return a black copy of this.
      */
     public Point black() {
-        return new Point(x, y, 0f, 0f, 0f);
+        return this.colored(Color.BLACK);
     }
 
     /**
@@ -154,30 +159,30 @@ public final class Point {
     }
 
     /**
+     * Creates a new point with the given colour.
+     */
+    public Point colored(Color color) {
+        return new Point(this.x, this.y, color);
+    }
+
+    /**
      * Returns a new point in a space scaled by the given factor.
      *
-     * @param factor scaling factor.
+     * @param factorX scaling factor in x axis.
+     * @param factorY scaling factor in y axis.
      * @return the new point.
      */
     public Point scale(float factorX, float factorY) {
         return new Point(x * factorX, y * factorY, r, g, b);
     }
 
-    /**
-     * Returns the end point of the given line which is closest to this.
-     *
-     * @param line the line whose points are compared.
-     * @return one of the line's two points.
-     */
-    public Point closest(Line line) {
-        return line.closest(this);
+    public Point offset(float dx, float dy) {
+        return new Point(x + dx, y + dy, this.color);
     }
 
-    /**
-     * Creates a new point with the given colour.
-     */
-    public Point colored(Color color) {
-        return new Point(this.x, this.y, color);
+    @Override
+    public Optional<Point> closest(Point other) {
+        return Optional.of(this);
     }
 
     static class PointFactory {
@@ -190,9 +195,5 @@ public final class Point {
         Point p(float x, float y) {
             return new Point(x, y, color);
         }
-    }
-
-    public Point offset(float dx, float dy) {
-        return new Point(x + dx, y + dy, this.color);
     }
 }

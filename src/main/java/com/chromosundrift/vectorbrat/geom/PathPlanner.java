@@ -1,5 +1,6 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,7 +55,7 @@ public final class PathPlanner {
      * model with interpolated intermediate path points based on the scanning speed in units per second. The path will
      * be constructed as a loop with interpolation from the last point to the first, including black steps between gaps.
      *
-     * @param m     the model to plan.
+     * @param m the model to plan.
      */
     public void planNextNearest(Model m) {
 
@@ -66,12 +67,13 @@ public final class PathPlanner {
         }
         List<Point> points = new LinkedList<>(m.points().toList());
         Point prev;
-        if (!lines.isEmpty())  {
+        if (!lines.isEmpty()) {
             prev = lines.get(0).from();
         } else if (!points.isEmpty()) {
             prev = points.get(0);
         } else {
-            prev = new Point(0, 0); // shouldn't happen
+            // model is empty, just draw origin with pen up
+            prev = new Point(0, 0, Color.BLACK);
         }
         while (!lines.isEmpty() || !points.isEmpty()) {
             // if a line is closest, this will contain it, otherwise null
@@ -158,6 +160,7 @@ public final class PathPlanner {
      * Fill out the model with interpolated intermediate path points based on the scanning speed in units per second.
      * The path will be constructed as a loop with interpolation from the last point to the first, including black
      * steps between gaps.
+     * TODO render polylines as separate lines - should need less code now
      *
      * @param m     the model to plan.
      * @param start the start point, will draw the model from its closest point to this.

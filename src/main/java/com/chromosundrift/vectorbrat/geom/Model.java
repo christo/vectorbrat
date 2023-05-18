@@ -3,7 +3,7 @@ package com.chromosundrift.vectorbrat.geom;
 import java.awt.Color;
 import java.util.stream.Stream;
 
-public interface Model {
+public interface Model extends Geom {
     Stream<Polyline> polylines();
 
     Stream<Point> points();

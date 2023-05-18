@@ -4,10 +4,11 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 
-public final class Polyline {
+public final class Polyline implements Geom {
     private final String name;
     private final Color color; // future: remove dep on java.awt.Color
     private final Point[] _points;
@@ -114,9 +115,9 @@ public final class Polyline {
      * @param other comparison point.
      * @return closest point to the other.
      */
-    public Point closest(Point other) {
+    public Optional<Point> closest(Point other) {
         //noinspection OptionalGetWithoutIsPresent
-        return Arrays.stream(_points).min(other.dist2Point()).get();
+        return Arrays.stream(_points).min(other.dist2Point());
     }
 
     public Polyline scale(float factorX, float factorY) {

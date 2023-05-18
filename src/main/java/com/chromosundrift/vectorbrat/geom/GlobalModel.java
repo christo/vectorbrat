@@ -1,12 +1,10 @@
 package com.chromosundrift.vectorbrat.geom;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -144,7 +142,11 @@ public class GlobalModel implements Model {
 
     /**
      * Returns the closest model point to the given point - only considers isolated Points and Polyline start points.
+     * This exists from when polylines could only be drawn from their start point
+     *
+     * @deprecated reconsider drawing polylines only from their start point
      */
+    @Deprecated
     public Point closeish(Point other) {
         TreeSet<Point> closestToRef = new TreeSet<>(other.dist2Point());
         // for now only consider points and the first point of each polyline
@@ -187,8 +189,13 @@ public class GlobalModel implements Model {
 
     @Override
     public Model colored(Color color) {
-        List<Polyline> polylines = this.polylines.stream().map(polyline -> polyline.colored(color)).collect(Collectors.<Polyline>toList());
-        List<Point> allPoints = this.points.stream().map(p -> p.colored(color)).collect(Collectors.toList());
+        List<Polyline> polylines = this.polylines().map(polyline -> polyline.colored(color)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = this.points().map(p -> p.colored(color)).collect(Collectors.toList());
         return new GlobalModel(this.name, polylines, allPoints);
+    }
+
+    @Override
+    public Optional<Point> closest(Point other) {
+        return Stream.concat(polylines().flatMap(polyline -> points()), points()).min(other.dist2Point());
     }
 }
