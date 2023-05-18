@@ -46,7 +46,7 @@ public class VectorBrat {
         DisplayController displayController = new DisplayController(false);
         displayPanel = new DisplayPanel(config, displayController, laser);
         displayController.setRepaintDisplay(displayPanel::repaint);
-        appMap = makeAppRunnable();
+        appMap = makeAppMap();
         Controllers controllers = new Controllers(displayController, laser, appMap);
         frame = new VectorBratFrame(config, displayPanel, controllers);
         motion = Executors.newSingleThreadExecutor(r -> new Thread(r, THREAD_ANIMATION));
@@ -61,11 +61,11 @@ public class VectorBrat {
         }
     }
 
-    private AppMap makeAppRunnable() {
+    private AppMap makeAppMap() {
         // TODO move the time supplier out of here (use jack)
         AppMap ar = new AppMap(this::setModel, System::nanoTime);
         TextEngine te = new TextEngine(Color.CYAN, new AsteroidsFont());
-        ar.add(te.textLine("ASTEROIDS!").scale(0.6f, 0.2f));
+        ar.add(te.textLine("KR00ZY YUEZ").scale(0.9f, 0.15f).merge(Pattern.boundingBox(Color.YELLOW)));
         Model aModel = new AsteroidsFont().getChar('A');
         ar.add(aModel);
         ar.add(new Asteroids());

@@ -1,14 +1,9 @@
 package com.chromosundrift.vectorbrat.geom;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.chromosundrift.vectorbrat.Config.SAMPLE_MAX;
 import static com.chromosundrift.vectorbrat.Config.SAMPLE_MIN;
 import static com.chromosundrift.vectorbrat.Config.SAMPLE_RANGE;
-
-import com.chromosundrift.vectorbrat.Config;
 
 public class TextEngine {
 
@@ -25,7 +20,7 @@ public class TextEngine {
      * {@link com.chromosundrift.vectorbrat.Config#SAMPLE_MIN} and
      * {@link com.chromosundrift.vectorbrat.Config#SAMPLE_MAX}.
      * Unsupported characters are replaced with X in a box.
-     *
+     * <p>
      * TODO whole call graph is unoptimised and quite dumb
      *
      * @param text the text to render.
@@ -36,17 +31,29 @@ public class TextEngine {
             throw new IllegalArgumentException("text must not be empty or contain newlines or carriage returns");
         }
         char[] chars = text.toCharArray();
-        float gap = typeface.gap('m', 'm');
-        float charWidth = SAMPLE_RANGE / chars.length;
-        Model m = new GlobalModel(""); // merging will merge model name ltr
+
+        // calculate spacing
+        float[] gaps = new float[chars.length];
+        gaps[0] = 0f;
+        float spaceSpace = 0f;
+        for (int i = 1; i < chars.length; i++) {
+            float gap = typeface.gap(chars[i-1], chars[i]);
+            spaceSpace += gap;
+            gaps[i] = gap;
+        }
+        // letters same width for now, but kerning is defined by typeface
+        // character width in sample units
+        float charWidth = (SAMPLE_RANGE - spaceSpace) / chars.length;
+
+        // TODO move anything out of loop that doesn't depend on i
+        Model m = new GlobalModel();
         for (int i = 0; i < chars.length; i++) {
-            // TODO fix gap
-            float offset = SAMPLE_MIN + (i * (charWidth + gap));
-            if (i != 0) {
-                offset += gap;
-            }
+            float offset = (SAMPLE_MIN + (gaps[i] + charWidth) * i);
+
+            float charScale = charWidth / SAMPLE_RANGE;
             Model charModel = typeface.getChar(chars[i]);
-            m = m.merge(charModel.scale((charWidth - gap)/SAMPLE_RANGE, 1.0f).offset(offset, 0f));
+            Model charInSitu = charModel.scale(charScale, 1.0f).offset(offset, 0f);
+            m = m.merge(charInSitu);
         }
 
         return m.colored(this.color);
