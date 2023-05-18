@@ -7,6 +7,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.chromosundrift.vectorbrat.Config.SAMPLE_MAX;
+import static com.chromosundrift.vectorbrat.Config.SAMPLE_MIN;
+
 public class Pattern {
 
     private static final Logger logger = LoggerFactory.getLogger(Pattern.class);
@@ -16,7 +19,7 @@ public class Pattern {
         for (int i = 0; i < n; i++) {
             Point[] points = new Point[n];
             for (int j = 0; j < n; j++) {
-                points[j] = new Point((float) (i*0.05 - 0.4) + (float) (Math.sin(j * Math.TAU/n) * -0.015f*i), (float) (j*0.09-0.7), c);
+                points[j] = new Point((float) (i * 0.05 - 0.4) + (float) (Math.sin(j * Math.TAU / n) * -0.015f * i), (float) (j * 0.09 - 0.7), c);
             }
             polylines.add(Polyline.open("sin_" + i, c, points));
         }
@@ -64,8 +67,8 @@ public class Pattern {
         GlobalModel m = new GlobalModel();
         float extent = 2f;  // total width or height
         float offset = -1;  // add to extent to get coordinate range
-        float w = extent/(nx*2+1);
-        float h = extent/(ny*2+1);
+        float w = extent / (nx * 2 + 1);
+        float h = extent / (ny * 2 + 1);
         for (int i = 0; i < nx; i++) {
             for (int j = 0; j < ny; j++) {
                 float x = i * w * extent + offset + w;
@@ -83,5 +86,9 @@ public class Pattern {
 
     static Polyline createMidSquare(Color c) {
         return Polyline.box("mid square", -0.5f, -0.5f, 0.5f, 0.5f, c);
+    }
+
+    public static Model boundingBox(Color color) {
+        return new GlobalModel().add(Polyline.box(SAMPLE_MIN, SAMPLE_MIN, SAMPLE_MAX, SAMPLE_MAX, color));
     }
 }
