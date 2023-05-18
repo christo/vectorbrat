@@ -14,6 +14,7 @@
 * [ ] gamepads / other control surface (midi? cv?)
 * [ ] text rendering
 * [ ] circles
+* [ ] performance testing
 
 ## Done
 
