@@ -27,7 +27,7 @@ public class GlobalModel implements Model {
     private final String name;
 
     public GlobalModel() {
-        this("untitled");
+        this("");
     }
 
     public GlobalModel(String name) {
