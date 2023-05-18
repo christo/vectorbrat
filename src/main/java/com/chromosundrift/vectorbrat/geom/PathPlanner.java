@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.Util;
 
 /**
  * Holds the trace path for rendering shapes.
@@ -48,6 +47,24 @@ public final class PathPlanner {
         this.vertexPoints = config.getVertexPoints();
         this.interpolation = config.getInterpolation();
         this.pointsPerUnitOffset = config.getPointsPerUnitOffset();
+    }
+
+    /**
+     * Input domain 0-1
+     * @param x input value
+     * @return quintic ease in and out
+     */
+    public static float quintic(float x) {
+        return (float)(x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2);
+    }
+
+    /**
+     * Input domain 0-1
+     * @param x input value
+     * @return quintic ease in and out
+     */
+    public static double quintic(double x) {
+        return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
     }
 
     /**
@@ -245,8 +262,8 @@ public final class PathPlanner {
                 prevx = sx + i * xDist / n;
                 prevy = sy + i * yDist / n;
             } else if (interpolation == Interpolation.QUINTIC) {
-                prevx = sx + Util.quintic(i / n) * xDist;
-                prevy = sy + Util.quintic(i / n) * yDist;
+                prevx = sx + quintic(i / n) * xDist;
+                prevy = sy + quintic(i / n) * yDist;
             }
             xs.add(prevx);
             ys.add(prevy);
