@@ -4,6 +4,9 @@ import org.jaudiolibs.jnajack.JackClient;
 
 import java.nio.FloatBuffer;
 
+/**
+ * TODO implement buffer
+ */
 public class LaserBuffer {
 
     private float[] xBuffer;
