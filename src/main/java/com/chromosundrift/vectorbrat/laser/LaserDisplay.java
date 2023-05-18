@@ -30,16 +30,6 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     private int pps;
 
-    /**
-     * Time in nanos to dwell on an isolated point.
-     */
-    private int pointDwellNano;
-
-    /**
-     * Time to dwell on a line endpoint.
-     */
-    private int endPointDwellNano;
-
     private volatile boolean running;
 
     /**
@@ -53,9 +43,9 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private volatile boolean modelDirty;
     private final ThreadFactory threadFactory;
     private long lastPathPlanTime;
-    private Set<Consumer<LaserController>> updateListeners;
+    private final Set<Consumer<LaserController>> updateListeners;
     private PathPlanner pathPlanner;
-    private Config config;
+    private final Config config;
 
     public LaserDisplay(Config config) throws VectorBratException {
         logger.info("initialising LaserDisplay");

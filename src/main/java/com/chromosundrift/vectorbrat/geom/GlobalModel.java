@@ -1,7 +1,6 @@
 package com.chromosundrift.vectorbrat.geom;
 
 
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +17,6 @@ import java.util.stream.Stream;
  * TODO WIP threadsafety - fix races and deadlocks and consider immutable updates
  */
 public class GlobalModel implements Model {
-
-    private static final Logger logger = LoggerFactory.getLogger(GlobalModel.class);
 
     private final ReentrantLock lock = new ReentrantLock();
     private final List<Polyline> polylines;
