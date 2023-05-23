@@ -13,7 +13,10 @@ what's the big deal anyway, start with [background info](background.md).
 
 ## How To
 
-* make sure default system audio device is set to ES-9
+During this alpha stage, the audio device is configured in `jackstart` and the 
+operating system with its audio driver specifics are assumed to be `macos`. The 
+goal is to make this cross-platform. If you get it working on Linux or Windows,
+please let me know and/or make a pull-request with the necessary changes.
 
 ## TODO
 
