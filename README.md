@@ -11,6 +11,8 @@ Experimental software for live interactive installations using ILDA lasers and x
 If you don't know why you want to play with lasers and vector graphics and 
 what's the big deal anyway, start with [background info](background.md).
 
+[Information I've collected about lasers](lasers.md).
+
 ## How To
 
 During this alpha stage, the audio device is configured in `jackstart` and the 
@@ -34,25 +36,25 @@ SO much. See [TODO](TODO.md).
 * future racing
 * gyruss
 * night driving
+* missile command
+* Zork (text engine)
 
-## Stretch goals for Asteroids
+## App Ideas
 
-* fisheye distortion etc.
-* screen shake & compression blasts
-* asteroid collisions
-* conservation of rotational momentum
-* rotation around centre of mass
-* laser weapon (goes through everything, instantaneous)
-* show starfield video backdrop
-* modular synth sound effects
-* beat detection input to effects
-* custom play controls - continuous encoder and a couple of buttons
-* use daisy patch for advanced modulation (beat detect? etc.)
+* console (Q: maximum rows/cols? optimal font?)
+* boids
+* chaos stuff
+  * lorenz attractor
+  * hilbert curve
+  * fractal trees
+* vector synth
+* demoscene stuff
+  * cubes
+  * metablobs
+  * tunnels
+  * scrolltext
+* star wars text
 
-## modular fx
-
-* warps / lens distortion (nonlinear proportional adder)
-* screen shake (linear precision adder)
 
 ## Effects Ideas
 
@@ -70,6 +72,14 @@ SO much. See [TODO](TODO.md).
 * welcome to country
 * laser overlay on video
 
+## modular fx
+
+Visual effects suitable for mixing in on the modular
+
+* warps / lens distortion (nonlinear proportional adder)
+* screen shake (linear precision adder)
+
+
 ## Modular Synthesiser Integration
 
 Modular synthesisers can also be used to control ILDA lasers
@@ -83,18 +93,20 @@ running the alternative 1010
 ### Modules:
 
 * cyclops - ILDA integration, interlock, attenuation of outbound analog laser control signals.
+  * has lowpass filter on the output at various kpps values
 * laserbox - pattern generation, load/store of files: wav, ilda, patterns
 * es-9 - computer integration, headphone monitoring, line in, balanced line out
+  * alternative: es-8 (optional es-6 expansion)
 * dasiypatch - beat detection, orchestration, 
 * muxlicer - arbitrary sequencing, switching
-* vca matrix - mixing two geometry sources
+* vca matrix - mixing two geometry sources, routing to data
 * rampage - slew, laser functions
-* distingEX - modulation  
+* distingEX - modulation, sample playback  
 * Pams + pexp2 - clocks, lfo
 * data - signal analysis, waveform generator
 * zoia - everything
 * mult - sharing clock
-* (possibly?) poly hector (general duties)
+* poly hector (general duties)
 
 ### Dedicated Control surfaces
 

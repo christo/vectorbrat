@@ -1,5 +1,6 @@
 # vectorbrat TODO List
 
+* [ ] move to github issues
 * [ ] brightness
 * [ ] text rendering, fonts
 * [ ] configurable x and y flip for DisplayPanel
@@ -13,11 +14,45 @@
 * [ ] debug colour bleed (caused by path planner error or hardware?)
 * [ ] gamepads / other control surface (midi? cv?)
 * [ ] text rendering
-* [ ] circles
-* [ ] performance testing
+* [ ] render circle primitives using sin/cos rather than polygon
+* [ ] performance testing and instrumentation
+* [ ] laser driver
+  * [ ] brightness control test and calibration
+  * [ ] skew, keystone, scale, rotation, translation
+  * [ ] debug / logging
+    * [ ] geometry stats
+    * [ ] path period / fps
+  * [ ] config
+    * [ ] max pps
+    * [ ] max dwell time
+    * [ ] max path duration
+    * [ ] strategy for culling geometry
+    * [ ] detail levels
+    * [ ] optional display items (score, spare ships, fps)
+  * text engine
+    * original asteroids font
+    * hershey vector font
+  * wav generation and export
+* game options (asteroid sizes etc.)
+* sound effects
+  * sound fx test rig  
+  * modular synth for sounds
+    * two cv lines: sound index, trigger
+    * send cv for sound fx
+    * use muxlicer to decode up to 8 sounds
+    * patch dfam, mother32 to make individual sounds
+  * sample playback (backup plan)
+    * use disting EX for playback
 
 ## Done
 
+* [ ] laser driver
+  * [x] linear, quintic easing functions for line interpolation
+  * [x] dwell time for bright points
+  * [x] colour
+  * [x] debug output - shows interconnected paths
+  * [x] render arbitrary streaming geometry on laser
+* [x] spike: ensure es8 or es9 DC coupling 
 * [x] define deployment setup
   * [x] laptop
   * [x] modular rig
@@ -30,3 +65,5 @@
 * [x] compare existing to rebuild option
 * [x] audio visualisations via *ad hoc* modular patches
 * [x] practice laser shape jamming
+* [x] dev setup and workflow
+
