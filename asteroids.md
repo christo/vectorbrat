@@ -38,4 +38,6 @@ they apparently modified it for every game release. In later games they made col
   * Tempest (people love this)
 
 
+[Atari's Quadrascan Explained](https://www.youtube.com/watch?v=smStEPSRKBs&ab_channel=RetroGameMechanicsExplained)
+
 See [TODO](TODO.md) for implementation plan.
