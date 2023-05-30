@@ -1,6 +1,5 @@
 package com.chromosundrift.vectorbrat;
 
-import org.jaudiolibs.jnajack.JackStatus;
 import org.junit.Test;
 
 import java.util.EnumSet;
