@@ -8,6 +8,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 
+/**
+ * Series of end-to-end line segments.
+ */
 public final class Polyline implements Geom {
     private final String name;
     private final Color color; // future: remove dep on java.awt.Color
@@ -80,7 +83,7 @@ public final class Polyline implements Geom {
     public String toString() {
         return "Polyline{'" + name + "' " +
                 "color=" + color +
-                ", _points=" + Arrays.toString(_points) +
+                ", points=" + Arrays.toString(_points) +
                 '}';
     }
 
