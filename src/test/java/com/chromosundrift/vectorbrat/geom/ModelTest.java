@@ -4,22 +4,19 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.awt.Color;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 
-public class GlobalModelTest {
+public class ModelTest {
 
     @Test
     public void lines() {
         Color c = Color.BLUE;
         int n = 10; // n polylines each with n points
         List<Polyline> polylines = Pattern.sineWaves(c, n);
-        GlobalModel gm = new GlobalModel("foo", polylines);
+        Model gm = new Model("foo", polylines);
         long nLines = gm.lines().count();
         Assert.assertEquals(n * (n - 1), nLines);
     }
@@ -28,7 +25,7 @@ public class GlobalModelTest {
     public void testGridLines() {
         int cols = 4;
         int rows = 4;
-        GlobalModel model = Pattern.boxGrid(cols, rows, Color.CYAN);
+        Model model = Pattern.boxGrid(cols, rows, Color.CYAN);
         LinkedList<Line> lines = new LinkedList<>();
         for (Polyline pl : model._polylines()) {
             lines.addAll(pl.lineList());
@@ -44,7 +41,7 @@ public class GlobalModelTest {
         Point blueMax = new Point(1f, 1f, Color.BLUE);
         Polyline foo1 = Polyline.open("foo", Color.RED, greenOrigin, blueMax);
         Point orangeMin = new Point(-1f, -1f, Color.ORANGE);
-        Model foo = new GlobalModel("foo", List.of(foo1), List.of(orangeMin));
+        Model foo = new Model("foo", List.of(foo1), List.of(orangeMin));
         Model colored = foo.colored(Color.MAGENTA);
         List<Polyline> offColorPolylines = colored.polylines()
                 .filter(polyline -> !polyline.getColor().equals(Color.MAGENTA))

@@ -36,7 +36,7 @@ public class AsteroidsFont implements Typeface {
                 new Point(SAMPLE_MAX, SAMPLE_MIN),
                 new Point(SAMPLE_MIN, SAMPLE_MAX))
         );
-        return new GlobalModel("[X]", polylines);
+        return new Model("[X]", polylines);
     }
 
     static Map<Character, Model> buildCharMap() {
@@ -443,7 +443,7 @@ public class AsteroidsFont implements Typeface {
         }
 
         public Model toModel(Character c) {
-            return new GlobalModel(c.toString(), polylines);
+            return new Model(c.toString(), polylines);
         }
     }
 

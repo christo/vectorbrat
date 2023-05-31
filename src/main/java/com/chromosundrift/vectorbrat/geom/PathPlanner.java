@@ -184,7 +184,7 @@ public final class PathPlanner {
      * @param m     the model to plan.
      * @param start the start point, will draw the model from its closest point to this.
      */
-    public void planNaive(GlobalModel m, Point start) {
+    public void planNaive(Model m, Point start) {
         // generate intermediate points along the course of the path to draw the model
         Point prev = m.closeish(start);
 

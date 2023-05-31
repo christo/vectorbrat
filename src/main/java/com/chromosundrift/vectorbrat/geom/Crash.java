@@ -14,6 +14,6 @@ public class Crash extends StaticAnimator {
         Point.PointFactory red = new Point.PointFactory(Color.RED);
         Polyline bs = Polyline.open("\\", Color.RED, red.p(-0.1f, -0.1f), red.p(0.1f, 0.1f));
         Polyline fs = Polyline.open("/", Color.RED, red.p(0.1f, -0.1f), red.p(-0.1f, 0.1f));
-        return new GlobalModel("crash", Arrays.asList(bs, fs), Collections.emptyList());
+        return new Model("crash", Arrays.asList(bs, fs), Collections.emptyList());
     }
 }

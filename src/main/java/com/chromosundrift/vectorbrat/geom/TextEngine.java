@@ -2,7 +2,6 @@ package com.chromosundrift.vectorbrat.geom;
 
 import java.awt.Color;
 
-import static com.chromosundrift.vectorbrat.Config.SAMPLE_MIN;
 import static com.chromosundrift.vectorbrat.Config.SAMPLE_RANGE;
 
 public class TextEngine {
@@ -44,18 +43,24 @@ public class TextEngine {
         // letters same width for now, but kerning is defined by typeface
         // character width in sample units
         float charWidth = (SAMPLE_RANGE - spaceSpace) / chars.length;
+        float charScale = charWidth / SAMPLE_RANGE;
 
-        // TODO move anything out of loop that doesn't depend on i
-        Model m = new GlobalModel();
+        Model m = new Model();
         for (int i = 0; i < chars.length; i++) {
-            float offset = (SAMPLE_MIN + (gaps[i] + charWidth) * i);
+            float charXOffset = ((gaps[i] + charWidth) * i);
 
-            float charScale = charWidth / SAMPLE_RANGE;
             Model charModel = typeface.getChar(chars[i]);
-            Model charInSitu = charModel.scale(charScale, 1.0f).offset(offset, 0f);
+            // normalise model: scale and offset model from 0-1
+            Model unitModel = charModel.normalise();
+
+            // now scale and offset
+            Model charInSitu = charModel.scale(charScale, 1.0f).offset(charXOffset, 0f);
+            // now shift and scale back to SAMPLE_RANGE
+
             m = m.merge(charInSitu);
         }
 
         return m.colored(this.color);
     }
+
 }

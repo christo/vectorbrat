@@ -15,7 +15,6 @@ import static com.chromosundrift.vectorbrat.Util.setSystemLibraryPath;
 
 import com.chromosundrift.vectorbrat.asteroids.Asteroids;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
-import com.chromosundrift.vectorbrat.geom.GlobalModel;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Pattern;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
@@ -85,7 +84,7 @@ public class VectorBrat {
     }
 
     private void start() throws VectorBratException {
-        GlobalModel empty = new GlobalModel();
+        Model empty = new Model();
         setModel(empty);
         this.frame.start();
         this.laser.start();

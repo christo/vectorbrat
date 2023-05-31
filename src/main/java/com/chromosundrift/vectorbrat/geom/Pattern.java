@@ -27,11 +27,11 @@ public class Pattern {
     }
 
     public static Model sineWaves(Color color) {
-        return new GlobalModel("sine waves", sineWaves(color, 14));
+        return new Model("sine waves", sineWaves(color, 14));
     }
 
-    public static GlobalModel testPattern1() {
-        GlobalModel m = new GlobalModel("test pattern 1");
+    public static Model testPattern1() {
+        Model m = new Model("test pattern 1");
         m.add(createMidSquare(Color.ORANGE));
         // centre dots
         for (float i = 0; i < 0.4; i += 0.1) {
@@ -63,8 +63,8 @@ public class Pattern {
      * @param c  color
      * @return the Model
      */
-    public static GlobalModel boxGrid(int nx, int ny, Color c) {
-        GlobalModel m = new GlobalModel();
+    public static Model boxGrid(int nx, int ny, Color c) {
+        Model m = new Model();
         float extent = 2f;  // total width or height
         float offset = -1;  // add to extent to get coordinate range
         float w = extent / (nx * 2 + 1);
@@ -79,8 +79,8 @@ public class Pattern {
         return m;
     }
 
-    public static GlobalModel midSquare(Color c) {
-        GlobalModel m = new GlobalModel("mid square");
+    public static Model midSquare(Color c) {
+        Model m = new Model("mid square");
         return m.add(createMidSquare(c));
     }
 
@@ -89,6 +89,6 @@ public class Pattern {
     }
 
     public static Model boundingBox(Color color) {
-        return new GlobalModel().add(Polyline.box(SAMPLE_MIN, SAMPLE_MIN, SAMPLE_MAX, SAMPLE_MAX, color));
+        return new Model().add(Polyline.box(SAMPLE_MIN, SAMPLE_MIN, SAMPLE_MAX, SAMPLE_MAX, color));
     }
 }

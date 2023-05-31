@@ -1,45 +1,197 @@
 package com.chromosundrift.vectorbrat.geom;
 
+
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.TreeSet;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public interface Model extends Geom {
-    Stream<Polyline> polylines();
+import static com.chromosundrift.vectorbrat.Config.SAMPLE_MIN;
+import static com.chromosundrift.vectorbrat.Config.SAMPLE_RANGE;
 
-    Stream<Point> points();
+/**
+ * Vector display model with coordinates from (-1.0,-1.0) (top left) to 1.0, 1.0 (bottom right)
+ * TODO WIP threadsafety - fix races and deadlocks and consider immutable updates
+ */
+public class Model implements Geom {
 
-    boolean isEmpty();
+    private final ReentrantLock lock = new ReentrantLock();
+    private final List<Polyline> polylines;
+    private final List<Point> points;
+    private final String name;
 
-    int countVertices();
+    public Model() {
+        this("");
+    }
 
-    String getName();
+    public Model(String name) {
+        this(name, new ArrayList<>());
+    }
 
-    int countPolylines();
+    public Model(String name, List<Polyline> polylines) {
+        this(name, polylines, new ArrayList<>());
+    }
 
-    int countPoints();
+    public Model(String name, List<Polyline> polylines, List<Point> points) {
+        this.polylines = polylines;
+        this.points = points;
+        this.name = name;
+    }
 
-    Model scale(float factorX, float factorY);
+    public Model normalise() {
+        return scale(1 / SAMPLE_RANGE, 1 / SAMPLE_RANGE)
+                .offset(1 - SAMPLE_MIN, 1 - SAMPLE_MIN);
+    }
 
-    Stream<Line> lines();
+    Model add(Point point) {
+        try {
+            lock.lock();
+            points.add(point);
+        } finally {
+            lock.unlock();
+        }
+        return this;
+    }
+
+    Model add(Polyline p) {
+        try {
+            lock.lock();
+            polylines.add(p);
+        } finally {
+            lock.unlock();
+        }
+        return this;
+    }
 
     /**
-     * Returns a new model with all the content of this and the other model.
+     * Stream of just the polylines (not points).
      *
-     * @param other the other model.
-     * @return a new Model.
+     * @return polylines.
      */
-    Model merge(Model other);
+    public Stream<Polyline> polylines() {
+        try {
+            lock.lock();
+            return new ArrayList<>(polylines).stream();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    List<Polyline> _polylines() {
+        return this.polylines;
+    }
+
+    public List<Point> _points() {
+        return this.points;
+    }
 
     /**
-     * Returns a new Model offset by the given x and y. They're just added to all coordinates.
-     */
-    Model offset(float dx, float dy);
-
-    /**
-     * Returns a new model with everything this colour.
+     * Stream of just the points (not polylines)
      *
-     * @param color the color.
-     * @return the new Model.
+     * @return points.
      */
-    Model colored(Color color);
+    public Stream<Point> points() {
+        try {
+            lock.lock();
+            return new ArrayList<>(points).stream();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean isEmpty() {
+        try {
+            lock.lock();
+            return polylines.size() == 0 && points.size() == 0;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public int countVertices() {
+        try {
+            lock.lock();
+            return polylines.stream().mapToInt(Polyline::size).sum() + points.size();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "GlobalModel{" +
+                "polyliness=" + polylines +
+                ", points=" + points +
+                '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int countPolylines() {
+        return polylines.size();
+    }
+
+    public int countPoints() {
+        return points.size();
+    }
+
+    /**
+     * Returns the closest model point to the given point - only considers isolated Points and Polyline start points.
+     * This exists from when polylines could only be drawn from their start point
+     *
+     * @deprecated reconsider drawing polylines only from their start point
+     */
+    @Deprecated
+    public Point closeish(Point other) {
+        TreeSet<Point> closestToRef = new TreeSet<>(other.dist2Point());
+        // for now only consider points and the first point of each polyline
+        closestToRef.addAll(polylines.stream().map(p -> p._points()[0]).toList());
+        closestToRef.addAll(_points());
+        return closestToRef.first();
+    }
+
+    public Model scale(float factorX, float factorY) {
+        Model m = new Model(this.name);
+        polylines().map(polyline -> polyline.scale(factorX, factorY)).forEach(m::add);
+        points().map(point -> point.scale(factorX, factorY)).forEach(m::add);
+        if (this.countVertices() != m.countVertices()) {
+            throw new IllegalStateException("scaled model should have same number of points");
+        }
+        return m;
+    }
+
+    public Stream<Line> lines() {
+        return this.polylines().flatMap(Polyline::lines);
+    }
+
+    public Model merge(Model other) {
+        List<Polyline> allPolylines = new ArrayList<>(this.polylines);
+        other.polylines().forEach(allPolylines::add);
+        List<Point> allPoints = new ArrayList<>(this.points);
+        other.points().forEach(allPoints::add);
+        return new Model(name + other.getName(), allPolylines, allPoints);
+    }
+
+    public Model offset(float dx, float dy) {
+        List<Polyline> allPolylines = this.polylines.stream().map(pl -> pl.offset(dx, dy)).collect(Collectors.toList());
+        List<Point> allPoints = this.points.stream().map(p -> p.offset(dx, dy)).collect(Collectors.toList());
+        return new Model(name, allPolylines, allPoints);
+    }
+
+    public Model colored(Color color) {
+        List<Polyline> polylines = this.polylines().map(polyline -> polyline.colored(color)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = this.points().map(p -> p.colored(color)).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
+    }
+
+    @Override
+    public Optional<Point> closest(Point other) {
+        return Stream.concat(polylines().flatMap(polyline -> points()), points()).min(other.dist2Point());
+    }
 }

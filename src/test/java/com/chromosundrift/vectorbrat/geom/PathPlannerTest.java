@@ -22,7 +22,7 @@ public class PathPlannerTest {
     @Test
     public void testMaxPointDistance() {
         int pointsPerUnit = 15;
-        GlobalModel model = Pattern.testPattern1();
+        Model model = Pattern.testPattern1();
         Point start = new Point(0f, 0f);
         Config c = getTestConfig();
         PathPlanner pp = new PathPlanner(c);
@@ -81,7 +81,7 @@ public class PathPlannerTest {
         Config c = getTestConfig();
         c.setInterpolation(Interpolation.QUINTIC);
         PathPlanner pp = new PathPlanner(c);
-        GlobalModel m = Pattern.boxGrid(5, 5, Color.YELLOW);
+        Model m = Pattern.boxGrid(5, 5, Color.YELLOW);
         pp.planNextNearest(m);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
