@@ -17,8 +17,8 @@ public class TestUtils {
      * @param point     that's the point.
      */
     public static void assertInRange(String pointName, Point point) {
-        assertTrue(pointName + " x was out of range %s".formatted(point.x()), inSampleRange(point.x()));
-        assertTrue(pointName + " y was out of range %s".formatted(point.y()), inSampleRange(point.y()));
+        assertTrue(pointName + " x was out of range: %s".formatted(point.x()), inSampleRange(point.x()));
+        assertTrue(pointName + " y was out of range: %s".formatted(point.y()), inSampleRange(point.y()));
     }
 
     static void assertPointColor(String message, Color expected, Point point) {
