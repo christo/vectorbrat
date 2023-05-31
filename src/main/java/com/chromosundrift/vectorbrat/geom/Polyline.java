@@ -116,7 +116,6 @@ public final class Polyline implements Geom {
      * @return closest point to the other.
      */
     public Optional<Point> closest(Point other) {
-        //noinspection OptionalGetWithoutIsPresent
         return Arrays.stream(_points).min(other.dist2Point());
     }
 
