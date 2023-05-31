@@ -54,10 +54,10 @@ public class TextEngine {
             Model unitModel = charModel.normalise();
 
             // now scale and offset
-            Model charInSitu = charModel.scale(charScale, 1.0f).offset(charXOffset, 0f);
+            Model charInSitu = unitModel.scale(charScale, 1.0f).offset(charXOffset, 0f);
             // now shift and scale back to SAMPLE_RANGE
 
-            m = m.merge(charInSitu);
+            m = m.merge(charInSitu.denormalise());
         }
 
         return m.colored(this.color);

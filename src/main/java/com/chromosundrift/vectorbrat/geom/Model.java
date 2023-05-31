@@ -42,9 +42,22 @@ public class Model implements Geom {
         this.name = name;
     }
 
+    /**
+     * Scales and translates model space between 0-1. Also see {@link #denormalise()}.
+     * @return a new Model
+     */
     public Model normalise() {
         return scale(1 / SAMPLE_RANGE, 1 / SAMPLE_RANGE)
                 .offset(1 - SAMPLE_MIN, 1 - SAMPLE_MIN);
+    }
+
+    /**
+     * Scales and translates model space across SAMPLE_RANGE. Also see {@link #normalise()}.
+     * @return a new Model
+     */
+    public Model denormalise() {
+        return scale(SAMPLE_RANGE, SAMPLE_RANGE)
+                .offset(SAMPLE_MIN, SAMPLE_MIN);
     }
 
     Model add(Point point) {
