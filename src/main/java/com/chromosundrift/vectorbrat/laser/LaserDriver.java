@@ -26,7 +26,6 @@ import com.chromosundrift.vectorbrat.geom.PathPlanner;
  */
 public final class LaserDriver {
 
-    public static final EnumSet<JackStatus> NO_STATUS = EnumSet.noneOf(JackStatus.class);
     public static final EnumSet<JackOptions> NO_OPTIONS = EnumSet.noneOf(JackOptions.class);
     public static final EnumSet<JackPortFlags> PHYSICAL_JACK_INPUTS = EnumSet.of(
             JackPortFlags.JackPortIsInput,
@@ -34,6 +33,7 @@ public final class LaserDriver {
     );
     private static final Logger logger = LoggerFactory.getLogger(LaserDriver.class);
     private static final EnumSet<JackPortFlags> TO_JACK = EnumSet.of(JackPortFlags.JackPortIsOutput);
+    private static EnumSet<JackStatus> jackStatus;
 
     private final JackPort xPort;
     private final JackPort yPort;
@@ -106,11 +106,20 @@ public final class LaserDriver {
         }
     }
 
-    private static JackClient openClient(Jack jack, String title) throws VectorBratException {
+    private static JackClient openClient(Jack jack, String title) throws LaserDriverException {
         try {
-            return jack.openClient(truncate(title, jack.getMaximumClientNameSize()), NO_OPTIONS, NO_STATUS);
+            logger.info("resetting jack status");
+            jackStatus = EnumSet.noneOf(JackStatus.class);
+            return jack.openClient(truncate(title, jack.getMaximumClientNameSize()), NO_OPTIONS, jackStatus);
         } catch (JackException e) {
-            throw new VectorBratException("jack spewed trying to open client", e);
+            if (!jackStatus.contains(JackStatus.JackFailure)) {
+                // probably shouldn't happen?
+                throw new LaserDriverException("jack spewed opening client but no failure status recorded! ", jackStatus, e);
+            } else if (jackStatus.contains(JackStatus.JackServerFailed)) {
+                throw new LaserDriverException("Cannot connect to Jack Server (is it running?) ", jackStatus);
+            } else {
+                throw new LaserDriverException("jack spewed opening client ", jackStatus, e);
+            }
         }
     }
 
