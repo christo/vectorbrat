@@ -77,10 +77,8 @@ public class VectorBrat {
         AppMap ar = new AppMap(this::setModel, System::nanoTime);
         TextEngine te = new TextEngine(Color.CYAN, new AsteroidsFont());
         String text = "ASTEROIDS";
-//        String text = "Z";
-        ar.add(te.textLine(text).scale(0.9f, (float) (1.0 / text.length()))
-                .merge(Pattern.boundingBox(Color.YELLOW))
-                .merge(new Model("centrepoint", emptyList(), List.of(new Point(0, 0)))));
+        float yScale = (float) (1.0 / text.length());
+        ar.add(te.textLine(text).scale(0.9f, yScale).merge(Pattern.boundingBox(Color.YELLOW)));
         Model aModel = new AsteroidsFont().getChar('A');
         ar.add(aModel);
         ar.add(new Asteroids());
