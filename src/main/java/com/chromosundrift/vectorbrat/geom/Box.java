@@ -1,6 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
 import java.awt.Color;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -70,4 +71,40 @@ public final class Box implements Geom {
     public Stream<Line> lines() {
         return toPolyline("unused", Color.WHITE).lines();    // TODO name and colour not supported by box
     }
+
+    /**
+     * Always returns this.
+     *
+     * @return optional of this.
+     */
+    @Override
+    public Optional<Box> bounds() {
+        return Optional.of(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Box) obj;
+        return minMin.equals(that.minMin) &&
+                maxMax.equals(that.maxMax) &&
+                minMax.equals(that.minMax) &&
+                maxMin.equals(that.maxMin);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(minMin, maxMax, minMax, maxMin);
+    }
+
+    @Override
+    public String toString() {
+        return "Box[" +
+                "minMin=" + minMin + ", " +
+                "maxMax=" + maxMax + ", " +
+                "minMax=" + minMax + ", " +
+                "maxMin=" + maxMin + ']';
+    }
+
 }

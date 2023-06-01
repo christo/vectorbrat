@@ -1,10 +1,14 @@
 package com.chromosundrift.vectorbrat.geom;
 
 
+import com.google.common.collect.Collections2;
+
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -206,5 +210,33 @@ public class Model implements Geom {
     @Override
     public Optional<Point> closest(Point other) {
         return Stream.concat(polylines().flatMap(polyline -> points()), points()).min(other.dist2Point());
+    }
+
+    @Override
+    public Optional<Box> bounds() {
+        Optional<Box> box = Optional.empty();
+        if (!this.isEmpty()) {
+            // boomer way faster and simple enough if not functional / hipster-compliant
+            float minX = Float.MAX_VALUE;
+            float maxX = Float.MIN_VALUE;
+            float minY = Float.MAX_VALUE;
+            float maxY = Float.MIN_VALUE;
+            for (Polyline polyline : polylines) {
+                for (Point point : polyline._points()) {
+                    minX = Math.min(point.x(), minX);
+                    minY = Math.min(point.y(), minY);
+                    maxX = Math.max(point.x(), maxX);
+                    maxY = Math.max(point.y(), maxY);
+                }
+            }
+            for (Point point : points) {
+                minX = Math.min(point.x(), minX);
+                minY = Math.min(point.y(), minY);
+                maxX = Math.max(point.x(), maxX);
+                maxY = Math.max(point.y(), maxY);
+            }
+            box = Optional.of(new Box(minX, minY, maxX, maxY));
+        }
+        return box;
     }
 }

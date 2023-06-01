@@ -103,4 +103,11 @@ public class ModelTest {
         Set<Point> expectedPoints = getLinePoints(new Box(-1f, -1f, 1f, 1f));
         assertEquals(expectedPoints, getLinePoints(m));
     }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Test
+    public void bounds() {
+        Box actual = Pattern.boundingBox(Color.RED).bounds().get();
+        assertEquals(new Box(-1f, -1f, 1f, 1f), actual);
+    }
 }

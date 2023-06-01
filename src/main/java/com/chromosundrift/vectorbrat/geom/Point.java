@@ -110,11 +110,11 @@ public final class Point implements Geom {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (Point) obj;
-        return Float.floatToIntBits(this.x) == Float.floatToIntBits(that.x) &&
-                Float.floatToIntBits(this.y) == Float.floatToIntBits(that.y) &&
-                Float.floatToIntBits(this.r) == Float.floatToIntBits(that.r) &&
-                Float.floatToIntBits(this.g) == Float.floatToIntBits(that.g) &&
-                Float.floatToIntBits(this.b) == Float.floatToIntBits(that.b);
+        return x == that.x &&
+                y == that.y &&
+                r == that.r &&
+                g == that.g &&
+                b == that.b;
     }
 
     @Override
@@ -205,5 +205,10 @@ public final class Point implements Geom {
     @Override
     public Stream<Line> lines() {
         return Stream.empty();
+    }
+
+    @Override
+    public Optional<Box> bounds() {
+        return Optional.of(new Box(this, this));
     }
 }

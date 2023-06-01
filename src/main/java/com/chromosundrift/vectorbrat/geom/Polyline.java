@@ -53,6 +53,9 @@ public final class Polyline implements Geom {
         return new Polyline(name, c, ps);
     }
 
+    /**
+     * Creates a box-shaped Polyline
+     */
     static Polyline box(String name, float x1, float y1, float x2, float y2, Color c) {
         return closed(name, c,
                 new Point(x1, y1, c),
@@ -171,5 +174,20 @@ public final class Polyline implements Geom {
             points[i] = this._points[i].colored(c);
         }
         return new Polyline(this.name, c, points);
+    }
+
+    @Override
+    public Optional<Box> bounds() {
+        float minX = Float.MAX_VALUE;
+        float maxX = Float.MIN_VALUE;
+        float minY = Float.MAX_VALUE;
+        float maxY = Float.MIN_VALUE;
+            for (Point point : _points()) {
+                minX = Math.min(point.x(), minX);
+                minY = Math.min(point.y(), minY);
+                maxX = Math.max(point.x(), maxX);
+                maxY = Math.max(point.y(), maxY);
+            }
+        return Optional.of(new Box(minX, minY, maxX, maxY));
     }
 }

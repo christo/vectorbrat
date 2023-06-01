@@ -34,4 +34,13 @@ public record Line(Point from, Point to) implements Geom {
     public Stream<Line> lines() {
         return Stream.of(this);
     }
+
+    @Override
+    public Optional<Box> bounds() {
+        return Optional.of(toBox());
+    }
+
+    public Box toBox() {
+        return new Box(from, to);
+    }
 }

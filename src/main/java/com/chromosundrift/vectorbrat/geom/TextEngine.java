@@ -43,7 +43,8 @@ public class TextEngine {
         // letters same width for now, but kerning is defined by typeface
         // character width in normal units
         float charWidth = (1 - spaceSpace) / chars.length;
-        float charScale = charWidth / SAMPLE_RANGE;
+//        float charScale = charWidth / SAMPLE_RANGE;
+        float charScale = charWidth;
 
         Model m = new Model();
         for (int i = 0; i < chars.length; i++) {
