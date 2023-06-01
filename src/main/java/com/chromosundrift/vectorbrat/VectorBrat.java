@@ -74,7 +74,6 @@ public class VectorBrat {
     }
 
     private AppMap makeAppMap() {
-        // TODO move the time supplier out of here (use jack)
         AppMap ar = new AppMap(this::setModel, System::nanoTime);
         TextEngine te = new TextEngine(Color.CYAN, new AsteroidsFont());
         String text = "ASTEROIDS";

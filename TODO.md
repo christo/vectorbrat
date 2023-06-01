@@ -43,6 +43,7 @@
     * patch dfam, mother32 to make individual sounds
   * sample playback (backup plan)
     * use disting EX for playback
+* use jack for nano clock in AppMap constructor
 
 ## Done
 
