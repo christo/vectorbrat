@@ -20,7 +20,7 @@ public class TextEngine {
      * {@link com.chromosundrift.vectorbrat.Config#SAMPLE_MAX}.
      * Unsupported characters are replaced with X in a box.
      * <p>
-     * TODO whole call graph is unoptimised and quite dumb
+     * Whole call graph is unoptimised and quite dumb
      *
      * @param text the text to render.
      * @return the model containing the text.
@@ -30,6 +30,8 @@ public class TextEngine {
             throw new IllegalArgumentException("text must not be empty or contain newlines or carriage returns");
         }
         char[] chars = text.toCharArray();
+
+        float emWidth = typeface.getChar('M').bounds().get().width();
 
         // calculate spacing
         float[] gaps = new float[chars.length];
@@ -42,13 +44,11 @@ public class TextEngine {
         }
         // letters same width for now, but kerning is defined by typeface
         // character width in normal units
-        float charWidth = (1 - spaceSpace) / chars.length;
-//        float charScale = charWidth / SAMPLE_RANGE;
-        float charScale = charWidth;
+        float charScale = (1 - spaceSpace) / chars.length;
 
         Model m = new Model();
         for (int i = 0; i < chars.length; i++) {
-            float charXOffset = ((gaps[i] + charWidth) * i);
+            float charXOffset = ((gaps[i] + (1 - spaceSpace) / chars.length) * i);
 
             Model charModel = typeface.getChar(chars[i]);
 

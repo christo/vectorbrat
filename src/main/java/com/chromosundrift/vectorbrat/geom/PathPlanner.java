@@ -101,7 +101,6 @@ public final class PathPlanner {
             boolean reverseLine = false;
             float closestD2 = Float.MAX_VALUE;
             // using square distance throughout
-            // TODO decide whether to store the index of the closest to make removal speedy
             // do lines first, spidey guess for average case
             int s = lines.size();
             for (int i = 0; i < s; i++) {
@@ -177,7 +176,6 @@ public final class PathPlanner {
      * Fill out the model with interpolated intermediate path points based on the scanning speed in units per second.
      * The path will be constructed as a loop with interpolation from the last point to the first, including black
      * steps between gaps.
-     * TODO render polylines as separate lines - should need less code now
      *
      * @param m     the model to plan.
      * @param start the start point, will draw the model from its closest point to this.

@@ -69,7 +69,7 @@ public final class Box implements Geom {
 
     @Override
     public Stream<Line> lines() {
-        return toPolyline("unused", Color.WHITE).lines();    // TODO name and colour not supported by box
+        return toPolyline("unused", Color.WHITE).lines();
     }
 
     /**
@@ -107,4 +107,11 @@ public final class Box implements Geom {
                 "maxMin=" + maxMin + ']';
     }
 
+    public float width() {
+        return maxMax.x() - minMin.x();
+    }
+
+    public float height() {
+        return maxMax.y() - minMin.y();
+    }
 }
