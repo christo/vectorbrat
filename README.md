@@ -22,8 +22,32 @@ please let me know and/or make a pull-request with the necessary changes.
 
 ## TODO
 
-SO much. See [TODO](TODO.md).
+See [GitHub issues](https://github.com/christo/vectorbrat/issues) for outstanding items.
 
+### DONE:
+
+* [ ] laser driver (WIP, see
+[laser issues](https://github.com/christo/vectorbrat/issues?q=is%3Aissue+is%3Aopen+label%3Alaser))
+  * [x] text rendering
+  * [x] linear, quintic easing functions for line interpolation
+  * [x] dwell time for bright points
+  * [x] colour
+  * [x] debug output - shows interconnected paths
+  * [x] render arbitrary streaming geometry on laser
+* [x] spike: ensure es8 or es9 DC coupling
+* [x] define deployment setup
+  * [x] laptop
+  * [x] modular rig
+* [x] audio device detection
+* [x] colour
+* [x] off/on
+* [x] dwell points
+* [x] review and collect prior art
+* [x] attempt to build best existing
+* [x] compare existing to rebuild option
+* [x] audio visualisations via *ad hoc* modular patches
+* [x] practice laser shape jamming
+* [x] dev setup and workflow
 
 ## Game Ideas
 
