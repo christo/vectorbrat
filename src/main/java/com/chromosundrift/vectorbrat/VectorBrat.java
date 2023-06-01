@@ -78,7 +78,7 @@ public class VectorBrat {
         TextEngine te = new TextEngine(Color.CYAN, new AsteroidsFont());
         String text = "ASTEROIDS";
         float yScale = (float) (1.0 / text.length());
-        ar.add(te.textLine(text).scale(0.9f, yScale).merge(Pattern.boundingBox(Color.YELLOW)));
+        ar.add(te.textLine(text).scale(0.6f, yScale).merge(Pattern.boundingBox(Color.YELLOW)));
         Model aModel = new AsteroidsFont().getChar('A');
         ar.add(aModel);
         ar.add(new Asteroids());
