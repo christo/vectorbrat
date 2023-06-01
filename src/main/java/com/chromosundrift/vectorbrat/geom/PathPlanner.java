@@ -78,8 +78,6 @@ public final class PathPlanner {
      */
     public void planNextNearest(Model m) {
 
-        // TODO color change time compensation?
-
         LinkedList<Line> lines = new LinkedList<>();
         for (Polyline pl : m.polylines().toList()) {
             lines.addAll(pl.lineList());

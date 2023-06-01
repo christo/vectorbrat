@@ -10,7 +10,7 @@ public class Crash extends StaticAnimator {
     }
 
     private static Model redX(String message) {
-        // TODO vector font rendered message
+        // TODO vector font rendered message with line breaks
         Point.PointFactory red = new Point.PointFactory(Color.RED);
         Polyline bs = Polyline.open("\\", Color.RED, red.p(-0.1f, -0.1f), red.p(0.1f, 0.1f));
         Polyline fs = Polyline.open("/", Color.RED, red.p(0.1f, -0.1f), red.p(-0.1f, 0.1f));
