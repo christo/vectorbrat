@@ -45,6 +45,10 @@ public final class Box implements Geom {
         }
     }
 
+    public Box(float p1x, float p1y, float p2x, float p2y) {
+        this(new Point(p1x, p1y), new Point(p2x, p2y));
+    }
+
     @Override
     public Optional<Point> closest(Point other) {
         return Stream.of(minMin, maxMax, minMax, maxMin).min(other.dist2Point());
@@ -60,5 +64,10 @@ public final class Box implements Geom {
 
     public Box offset(float offsetX, float offsetY) {
         return new Box(minMin.offset(offsetX, offsetY), maxMax.offset(offsetX, offsetY));
+    }
+
+    @Override
+    public Stream<Line> lines() {
+        return toPolyline("unused", Color.WHITE).lines();    // TODO name and colour not supported by box
     }
 }

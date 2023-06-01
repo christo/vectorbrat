@@ -23,7 +23,7 @@ public class TextEngineTest {
     @Test
     public void letterA() {
         TextEngine te = new TextEngine(Color.GREEN, new AsteroidsFont());
-        Model model = te.textLine("A");
+        Model model = te.textLine("0");
         model.lines().forEach(line -> {
             logger.info("checking line %s from".formatted(line));
             TestUtils.assertInRange("from", line.from());

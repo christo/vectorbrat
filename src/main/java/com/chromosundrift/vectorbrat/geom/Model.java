@@ -48,7 +48,7 @@ public class Model implements Geom {
      */
     public Model normalise() {
         return scale(1 / SAMPLE_RANGE, 1 / SAMPLE_RANGE)
-                .offset(1 - SAMPLE_MIN, 1 - SAMPLE_MIN);
+                .offset(-SAMPLE_MIN/SAMPLE_RANGE, -SAMPLE_MIN/SAMPLE_RANGE);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public interface Geom {
 
@@ -13,4 +14,5 @@ public interface Geom {
     Optional<Point> closest(Point other);
 
 
+    Stream<Line> lines();
 }

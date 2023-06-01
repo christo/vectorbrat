@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Immutable float-precision point.
@@ -195,5 +196,14 @@ public final class Point implements Geom {
         Point p(float x, float y) {
             return new Point(x, y, color);
         }
+    }
+
+    /**
+     * A Point has no lines, always empty.
+     * @return empty stream.
+     */
+    @Override
+    public Stream<Line> lines() {
+        return Stream.empty();
     }
 }

@@ -41,8 +41,8 @@ public class TextEngine {
             gaps[i] = gap;
         }
         // letters same width for now, but kerning is defined by typeface
-        // character width in sample units
-        float charWidth = (SAMPLE_RANGE - spaceSpace) / chars.length;
+        // character width in normal units
+        float charWidth = (1 - spaceSpace) / chars.length;
         float charScale = charWidth / SAMPLE_RANGE;
 
         Model m = new Model();
@@ -50,14 +50,18 @@ public class TextEngine {
             float charXOffset = ((gaps[i] + charWidth) * i);
 
             Model charModel = typeface.getChar(chars[i]);
+
             // normalise model: scale and offset model from 0-1
             Model unitModel = charModel.normalise();
+            Model charInSitu = unitModel.scale(charScale, 1.0f);
+            if (i != 0) {
+                charInSitu = charInSitu.offset(charXOffset, 0f);
+            }
 
-            // now scale and offset
-            Model charInSitu = unitModel.scale(charScale, 1.0f).offset(charXOffset, 0f);
-            // now shift and scale back to SAMPLE_RANGE
+            // now denormalise
+            Model denormalised = charInSitu.denormalise();
 
-            m = m.merge(charInSitu.denormalise());
+            m = m.merge(denormalised);
         }
 
         return m.colored(this.color);

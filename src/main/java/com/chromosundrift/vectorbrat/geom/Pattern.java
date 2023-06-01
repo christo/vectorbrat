@@ -91,4 +91,8 @@ public class Pattern {
     public static Model boundingBox(Color color) {
         return new Model().add(Polyline.box(SAMPLE_MIN, SAMPLE_MIN, SAMPLE_MAX, SAMPLE_MAX, color));
     }
+
+    public static Model boundingBox() {
+        return boundingBox(Color.WHITE);
+    }
 }

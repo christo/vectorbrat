@@ -24,4 +24,11 @@ public class TestUtils {
     static void assertPointColor(String message, Color expected, Point point) {
         assertEquals(message, expected, point.getColor());
     }
+
+    static void assertInNormalRange(Point point) {
+        boolean xInRange = point.x() >= 0f && point.x() <= 1f;
+        boolean yInRange = point.y() >= 0f && point.y() <= 1f;
+        assertTrue("from" + " x was out of normal range: %s".formatted(point.x()), xInRange);
+        assertTrue("from" + " y was out of normal range: %s".formatted(point.y()), yInRange);
+    }
 }

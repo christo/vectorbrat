@@ -1,6 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * A coloured line.
@@ -27,5 +28,10 @@ public record Line(Point from, Point to) implements Geom {
      */
     public Line reversed() {
         return new Line(to, from);
+    }
+
+    @Override
+    public Stream<Line> lines() {
+        return Stream.of(this);
     }
 }

@@ -8,15 +8,19 @@ import org.slf4j.LoggerFactory;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.Color;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.chromosundrift.vectorbrat.Util.setSystemLibraryPath;
+import static java.util.Collections.emptyList;
 
 import com.chromosundrift.vectorbrat.asteroids.Asteroids;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Pattern;
+import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
 import com.chromosundrift.vectorbrat.swing.Controllers;
@@ -73,7 +77,11 @@ public class VectorBrat {
         // TODO move the time supplier out of here (use jack)
         AppMap ar = new AppMap(this::setModel, System::nanoTime);
         TextEngine te = new TextEngine(Color.CYAN, new AsteroidsFont());
-        ar.add(te.textLine("KR00ZY YUEZ").scale(0.9f, 0.15f).merge(Pattern.boundingBox(Color.YELLOW)));
+        String text = "ASTEROIDS";
+//        String text = "Z";
+        ar.add(te.textLine(text).scale(0.9f, (float) (1.0 / text.length()))
+                .merge(Pattern.boundingBox(Color.YELLOW))
+                .merge(new Model("centrepoint", emptyList(), List.of(new Point(0, 0)))));
         Model aModel = new AsteroidsFont().getChar('A');
         ar.add(aModel);
         ar.add(new Asteroids());
