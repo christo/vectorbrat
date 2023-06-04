@@ -79,6 +79,45 @@ See [GitHub issues](https://github.com/christo/vectorbrat/issues) for outstandin
   * scrolltext
 * star wars text
 
+## Performance Measurement and Calibration
+
+The Interpolator needs to be configurable with time delta functions. The coefficients of these functions must be 
+experimentally approximated. This creates an opportunity for a much-needed test method for vector display 
+performance characteristics.
+
+We need a simulator and integrated a test harness for calibration of the physical hardware limitations as a search for
+coefficients by empirical approximation. A simulator view should attempt to render the expected visual appearance
+and tweaking the configuration parameters for the hardware driver should enable the user to make the simulator match the
+real visual. Once the simulator shows the same distortions as the real device, at least for that point in the signal 
+space, the hardware limitations can be known. By taking successive measurements of the distortions, even nonlinear 
+performance characteristics can be compensated for.  
+
+Scanning lasers deflect the beam with galvanometers, cathode ray oscilloscopes use electrostatic deflection and Vecrex,
+like cathode ray TVs, use electromagnetic deflection. Each of these methods constrains the acceleration of these
+deflection angles differently.
+
+Additionally, DPSS lasers have a beam intensity change profile which is slower than "pure diode" lasers and the rate is
+possibly different for increase and decrease.
+
+In order to create signals that optimally produce a desired geometry, each of these (probably polynomial) time functions
+must be approximated. Lasers are the slowest and have rotational momentum in the optics.
+
+Each hardware model may need its own profile. 
+
+The process can be semi-automated with a camera trained on the output, subject to camera performance and so long as the 
+characteristics of the camera are known or can be reasonably approximated. By doing camera calibration at very low 
+speeds, the chicken-and-egg problem may be avoided. The potential for on-board optimisers and intervening analog 
+circuits for scaling and offsetting voltages must be accommodated, perhaps by adding notes to an experimental run 
+and allowing for additional parameters to the measurement space.
+
+The results of such tests could be saved to a known format and shared in an online database between users and 
+manufacturers.
+
+Finally, while the quality of the output signal is of primary interest, if the hardware is pushed too hard, it can 
+be damaged, regardless of the output quality. In the case of lasers, the advised method to avoid this kind of 
+trouble is to listen for excess audible strain in the scanners. Attempting to autocalibrate even this by adding a 
+contact microphone is alluring but this whole thing feels like a bridge too far and such monumenal automation 
+efforts must stop somewhere. 
 
 ## Effects Ideas
 
