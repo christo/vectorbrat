@@ -4,9 +4,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
-import java.util.Optional;
-
 import static org.junit.Assert.assertEquals;
 
 public class TextEngineTest {
@@ -15,17 +12,17 @@ public class TextEngineTest {
 
     @Test
     public void color() {
-        TextEngine te = new TextEngine(Color.GREEN, new AsteroidsFont());
+        TextEngine te = new TextEngine(Rgb.GREEN, new AsteroidsFont());
         Model model = te.textLine("FOO");
         model.lines().forEach(line -> {
-            TestUtils.assertPointColor("Wrong color for 'from' point", Color.GREEN, line.from());
-            TestUtils.assertPointColor("Wrong color for 'to' point", Color.GREEN, line.to());
+            TestUtils.assertPointColor("Wrong color for 'from' point", Rgb.GREEN, line.from());
+            TestUtils.assertPointColor("Wrong color for 'to' point", Rgb.GREEN, line.to());
         });
     }
 
     @Test
     public void letterA() {
-        TextEngine te = new TextEngine(Color.GREEN, new AsteroidsFont());
+        TextEngine te = new TextEngine(Rgb.GREEN, new AsteroidsFont());
         Model model = te.textLine("0");
         // check all lines are in bounds for finer-grained failures
         model.lines().forEach(line -> {

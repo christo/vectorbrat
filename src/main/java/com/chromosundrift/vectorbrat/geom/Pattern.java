@@ -3,7 +3,6 @@ package com.chromosundrift.vectorbrat.geom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,7 @@ public class Pattern {
 
     private static final Logger logger = LoggerFactory.getLogger(Pattern.class);
 
-    static List<Polyline> sineWaves(Color c, int n) {
+    static List<Polyline> sineWaves(Rgb c, int n) {
         List<Polyline> polylines = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             Point[] points = new Point[n];
@@ -26,30 +25,30 @@ public class Pattern {
         return polylines;
     }
 
-    public static Model sineWaves(Color color) {
+    public static Model sineWaves(Rgb color) {
         return new Model("sine waves", sineWaves(color, 14));
     }
 
     public static Model testPattern1() {
         Model m = new Model("test pattern 1");
-        m.add(createMidSquare(Color.ORANGE));
+        m.add(createMidSquare(Rgb.ORANGE));
         // centre dots
         for (float i = 0; i < 0.4; i += 0.1) {
-            m.add(new Point(0.0f, i, Color.MAGENTA));
+            m.add(new Point(0.0f, i, Rgb.MAGENTA));
         }
 
-        Color c = Color.CYAN;
+        Rgb c = Rgb.CYAN;
         m.add(Polyline.open("-y arrow", c, new Point(-0.15f, -0.35f, c), new Point(0.0f, -0.5f, c), new Point(0.15f, -0.35f, c)));
         // dot x-aligned with arrow point and y-aligned with wing tips
-        m.add(new Point(0.0f, -0.35f, Color.RED));
+        m.add(new Point(0.0f, -0.35f, Rgb.RED));
         // bottom right handle
-        c = Color.BLUE;
+        c = Rgb.BLUE;
         m.add(Polyline.open("++ handle", c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
 
-        m.add(Polyline.box("+-box", 0.8f, -1f, 1f, -0.8f, Color.GREEN));
-        m.add(Polyline.box("++box", 0.8f, 0.8f, 1f, 1f, Color.GREEN));
-        m.add(Polyline.box("-+box", -1f, 0.8f, -0.8f, 1f, Color.GREEN));
-        m.add(Polyline.box("--box", -1f, -1f, -0.8f, -0.8f, Color.GREEN));
+        m.add(Polyline.box("+-box", 0.8f, -1f, 1f, -0.8f, Rgb.GREEN));
+        m.add(Polyline.box("++box", 0.8f, 0.8f, 1f, 1f, Rgb.GREEN));
+        m.add(Polyline.box("-+box", -1f, 0.8f, -0.8f, 1f, Rgb.GREEN));
+        m.add(Polyline.box("--box", -1f, -1f, -0.8f, -0.8f, Rgb.GREEN));
         logger.info("created test pattern: " + m);
         return m;
     }
@@ -63,7 +62,7 @@ public class Pattern {
      * @param c  color
      * @return the Model
      */
-    public static Model boxGrid(int nx, int ny, Color c) {
+    public static Model boxGrid(int nx, int ny, Rgb c) {
         Model m = new Model();
         float extent = 2f;  // total width or height
         float offset = -1;  // add to extent to get coordinate range
@@ -79,20 +78,20 @@ public class Pattern {
         return m;
     }
 
-    public static Model midSquare(Color c) {
+    public static Model midSquare(Rgb c) {
         Model m = new Model("mid square");
         return m.add(createMidSquare(c));
     }
 
-    static Polyline createMidSquare(Color c) {
+    static Polyline createMidSquare(Rgb c) {
         return Polyline.box("mid square", -0.5f, -0.5f, 0.5f, 0.5f, c);
     }
 
-    public static Model boundingBox(Color color) {
+    public static Model boundingBox(Rgb color) {
         return new Model().add(Polyline.box(SAMPLE_MIN, SAMPLE_MIN, SAMPLE_MAX, SAMPLE_MAX, color));
     }
 
     public static Model boundingBox() {
-        return boundingBox(Color.WHITE);
+        return boundingBox(Rgb.WHITE);
     }
 }

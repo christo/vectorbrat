@@ -11,6 +11,7 @@ import com.chromosundrift.vectorbrat.Util;
  * @param blue blue component.
  */
 public record Rgb(float red, float green, float blue) {
+
     public Rgb(float red, float green, float blue) {
         this.red = Util.clampNormal(red);
         this.green = Util.clampNormal(green);
@@ -28,5 +29,6 @@ public record Rgb(float red, float green, float blue) {
     public static Rgb GREY = new Rgb(0.5f, 0.5f, 0.5f);
     public static Rgb LIGHT_GREY = new Rgb(0.75f, 0.75f, 0.75f);
     public static Rgb DARK_GREY = new Rgb(0.25f, 0.25f, 0.25f);
+    public static final Rgb ORANGE = new Rgb(1f, 0.75f, 0f);
 
 }

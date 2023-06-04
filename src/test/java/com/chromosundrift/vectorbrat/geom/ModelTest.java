@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +13,6 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ModelTest {
 
@@ -23,7 +21,7 @@ public class ModelTest {
 
     @Test
     public void lines() {
-        Color c = Color.BLUE;
+        Rgb c = Rgb.BLUE;
         int n = 10; // n polylines each with n points
         List<Polyline> polylines = Pattern.sineWaves(c, n);
         Model gm = new Model("foo", polylines);
@@ -35,7 +33,7 @@ public class ModelTest {
     public void testGridLines() {
         int cols = 4;
         int rows = 4;
-        Model model = Pattern.boxGrid(cols, rows, Color.CYAN);
+        Model model = Pattern.boxGrid(cols, rows, Rgb.CYAN);
         LinkedList<Line> lines = new LinkedList<>();
         for (Polyline pl : model._polylines()) {
             lines.addAll(pl.lineList());
@@ -47,18 +45,18 @@ public class ModelTest {
 
     @Test
     public void colored() {
-        Point greenOrigin = new Point(0f, 0f, Color.GREEN);
-        Point blueMax = new Point(1f, 1f, Color.BLUE);
-        Polyline foo1 = Polyline.open("foo", Color.RED, greenOrigin, blueMax);
-        Point orangeMin = new Point(-1f, -1f, Color.ORANGE);
+        Point greenOrigin = new Point(0f, 0f, Rgb.GREEN);
+        Point blueMax = new Point(1f, 1f, Rgb.BLUE);
+        Polyline foo1 = Polyline.open("foo", Rgb.RED, greenOrigin, blueMax);
+        Point orangeMin = new Point(-1f, -1f, Rgb.ORANGE);
         Model foo = new Model("foo", List.of(foo1), List.of(orangeMin));
-        Model colored = foo.colored(Color.MAGENTA);
+        Model colored = foo.colored(Rgb.MAGENTA);
         List<Polyline> offColorPolylines = colored.polylines()
-                .filter(polyline -> !polyline.getColor().equals(Color.MAGENTA))
+                .filter(polyline -> !polyline.getColor().equals(Rgb.MAGENTA))
                 .toList();
         assertEquals("polylines should have all been green", emptyList(), offColorPolylines);
         List<Point> offColorPoints = colored.points()
-                .filter(polyline -> !polyline.getColor().equals(Color.MAGENTA))
+                .filter(polyline -> !polyline.getColor().equals(Rgb.MAGENTA))
                 .toList();
         assertEquals("points should have all been green", emptyList(), offColorPoints);
     }
@@ -91,7 +89,7 @@ public class ModelTest {
     @Test
     public void denormalise() {
         Box box = new Box(0f, 0f, 1f, 1f);
-        Polyline normalPolyBox = box.toPolyline("normal box", Color.WHITE);
+        Polyline normalPolyBox = box.toPolyline("normal box", Rgb.WHITE);
         Model m = new Model("just normal box", List.of(normalPolyBox)).denormalise();
         m.lines().forEach(line -> {
             logger.info("checking line %s from".formatted(line));
@@ -107,7 +105,7 @@ public class ModelTest {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void bounds() {
-        Box actual = Pattern.boundingBox(Color.RED).bounds().get();
+        Box actual = Pattern.boundingBox(Rgb.RED).bounds().get();
         assertEquals(new Box(-1f, -1f, 1f, 1f), actual);
     }
 }

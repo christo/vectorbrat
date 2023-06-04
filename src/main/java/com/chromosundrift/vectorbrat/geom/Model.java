@@ -1,14 +1,9 @@
 package com.chromosundrift.vectorbrat.geom;
 
 
-import com.google.common.collect.Collections2;
-
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -48,15 +43,17 @@ public class Model implements Geom {
 
     /**
      * Scales and translates model space between 0-1. Also see {@link #denormalise()}.
+     *
      * @return a new Model
      */
     public Model normalise() {
         return scale(1 / SAMPLE_RANGE, 1 / SAMPLE_RANGE)
-                .offset(-SAMPLE_MIN/SAMPLE_RANGE, -SAMPLE_MIN/SAMPLE_RANGE);
+                .offset(-SAMPLE_MIN / SAMPLE_RANGE, -SAMPLE_MIN / SAMPLE_RANGE);
     }
 
     /**
      * Scales and translates model space across SAMPLE_RANGE. Also see {@link #normalise()}.
+     *
      * @return a new Model
      */
     public Model denormalise() {
@@ -195,7 +192,7 @@ public class Model implements Geom {
         return new Model(name, allPolylines, allPoints);
     }
 
-    public Model colored(Color color) {
+    public Model colored(Rgb color) {
         List<Polyline> polylines = this.polylines().map(polyline -> polyline.colored(color)).collect(Collectors.<Polyline>toList());
         List<Point> allPoints = this.points().map(p -> p.colored(color)).collect(Collectors.toList());
         return new Model(this.name, polylines, allPoints);

@@ -1,6 +1,5 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,17 +21,17 @@ public class AsteroidsFont implements Typeface {
 
     private static Model createMissingChar() {
         List<Polyline> polylines = new ArrayList<>();
-        polylines.add(Polyline.closed("[]", Color.WHITE,
+        polylines.add(Polyline.closed("[]", Rgb.WHITE,
                 new Point(SAMPLE_MIN, SAMPLE_MIN),
                 new Point(SAMPLE_MIN, SAMPLE_MAX),
                 new Point(SAMPLE_MAX, SAMPLE_MAX),
                 new Point(SAMPLE_MAX, SAMPLE_MIN)
         ));
-        polylines.add(Polyline.open("\\", Color.WHITE,
+        polylines.add(Polyline.open("\\", Rgb.WHITE,
                 new Point(SAMPLE_MIN, SAMPLE_MIN),
                 new Point(SAMPLE_MAX, SAMPLE_MAX))
         );
-        polylines.add(Polyline.open("/", Color.WHITE,
+        polylines.add(Polyline.open("/", Rgb.WHITE,
                 new Point(SAMPLE_MAX, SAMPLE_MIN),
                 new Point(SAMPLE_MIN, SAMPLE_MAX))
         );
@@ -439,7 +438,7 @@ public class AsteroidsFont implements Typeface {
             float my1 = (y1 - MIN_Y) * Config.SAMPLE_RANGE / MAX_Y + SAMPLE_MIN;
             float mx2 = (x2 - MIN_X) * Config.SAMPLE_RANGE / MAX_X + SAMPLE_MIN;
             float my2 = (y2 - MIN_Y) * Config.SAMPLE_RANGE / MAX_Y + SAMPLE_MIN;
-            polylines.add(Polyline.closed("", Color.WHITE, new Point(mx1, my1), new Point(mx2, my2)));
+            polylines.add(Polyline.closed("", Rgb.WHITE, new Point(mx1, my1), new Point(mx2, my2)));
         }
 
         public Model toModel(Character c) {

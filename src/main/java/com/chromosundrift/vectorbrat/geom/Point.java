@@ -1,6 +1,5 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import java.awt.Color;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,7 +14,7 @@ public final class Point implements Geom {
     private final float r;
     private final float g;
     private final float b;
-    private final Color color;
+    private final Rgb color;
 
     /**
      * Constructs a new point with given x and y coordinates and red, green, blue color components.
@@ -26,7 +25,7 @@ public final class Point implements Geom {
         this.r = r;
         this.g = g;
         this.b = b;
-        this.color = new Color(r, g, b);
+        this.color = new Rgb(r, g, b);
     }
 
     /**
@@ -39,13 +38,12 @@ public final class Point implements Geom {
         this(x, y, 1f, 1f, 1f);
     }
 
-    public Point(float x, float y, Color c) {
-        float[] rgb = c.getRGBComponents(null);
+    public Point(float x, float y, Rgb c) {
         this.x = x;
         this.y = y;
-        this.r = rgb[0];
-        this.g = rgb[1];
-        this.b = rgb[2];
+        this.r = c.red();
+        this.g = c.green();
+        this.b = c.blue();
         this.color = c;
     }
 
@@ -58,7 +56,7 @@ public final class Point implements Geom {
         this.color = copyMe.color;
     }
 
-    public Color getColor() {
+    public Rgb getColor() {
         return this.color;
     }
 
@@ -133,7 +131,7 @@ public final class Point implements Geom {
      * @return a black copy of this.
      */
     public Point black() {
-        return this.colored(Color.BLACK);
+        return this.colored(Rgb.BLACK);
     }
 
     /**
@@ -162,7 +160,7 @@ public final class Point implements Geom {
     /**
      * Creates a new point with the given colour.
      */
-    public Point colored(Color color) {
+    public Point colored(Rgb color) {
         return new Point(this.x, this.y, color);
     }
 
@@ -187,9 +185,9 @@ public final class Point implements Geom {
     }
 
     static class PointFactory {
-        private final Color color;
+        private final Rgb color;
 
-        public PointFactory(Color color) {
+        public PointFactory(Rgb color) {
             this.color = color;
         }
 
@@ -200,6 +198,7 @@ public final class Point implements Geom {
 
     /**
      * A Point has no lines, always empty.
+     *
      * @return empty stream.
      */
     @Override

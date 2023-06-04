@@ -1,7 +1,5 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import java.awt.Color;
-
 import static com.chromosundrift.vectorbrat.Config.inSampleRange;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -21,7 +19,7 @@ public class TestUtils {
         assertTrue(pointName + " y was out of range: %s".formatted(point.y()), inSampleRange(point.y()));
     }
 
-    static void assertPointColor(String message, Color expected, Point point) {
+    static void assertPointColor(String message, Rgb expected, Point point) {
         assertEquals(message, expected, point.getColor());
     }
 

@@ -1,15 +1,11 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import java.awt.Color;
-
-import static com.chromosundrift.vectorbrat.Config.SAMPLE_RANGE;
-
 public class TextEngine {
 
-    private final Color color;
+    private final Rgb color;
     private final Typeface typeface;
 
-    public TextEngine(Color color, Typeface typeface) {
+    public TextEngine(Rgb color, Typeface typeface) {
         this.color = color;
         this.typeface = typeface;
     }

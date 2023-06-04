@@ -1,6 +1,5 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import java.awt.Color;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,10 +12,10 @@ import java.util.stream.Stream;
  */
 public final class Polyline implements Geom {
     private final String name;
-    private final Color color; // future: remove dep on java.awt.Color
+    private final Rgb color;
     private final Point[] _points;
 
-    private Polyline(String name, Color color, Point... points) {
+    private Polyline(String name, Rgb color, Point... points) {
         this.name = name;
         this.color = color;
         this._points = points;
@@ -29,7 +28,7 @@ public final class Polyline implements Geom {
      * @param points the points.
      * @return the {@link Polyline}.
      */
-    public static Polyline closed(String name, Color color, Point... points) {
+    public static Polyline closed(String name, Rgb color, Point... points) {
         Point[] closedPoints = new Point[points.length + 1];
         for (int i = 0; i < points.length; i++) {
             closedPoints[i] = points[i].colored(color);
@@ -45,7 +44,7 @@ public final class Polyline implements Geom {
      * @param points the points.
      * @return the {@link Polyline}.
      */
-    public static Polyline open(String name, Color c, Point... points) {
+    public static Polyline open(String name, Rgb c, Point... points) {
         Point[] ps = new Point[points.length];
         for (int i = 0; i < points.length; i++) {
             ps[i] = points[i].colored(c);
@@ -56,7 +55,7 @@ public final class Polyline implements Geom {
     /**
      * Creates a box-shaped Polyline
      */
-    static Polyline box(String name, float x1, float y1, float x2, float y2, Color c) {
+    static Polyline box(String name, float x1, float y1, float x2, float y2, Rgb c) {
         return closed(name, c,
                 new Point(x1, y1, c),
                 new Point(x2, y1, c),
@@ -65,7 +64,7 @@ public final class Polyline implements Geom {
         );
     }
 
-    static Polyline box(float x1, float y1, float x2, float y2, Color c) {
+    static Polyline box(float x1, float y1, float x2, float y2, Rgb c) {
         return box("box", x1, y1, x2, y2, c);
     }
 
@@ -78,7 +77,7 @@ public final class Polyline implements Geom {
         return _points.length;
     }
 
-    public Color getColor() {
+    public Rgb getColor() {
         return color;
     }
 
@@ -168,7 +167,7 @@ public final class Polyline implements Geom {
         return new Polyline(name, color, points);
     }
 
-    public Polyline colored(Color c) {
+    public Polyline colored(Rgb c) {
         Point[] points = new Point[this._points.length];
         for (int i = 0; i < this._points.length; i++) {
             points[i] = this._points[i].colored(c);
@@ -182,12 +181,12 @@ public final class Polyline implements Geom {
         float maxX = Float.MIN_VALUE;
         float minY = Float.MAX_VALUE;
         float maxY = Float.MIN_VALUE;
-            for (Point point : _points()) {
-                minX = Math.min(point.x(), minX);
-                minY = Math.min(point.y(), minY);
-                maxX = Math.max(point.x(), maxX);
-                maxY = Math.max(point.y(), maxY);
-            }
+        for (Point point : _points()) {
+            minX = Math.min(point.x(), minX);
+            minY = Math.min(point.y(), minY);
+            maxX = Math.max(point.x(), maxX);
+            maxY = Math.max(point.y(), maxY);
+        }
         return Optional.of(new Box(minX, minY, maxX, maxY));
     }
 }

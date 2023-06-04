@@ -7,20 +7,16 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import java.awt.Color;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.chromosundrift.vectorbrat.Util.setSystemLibraryPath;
-import static java.util.Collections.emptyList;
 
 import com.chromosundrift.vectorbrat.asteroids.Asteroids;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Pattern;
-import com.chromosundrift.vectorbrat.geom.Point;
+import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
 import com.chromosundrift.vectorbrat.swing.Controllers;
@@ -75,16 +71,16 @@ public class VectorBrat {
 
     private AppMap makeAppMap() {
         AppMap ar = new AppMap(this::setModel, System::nanoTime);
-        TextEngine te = new TextEngine(Color.CYAN, new AsteroidsFont());
+        TextEngine te = new TextEngine(Rgb.CYAN, new AsteroidsFont());
         String text = "ASTEROIDS";
         float yScale = (float) (1.0 / text.length());
-        ar.add(te.textLine(text).scale(0.6f, yScale).merge(Pattern.boundingBox(Color.YELLOW)));
+        ar.add(te.textLine(text).scale(0.6f, yScale).merge(Pattern.boundingBox(Rgb.YELLOW)));
         Model aModel = new AsteroidsFont().getChar('A');
         ar.add(aModel);
         ar.add(new Asteroids());
         ar.add(Pattern.testPattern1().scale(0.8f, 0.8f));
-        ar.add(Pattern.sineWaves(Color.RED));
-        ar.add(Pattern.boxGrid(3, 2, Color.CYAN));
+        ar.add(Pattern.sineWaves(Rgb.RED));
+        ar.add(Pattern.boxGrid(3, 2, Rgb.CYAN));
         return ar;
     }
 

@@ -1,10 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.awt.Color;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -15,10 +12,10 @@ import static org.junit.Assert.assertTrue;
 public class PolylineTest {
     @Test
     public void testPointColorInherited() {
-        Polyline p = Polyline.open("test line", Color.GREEN, new Point(0, 0), new Point(1, 1));
+        Polyline p = Polyline.open("test line", Rgb.GREEN, new Point(0, 0), new Point(1, 1));
         assertEquals(2, p.size());
-        assertEquals(Color.GREEN, p._points()[0].getColor());
-        assertEquals(Color.GREEN, p._points()[1].getColor());
+        assertEquals(Rgb.GREEN, p._points()[0].getColor());
+        assertEquals(Rgb.GREEN, p._points()[1].getColor());
     }
 
     @Test
@@ -30,18 +27,18 @@ public class PolylineTest {
         assertEquals(nLines, 3); // 3 sides
         for (int i = 0; i < nLines; i++) {
             Line line = lines.get(i);
-            assertEquals(Color.ORANGE, line.from().getColor());
-            assertEquals(Color.ORANGE, line.to().getColor());
+            assertEquals(Rgb.ORANGE, line.from().getColor());
+            assertEquals(Rgb.ORANGE, line.to().getColor());
         }
     }
 
     @Test
     public void colored() {
-        Polyline green = getOrangeTriangle().colored(Color.GREEN);
+        Polyline green = getOrangeTriangle().colored(Rgb.GREEN);
         Stream<Line> lines = green.lines();
         lines.forEach(line -> {
-            assertPointColor("from should be green", Color.GREEN, line.from());
-            assertPointColor("to should be green", Color.GREEN, line.to());
+            assertPointColor("from should be green", Rgb.GREEN, line.from());
+            assertPointColor("to should be green", Rgb.GREEN, line.to());
         });
     }
 
@@ -62,6 +59,6 @@ public class PolylineTest {
     }
 
     private static Polyline getOrangeTriangle() {
-        return Polyline.closed("orange triangle", Color.ORANGE, new Point(0, 0), new Point(1, 1), new Point(1, 0));
+        return Polyline.closed("orange triangle", Rgb.ORANGE, new Point(0, 0), new Point(1, 1), new Point(1, 0));
     }
 }

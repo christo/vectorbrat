@@ -1,6 +1,5 @@
 package com.chromosundrift.vectorbrat.asteroids;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,13 +8,14 @@ import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.ModelAnimator;
 import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Polyline;
+import com.chromosundrift.vectorbrat.geom.Rgb;
 
 public class Asteroids implements ModelAnimator {
     public static final float MIN_X = -1.0f;
     public static final float MAX_X = 1.0f;
     public static final float MIN_Y = -1.0f;
     public static final float MAX_Y = 1.0f;
-    public static final Color COL_ASTEROID = Color.YELLOW.darker();
+    public static final Rgb COL_ASTEROID = Rgb.GREY;
     public static final int NUM_ASTEROIDS = 10;
     public static final String NAME = "Asteroids";
     private LinkedList<Asteroid> asteroids = new LinkedList<>();

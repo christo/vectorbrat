@@ -1,6 +1,5 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -92,7 +91,7 @@ public final class Interpolator implements Pather {
             prev = points.get(0);
         } else {
             // model is empty, just draw origin with pen up
-            prev = new Point(0, 0, Color.BLACK);
+            prev = new Point(0, 0, Rgb.BLACK);
         }
         while (!lines.isEmpty() || !points.isEmpty()) {
             // if a line is closest, this will contain it, otherwise null

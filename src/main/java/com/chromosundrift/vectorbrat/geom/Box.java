@@ -1,6 +1,5 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import java.awt.Color;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -55,7 +54,7 @@ public final class Box implements Geom {
         return Stream.of(minMin, maxMax, minMax, maxMin).min(other.dist2Point());
     }
 
-    public Polyline toPolyline(String name, Color color) {
+    public Polyline toPolyline(String name, Rgb color) {
         return Polyline.closed(name, color, minMin, minMax, maxMax, maxMin);
     }
 
@@ -69,7 +68,7 @@ public final class Box implements Geom {
 
     @Override
     public Stream<Line> lines() {
-        return toPolyline("unused", Color.WHITE).lines();
+        return toPolyline("unused", Rgb.WHITE).lines();
     }
 
     /**

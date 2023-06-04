@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
@@ -81,7 +80,7 @@ public class PathPlannerTest {
         Config c = getTestConfig();
         c.setInterpolation(Interpolation.QUINTIC);
         Interpolator pp = new Interpolator(c);
-        Model m = Pattern.boxGrid(5, 5, Color.YELLOW);
+        Model m = Pattern.boxGrid(5, 5, Rgb.YELLOW);
         pp.plan(m);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();

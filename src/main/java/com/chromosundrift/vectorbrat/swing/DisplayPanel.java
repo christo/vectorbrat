@@ -31,6 +31,7 @@ import com.chromosundrift.vectorbrat.VectorDisplay;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Interpolator;
 import com.chromosundrift.vectorbrat.geom.Polyline;
+import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.laser.LaserController;
 
 
@@ -111,13 +112,17 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         g2.dispose();
     }
 
+    private Color toColor(Rgb rgb) {
+        return new Color(rgb.red(), rgb.green(), rgb.blue());
+    }
+
     private void drawModel(Model model, BufferedImage im, Graphics2D g2) {
         g2.setStroke(strokeLine);
         Stream<Polyline> polylines = model.polylines();
         int xScale = im.getWidth();
         int yScale = im.getHeight();
         polylines.forEach(p -> {
-            g2.setColor(p.getColor());
+            g2.setColor(toColor(p.getColor()));
             int[] xPoints = p.xZeroScaled(xScale);
             int[] yPoints = p.yZeroScaled(yScale);
             g2.drawPolyline(xPoints, yPoints, xPoints.length);
@@ -125,7 +130,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         model.points().forEach(point -> {
             int x = (int) ((point.x() / 2 + 0.5) * xScale);
             int y = (int) ((point.y() / 2 + 0.5) * yScale);
-            g2.setColor(point.getColor());
+            g2.setColor(toColor(point.getColor()));
             g2.drawLine(x, y, x, y);
         });
     }
