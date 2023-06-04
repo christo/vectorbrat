@@ -8,16 +8,16 @@ import java.util.List;
 import com.chromosundrift.vectorbrat.Config;
 
 /**
- * Holds the trace path for rendering shapes.
- * future: implement best-effort scan order.
+ * Interpolating Pather. Holds the trace path for rendering shapes for renderers with physical acceleration limits.
+ *
  */
-public final class PathPlanner {
+public final class Interpolator implements Pather {
 
     /**
      * Initial size of path in total points including interpolation. Big enough to reduce allocations
      * during time-sensitive loop.
      */
-    public static final int INITIAL_CAPACITY = 1000;
+    public static final int INITIAL_CAPACITY = 5000;
 
     /**
      * Number of to replicated path points per given isolated point.
@@ -36,12 +36,14 @@ public final class PathPlanner {
     private final ArrayList<Float> rs = new ArrayList<>(INITIAL_CAPACITY);
     private final ArrayList<Float> gs = new ArrayList<>(INITIAL_CAPACITY);
     private final ArrayList<Float> bs = new ArrayList<>(INITIAL_CAPACITY);
+
+    /** Base value */
     private final float pointsPerUnitOffset;
 
     /**
      * @param config configuration.
      */
-    public PathPlanner(Config config) {
+    public Interpolator(Config config) {
         this.pointsPerPoint = config.getPointsPerPoint();
         this.pointsPerUnit = config.getPointsPerUnit();
         this.vertexPoints = config.getVertexPoints();
@@ -76,7 +78,8 @@ public final class PathPlanner {
      *
      * @param m the model to plan.
      */
-    public void planNextNearest(Model m) {
+    @Override
+    public void plan(Model m) {
 
         LinkedList<Line> lines = new LinkedList<>();
         for (Polyline pl : m.polylines().toList()) {
@@ -292,22 +295,27 @@ public final class PathPlanner {
         }
     }
 
+    @Override
     public ArrayList<Float> getXs() {
         return xs;
     }
 
+    @Override
     public ArrayList<Float> getYs() {
         return ys;
     }
 
+    @Override
     public ArrayList<Float> getRs() {
         return rs;
     }
 
+    @Override
     public ArrayList<Float> getGs() {
         return gs;
     }
 
+    @Override
     public ArrayList<Float> getBs() {
         return bs;
     }

@@ -29,7 +29,7 @@ import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorDisplay;
 import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.geom.PathPlanner;
+import com.chromosundrift.vectorbrat.geom.Interpolator;
 import com.chromosundrift.vectorbrat.geom.Polyline;
 import com.chromosundrift.vectorbrat.laser.LaserController;
 
@@ -156,7 +156,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     }
 
     private void drawPathPlan(final Model model, final BufferedImage im, final Graphics2D g2) {
-        PathPlanner p = getPathPlan();
+        Interpolator p = getPathPlan();
         if (p != null && p.getXs().size() > 0) {
             int w = im.getWidth();
             int h = im.getHeight();
@@ -220,7 +220,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         }
     }
 
-    private PathPlanner getPathPlan() {
+    private Interpolator getPathPlan() {
         return laserController.getPathPlanner();
     }
 

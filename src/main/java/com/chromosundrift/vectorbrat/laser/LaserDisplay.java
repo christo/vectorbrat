@@ -15,10 +15,10 @@ import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.VectorDisplay;
 import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.geom.PathPlanner;
+import com.chromosundrift.vectorbrat.geom.Interpolator;
 
 /**
- * Top level VectorDisplay for laser or scope. Delegates path interpolation to {@link PathPlanner} and signal details
+ * Top level VectorDisplay for laser or scope. Delegates path interpolation to {@link Interpolator} and signal details
  * to {@link LaserDriver}.
  */
 public final class LaserDisplay implements VectorDisplay, LaserController {
@@ -41,7 +41,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     private volatile boolean modelDirty;
     private long lastPathPlanTime;
-    private PathPlanner pathPlanner;
+    private Interpolator pathPlanner;
 
     public LaserDisplay(Config config) throws VectorBratException {
         logger.info("initialising LaserDisplay");
@@ -71,8 +71,8 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         if (modelDirty) {
 
             // calculate scan rate
-            pathPlanner = new PathPlanner(this.config);
-            pathPlanner.planNextNearest(model);
+            pathPlanner = new Interpolator(this.config);
+            pathPlanner.plan(model);
             laserDriver.setPathPlanner(pathPlanner);
             modelDirty = false;
         }
@@ -84,7 +84,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      * Renders continually at the configured rate, unless driver is "off", in which case, we do lots of nothing. Runs
      * in the current thread.
      */
-    public void run() throws VectorBratException {
+    private void run() throws VectorBratException {
         logger.info("running laser display");
         laserDriver.start();
         running = true;
@@ -116,7 +116,6 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
             exec.shutdown();
         }
     }
-
 
     /**
      * Will block until laser is finished any in-progress model rendering. Depending on current pps and
@@ -227,7 +226,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     }
 
     @Override
-    public PathPlanner getPathPlanner() {
+    public Interpolator getPathPlanner() {
         return this.pathPlanner;
     }
 }

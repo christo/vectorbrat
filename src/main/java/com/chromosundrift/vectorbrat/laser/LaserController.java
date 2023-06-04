@@ -2,7 +2,7 @@ package com.chromosundrift.vectorbrat.laser;
 
 import java.util.function.Consumer;
 
-import com.chromosundrift.vectorbrat.geom.PathPlanner;
+import com.chromosundrift.vectorbrat.geom.Interpolator;
 
 public interface LaserController {
 
@@ -56,5 +56,5 @@ public interface LaserController {
 
     void setPathPlanTime(long planTime);
 
-    PathPlanner getPathPlanner();
+    Interpolator getPathPlanner();
 }

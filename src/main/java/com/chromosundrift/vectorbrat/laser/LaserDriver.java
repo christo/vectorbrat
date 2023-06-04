@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.VectorBratException;
-import com.chromosundrift.vectorbrat.geom.PathPlanner;
+import com.chromosundrift.vectorbrat.geom.Interpolator;
 
 /**
  * Handles generation of audio buffers and connection to audio subsystem. Also provides nanosecond time from
@@ -276,7 +276,7 @@ public final class LaserDriver {
 
     }
 
-    public void setPathPlanner(PathPlanner p) {
+    public void setPathPlanner(Interpolator p) {
         ArrayList<Float> xs = p.getXs();
         ArrayList<Float> ys = p.getYs();
         ArrayList<Float> rs = p.getRs();

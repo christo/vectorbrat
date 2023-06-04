@@ -25,7 +25,7 @@ public class PathPlannerTest {
         Model model = Pattern.testPattern1();
         Point start = new Point(0f, 0f);
         Config c = getTestConfig();
-        PathPlanner pp = new PathPlanner(c);
+        Interpolator pp = new Interpolator(c);
         pp.planNaive(model, start);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
@@ -57,7 +57,7 @@ public class PathPlannerTest {
     @Test
     public void testInterpolateTo() {
         Config c = getTestConfig();
-        PathPlanner pp = new PathPlanner(c);
+        Interpolator pp = new Interpolator(c);
         pp.interpolate(new Point(0, 0), new Point(1, 1), 1, 5);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
@@ -80,9 +80,9 @@ public class PathPlannerTest {
     public void testPlanNextNearest() {
         Config c = getTestConfig();
         c.setInterpolation(Interpolation.QUINTIC);
-        PathPlanner pp = new PathPlanner(c);
+        Interpolator pp = new Interpolator(c);
         Model m = Pattern.boxGrid(5, 5, Color.YELLOW);
-        pp.planNextNearest(m);
+        pp.plan(m);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
         ArrayList<Float> rs = pp.getRs();
