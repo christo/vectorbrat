@@ -140,10 +140,7 @@ public class Model implements Geom {
 
     @Override
     public String toString() {
-        return "GlobalModel{" +
-                "polyliness=" + polylines +
-                ", points=" + points +
-                '}';
+        return "Model{polyliness=" + polylines + ", points=" + points + '}';
     }
 
     public String getName() {
@@ -161,10 +158,7 @@ public class Model implements Geom {
     /**
      * Returns the closest model point to the given point - only considers isolated Points and Polyline start points.
      * This exists from when polylines could only be drawn from their start point
-     *
-     * @deprecated reconsider drawing polylines only from their start point
      */
-    @Deprecated
     public Point closeish(Point other) {
         TreeSet<Point> closestToRef = new TreeSet<>(other.dist2Point());
         // for now only consider points and the first point of each polyline
