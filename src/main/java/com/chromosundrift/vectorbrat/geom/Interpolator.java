@@ -78,7 +78,6 @@ public final class Interpolator implements Pather {
      *
      * @param m the model to plan.
      */
-    @Override
     public void plan(Model m) {
 
         LinkedList<Line> lines = new LinkedList<>();

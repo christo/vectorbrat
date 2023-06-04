@@ -23,4 +23,7 @@ public class Util {
         return Math.min(Math.max(min, x), max);
     }
 
+    public static float clampNormal(float red) {
+        return clamp(red, 0f, 1f);
+    }
 }

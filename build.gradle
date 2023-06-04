@@ -27,7 +27,13 @@ dependencies {
     implementation 'org.jaudiolibs:audioservers-jack:1.2.0'
     implementation 'org.jaudiolibs:audioservers-javasound:1.2.0'
 
-    implementation "com.google.guava:guava:31.1-jre" // TODO reconsider using guava - try vavr?
+    // ilda file loading
+    implementation 'nl.sijpesteijn:ilda:1.1'
+    // TODO might need jaxb to support the above and this might be how to add it
+    // TODO consider adding a pull request to https://github.com/sijpesteijn/ilda
+//    runtimeOnly 'javax.xml.bind:jaxb-api:2.3.1'
+
+    implementation "com.google.guava:guava:31.1-jre"
 
     // java gui libs
     implementation 'io.github.vincenzopalazzo:material-ui-swing:1.1.2'
