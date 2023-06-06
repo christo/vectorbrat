@@ -1,5 +1,6 @@
 package com.chromosundrift.vectorbrat.laser;
 
+import com.google.common.base.Suppliers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
@@ -26,7 +28,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private static final Logger logger = LoggerFactory.getLogger(LaserDisplay.class);
 
     private final DoubleBufferedVectorDisplay vectorDisplay;
-    private final LaserDriver laserDriver;
+    private final Supplier<LaserDriver> laserDriver;
     private final ThreadFactory threadFactory;
     private final Set<Consumer<LaserController>> updateListeners;
     private final Config config;
@@ -43,10 +45,18 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private long lastPathPlanTime;
     private Interpolator pathPlanner;
 
-    public LaserDisplay(Config config) throws VectorBratException {
+    public LaserDisplay(final Config config) {
         logger.info("initialising LaserDisplay");
         this.vectorDisplay = new DoubleBufferedVectorDisplay();
-        this.laserDriver = new LaserDriver(config);
+        this.laserDriver = Suppliers.memoize(() -> {
+            try {
+                logger.info("Lazily creating LaserDriver (may throw)");
+                return new LaserDriver(config);
+            } catch (VectorBratException e) {
+                logger.error("Lazy creation of LaserDriver exploded", e);
+                throw new RuntimeException(e);
+            }
+        });
         this.pps = config.getPps();
         this.threadFactory = r -> {
             Thread t = new Thread(r, "laser display");
@@ -73,7 +83,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
             // calculate scan rate
             pathPlanner = new Interpolator(this.config);
             pathPlanner.plan(model);
-            laserDriver.setPathPlanner(pathPlanner);
+            laserDriver.get().setPathPlanner(pathPlanner);
             modelDirty = false;
         }
 
@@ -86,10 +96,10 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     private void run() throws VectorBratException {
         logger.info("running laser display");
-        laserDriver.start();
+        laserDriver.get().start();
         running = true;
         while (running) {
-            if (laserDriver.isOn()) {
+            if (laserDriver.get().isOn()) {
                 vectorDisplay.withLockAndFlip(this::render);
             } else {
                 try {
@@ -158,7 +168,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     @Override
     public boolean getOn() {
-        return this.laserDriver.isOn();
+        return this.laserDriver.get().isOn();
     }
 
     /**
@@ -168,7 +178,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     @Override
     public void setOn(boolean on) {
-        this.laserDriver.setOn(on);
+        this.laserDriver.get().setOn(on);
         this.tellListeners();
     }
 
@@ -201,12 +211,12 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     @Override
     public float getSampleRate() {
-        return laserDriver.getSampleRate();
+        return laserDriver.get().getSampleRate();
     }
 
     @Override
     public int getBufferSize() {
-        return laserDriver.getBufferSize();
+        return laserDriver.get().getBufferSize();
     }
 
     @Override
