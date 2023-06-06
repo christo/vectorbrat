@@ -2,6 +2,11 @@ package com.chromosundrift.vectorbrat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.LogManager;
 
 public class Util {
 
@@ -25,5 +30,16 @@ public class Util {
 
     public static float clampNormal(float red) {
         return clamp(red, 0f, 1f);
+    }
+
+    public static final void bridgeJulToSlf4j() {
+        logger.info("bridging JUL logging to Slf4j");
+        try (InputStream is = Util.class.getClassLoader().getResourceAsStream("logging.properties")) {
+            LogManager.getLogManager().readConfiguration(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
     }
 }
