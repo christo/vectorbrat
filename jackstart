@@ -9,8 +9,9 @@
 LEADER_BACKEND=coreaudio
 FOLLOWER_BACKEND=coremidi
 
-# audio interface internal name is not stable! May be different each time USB audio device is connected
-AUDIO_INTERFACE=$(dirname $0)/scripts/jackname.pl ES-9
+JN_SCRIPT="$(dirname $0)/scripts/jackname.pl"
+# use script to detect audio interface internal name (unstable across connections)
+AUDIO_INTERFACE=$($JN_SCRIPT ES-9)
 
 echo
 cat "$(dirname $0)/banner"
