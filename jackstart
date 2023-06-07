@@ -9,6 +9,10 @@
 LEADER_BACKEND=coreaudio
 FOLLOWER_BACKEND=coremidi
 
+#
+# must be a power of two - will impact latency predictably and provide more times between callbacks
+FRAMES_PER_PERIOD=256
+
 JN_SCRIPT="$(dirname $0)/scripts/jackname.pl"
 # use script to detect audio interface internal name (unstable across connections)
 AUDIO_INTERFACE=$($JN_SCRIPT ES-9)
@@ -24,5 +28,5 @@ echo starting jackd
 echo
 
 set -vx
-jackd -v -X "$FOLLOWER_BACKEND" -d "$LEADER_BACKEND" -d "$AUDIO_INTERFACE" -P "$AUDIO_INTERFACE" -C "$AUDIO_INTERFACE" -i 16 -o 16 -r 96000
+jackd -v -p "$FRAMES_PER_PERIOD" -X "$FOLLOWER_BACKEND" -d "$LEADER_BACKEND" -d "$AUDIO_INTERFACE" -P "$AUDIO_INTERFACE" -C "$AUDIO_INTERFACE" -i 16 -o 16 -r 96000
 
