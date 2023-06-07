@@ -61,6 +61,7 @@ public class VectorBrat {
 
     public static void main(String[] args) {
         setSystemLibraryPath();
+        Util.bridgeJulToSlf4j();
         try {
             VectorBrat vectorBrat = new VectorBrat();
             vectorBrat.start();
