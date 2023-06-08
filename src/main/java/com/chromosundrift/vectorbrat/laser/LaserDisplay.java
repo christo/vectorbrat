@@ -16,8 +16,8 @@ import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.VectorDisplay;
-import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Interpolator;
+import com.chromosundrift.vectorbrat.geom.Model;
 
 /**
  * Top level VectorDisplay for laser or scope. Delegates path interpolation to {@link Interpolator} and signal details
@@ -47,7 +47,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     public LaserDisplay(final Config config) {
         logger.info("initialising LaserDisplay");
-        this.vectorDisplay = new DoubleBufferedVectorDisplay();
+        this.vectorDisplay = new DoubleBufferedVectorDisplay(config.getMinimumLaserBrightness(), true);
         this.laserDriver = Suppliers.memoize(() -> {
             try {
                 logger.info("Lazily creating LaserDriver (may throw)");
@@ -238,5 +238,15 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     @Override
     public Interpolator getPathPlanner() {
         return this.pathPlanner;
+    }
+
+    @Override
+    public float getMinimumBrightness() {
+        return config.getMinimumLaserBrightness();
+    }
+
+    @Override
+    public boolean supportsBlank() {
+        return true;
     }
 }

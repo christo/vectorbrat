@@ -13,15 +13,19 @@ public final class DoubleBufferedVectorDisplay implements VectorDisplay {
     private final ReentrantLock lock = new ReentrantLock();
     private Model frontModel;
     private Model backModel;
+    private final float minimumBrightness;
+    private final boolean blanking;
 
 
-    public DoubleBufferedVectorDisplay(Model initialModel) {
+    public DoubleBufferedVectorDisplay(Model initialModel, float minimumBrightness, boolean blanking) {
         frontModel = initialModel;
         backModel = initialModel;
+        this.minimumBrightness = minimumBrightness;
+        this.blanking = blanking;
     }
 
-    public DoubleBufferedVectorDisplay() {
-        this(new Model());
+    public DoubleBufferedVectorDisplay(float minimumBrightness, boolean blanking) {
+        this(new Model(), minimumBrightness, blanking);
     }
 
     /**
@@ -64,5 +68,16 @@ public final class DoubleBufferedVectorDisplay implements VectorDisplay {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public float getMinimumBrightness() {
+        return minimumBrightness;
+    }
+
+
+    @Override
+    public boolean supportsBlank() {
+        return blanking;
     }
 }

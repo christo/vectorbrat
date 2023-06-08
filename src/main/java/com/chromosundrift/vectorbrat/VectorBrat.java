@@ -2,21 +2,26 @@ package com.chromosundrift.vectorbrat;
 
 import io.materialtheme.darkstackoverflow.DarkStackOverflowTheme;
 import mdlaf.MaterialLookAndFeel;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.chromosundrift.vectorbrat.Util.setSystemLibraryPath;
 
+import com.chromosundrift.vectorbrat.asteroids.Asteroid;
 import com.chromosundrift.vectorbrat.asteroids.Asteroids;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
 import com.chromosundrift.vectorbrat.geom.BungeeAnimator;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Pattern;
+import com.chromosundrift.vectorbrat.geom.Polyline;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
@@ -83,7 +88,16 @@ public class VectorBrat {
         ar.add(Pattern.testPattern1().scale(0.8f, 0.8f));
         ar.add(Pattern.sineWaves(Rgb.RED));
         ar.add(Pattern.boxGrid(3, 2, Rgb.CYAN));
+        ar.add(mkRock());
         return ar;
+    }
+
+    private Model mkRock() {
+        List<Polyline> pls = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            pls.add(new Asteroid(Asteroid.Size.LARGE).toPolyline());
+        }
+        return new Model("rock", pls);
     }
 
     private static Model mkTextModel(String text) {
@@ -97,7 +111,7 @@ public class VectorBrat {
         setModel(empty);
         this.frame.start();
         this.laser.start();
-        appMap.setAnimator("VECTORBRAT");
+        appMap.setAnimator("Asteroids");
 
         this.motion.submit(appMap);
         logger.info("started VectorBrat");

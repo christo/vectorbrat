@@ -29,4 +29,11 @@ public class TestUtils {
         assertTrue("from" + " x was out of normal range: %s".formatted(point.x()), xInRange);
         assertTrue("from" + " y was out of normal range: %s".formatted(point.y()), yInRange);
     }
+
+    public static void assertInRange(Box bounds) {
+        assertInRange("minmin", bounds.minMin);
+        assertInRange("minMax", bounds.minMax);
+        assertInRange("maxMin", bounds.maxMin);
+        assertInRange("maxMax", bounds.maxMax);
+    }
 }

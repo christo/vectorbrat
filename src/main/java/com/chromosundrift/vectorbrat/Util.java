@@ -55,4 +55,8 @@ public class Util {
     public static long millisToNanos(int msPeriod) {
         return msPeriod * MILLION;
     }
+
+    public static long msToNanos(int ms) {
+        return ms * MILLION;
+    }
 }

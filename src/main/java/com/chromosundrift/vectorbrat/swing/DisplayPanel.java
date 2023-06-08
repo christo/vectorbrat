@@ -48,8 +48,9 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private static final BasicStroke STROKE_PATH_OFF =
             new BasicStroke(1f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
     private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.6f, 0.3f);
+    public static final float MINIMUM_BRIGHTNESS = 0f;
     private final Color colText = Color.getHSBColor(0.83f, 0.5f, 0.9f);
-    private final Color colBg = Color.getHSBColor(0, 0, 0.0f);
+    private final Color colBg = Color.getHSBColor(0, 0, 0f);
     private final DoubleBufferedVectorDisplay vectorDisplay;
     private final Font fontBranding;
     private final Config config;
@@ -78,7 +79,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
         setMinimumSize(new Dimension(400, 300));
         setPreferredSize(new Dimension(900, 700));
-        this.vectorDisplay = new DoubleBufferedVectorDisplay();
+        vectorDisplay = new DoubleBufferedVectorDisplay(MINIMUM_BRIGHTNESS, true);
     }
 
     /**
@@ -255,5 +256,20 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     public void setModel(final Model model) {
         vectorDisplay.setModel(model);
         this.repaint();
+    }
+
+    /**
+     * Minimum brightness is zero for this display.
+     *
+     * @return 0f
+     */
+    @Override
+    public float getMinimumBrightness() {
+        return MINIMUM_BRIGHTNESS;
+    }
+
+    @Override
+    public boolean supportsBlank() {
+        return true;
     }
 }

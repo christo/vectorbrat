@@ -1,5 +1,8 @@
 package com.chromosundrift.vectorbrat.asteroids;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Random;
 
 import com.chromosundrift.vectorbrat.Util;
@@ -11,14 +14,16 @@ import com.chromosundrift.vectorbrat.geom.Polyline;
  */
 public class Asteroid {
 
-    private static final float MIN_DX = 0.01f;
-    private static final float MIN_DY = 0.01f;
-    private static final float MAX_DX = 0.1f;
-    private static final float MAX_DY = 0.1f;
-    private static final float MIN_DROT = (float) (Math.TAU / 10);
-    private static final float MAX_DROT = (float) (Math.TAU / 5);
-    private static final int TARGET_FPS = 60;
-    private static final double frameTimeMs = 1.0 * Util.THOUSAND / TARGET_FPS;
+    private static final float MIN_DX = -0.005f;
+    private static final float MIN_DY = -0.005f;
+    private static final float MAX_DX = 0.005f;
+    private static final float MAX_DY = 0.005f;
+    private static final float MIN_DROT = (float) (Math.TAU / -20);
+    private static final float MAX_DROT = (float) (Math.TAU / 20);
+    private static final int TARGET_FPS = 30;
+    private static final double NS_PER_FRAME = 1.0 * Util.BILLION / TARGET_FPS;
+    private static final float MARGIN = Asteroid.Size.LARGE.units / 1.5f;
+
     private final Size size;
     private final float[] radii;
     private final float dx;
@@ -27,10 +32,10 @@ public class Asteroid {
     private float rot;
     private float x;
     private float y;
-    private long lastUpdate = -1;
-
+    private long lastNanos = -1;
 
     public Asteroid(Size size) {
+
         Random r = new Random();
         this.size = size;
         this.x = r.nextFloat(Asteroids.MIN_X, Asteroids.MAX_X);
@@ -47,30 +52,30 @@ public class Asteroid {
         }
     }
 
-    public void update(long time) {
-        if (lastUpdate < 0) {
-            lastUpdate = time;
-        } else {
+    public void update(long nsTime) {
+        if (lastNanos >= 0) {
             // calculate the number of frames elapsed
-            double frames = time - lastUpdate * 1.0 / Util.MILLION;
+            long nsElapsed = nsTime - lastNanos;
+            float frames = (float) (nsElapsed / NS_PER_FRAME);
 
             // update the model params proportional to number of frames elapsed
             x += dx * frames;
             y += dy * frames;
             rot += drot * frames;
-            if (x < Asteroids.MIN_X - Size.LARGE.units) {
-                x = Asteroids.MAX_X + Size.LARGE.units;
+            if (x < Asteroids.MIN_X - MARGIN) {
+                x = Asteroids.MAX_X + MARGIN;
             }
-            if (x > Asteroids.MAX_X + Size.LARGE.units) {
-                x = Asteroids.MIN_X - Size.LARGE.units;
+            if (x > Asteroids.MAX_X + MARGIN) {
+                x = Asteroids.MIN_X - MARGIN;
             }
-            if (y < Asteroids.MIN_Y - Size.LARGE.units) {
-                y = Asteroids.MAX_Y + Size.LARGE.units;
+            if (y < Asteroids.MIN_Y - MARGIN) {
+                y = Asteroids.MAX_Y + MARGIN;
             }
-            if (y > Asteroids.MAX_Y + Size.LARGE.units) {
-                y = Asteroids.MIN_Y - Size.LARGE.units;
+            if (y > Asteroids.MAX_Y + MARGIN) {
+                y = Asteroids.MIN_Y - MARGIN;
             }
         }
+        lastNanos = nsTime;
     }
 
     public Polyline toPolyline() {
@@ -86,10 +91,10 @@ public class Asteroid {
     }
 
 
-    enum Size {
-        SMALL(0.1f, 40, 8),
-        MEDIUM(0.2f, 25, 10),
-        LARGE(0.3f, 10, 12);
+    public enum Size {
+        SMALL(0.05f, 40, 8),
+        MEDIUM(0.1f, 25, 10),
+        LARGE(0.17f, 10, 12);
 
         private final float units;
         private final int score;

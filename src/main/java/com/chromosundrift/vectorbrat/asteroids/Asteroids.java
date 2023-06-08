@@ -16,7 +16,7 @@ public class Asteroids implements ModelAnimator {
     public static final float MIN_Y = -1.0f;
     public static final float MAX_Y = 1.0f;
     public static final Rgb COL_ASTEROID = Rgb.GREY;
-    public static final int NUM_ASTEROIDS = 10;
+    public static final int NUM_ASTEROIDS = 6;
     public static final String NAME = "Asteroids";
     private LinkedList<Asteroid> asteroids = new LinkedList<>();
 
