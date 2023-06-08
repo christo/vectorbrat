@@ -83,9 +83,9 @@ public class AppMap implements Runnable, AppController {
                 }
                 // start new animator
                 try {
+                    animator = name;
                     logger.info("starting animator %s".formatted(animator));
                     newAnimator.start();
-                    animator = name;
                 } catch (Exception e) {
                     logger.warn("exception starting %s".formatted(animator), e);
                     throw new VectorBratException(e);
