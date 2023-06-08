@@ -16,10 +16,15 @@ java {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
+
+    // snapshot version of jack for locally modified stuff at https://github.com/christo/jnajack
+    // requires successful jnajack build with: mvn clean compile install
+//    implementation 'org.jaudiolibs:jnajack:1.5.0-SNAPSHOT'
 
     // for jack and audioservers
     implementation 'org.jaudiolibs:jnajack:1.4.0'
