@@ -98,10 +98,10 @@ public final class Config {
     private static final int DEFAULT_PPS = 30000;
     private static final float DEFAULT_LINE_WIDTH = 5.5f;
 
-    private static final float DEFAULT_POINTS_PER_POINT = 8f;
-    private static final float DEFAULT_POINTS_PER_UNIT = 150f;
-    private static final float DEFAULT_VERTEX_POINTS = 5f;
-    private static final float DEFAULT_BLACK_POINTS = 15f;
+    private static final float DEFAULT_POINTS_PER_POINT = 9f;
+    private static final float DEFAULT_POINTS_PER_UNIT = 180f;
+    private static final float DEFAULT_VERTEX_POINTS = 12f;
+    private static final float DEFAULT_BLACK_POINTS = 19f;
     private static final float DEFAULT_POINTS_PER_UNIT_OFFSET = 10f;
     private static final Interpolation DEFAULT_INTERPOLATION = Interpolation.QUINTIC;
     private final Channel channelX;
