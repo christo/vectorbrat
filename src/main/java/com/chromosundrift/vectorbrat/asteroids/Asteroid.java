@@ -17,8 +17,8 @@ public class Asteroid {
     private static final float MAX_DY = 0.1f;
     private static final float MIN_DROT = (float) (Math.TAU / 10);
     private static final float MAX_DROT = (float) (Math.TAU / 5);
-    private static final int TARGET_FRAMERATE = 60;
-    private static final double frameTimeMs = 1.0 * Util.MILLI / TARGET_FRAMERATE;
+    private static final int TARGET_FPS = 60;
+    private static final double frameTimeMs = 1.0 * Util.THOUSAND / TARGET_FPS;
     private final Size size;
     private final float[] radii;
     private final float dx;
@@ -52,7 +52,7 @@ public class Asteroid {
             lastUpdate = time;
         } else {
             // calculate the number of frames elapsed
-            double frames = time - lastUpdate * 1.0 / Util.MICRO;
+            double frames = time - lastUpdate * 1.0 / Util.MILLION;
 
             // update the model params proportional to number of frames elapsed
             x += dx * frames;

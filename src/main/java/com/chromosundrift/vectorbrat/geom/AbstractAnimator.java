@@ -27,5 +27,5 @@ public abstract class AbstractAnimator implements ModelAnimator {
     }
 
     @Override
-    public abstract Model update(long time);
+    public abstract Model update(long nsTime);
 }

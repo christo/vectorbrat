@@ -17,8 +17,9 @@ import java.util.EnumSet;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.Util;
 import com.chromosundrift.vectorbrat.VectorBratException;
-import com.chromosundrift.vectorbrat.geom.Interpolator;
+import com.chromosundrift.vectorbrat.geom.Pather;
 
 /**
  * Handles generation of audio buffers and connection to audio subsystem. Also provides nanosecond time from
@@ -46,6 +47,7 @@ public final class LaserDriver {
     private final JackClient client;
     private final ReentrantLock bufferLock = new ReentrantLock();
     private volatile boolean running = false;
+
     private float[] xBuffer;
     private float[] yBuffer;
     private float[] rBuffer;
@@ -110,7 +112,7 @@ public final class LaserDriver {
         try {
             logger.info("resetting jack status");
             jackStatus = EnumSet.noneOf(JackStatus.class);
-            return jack.openClient(truncate(title, jack.getMaximumClientNameSize()), NO_OPTIONS, jackStatus);
+            return jack.openClient(Util.truncate(title, jack.getMaximumClientNameSize()), NO_OPTIONS, jackStatus);
         } catch (JackException e) {
             if (!jackStatus.contains(JackStatus.JackFailure)) {
                 // probably shouldn't happen?
@@ -125,16 +127,12 @@ public final class LaserDriver {
 
     private static JackPort registerPort(Config.Channel channel, JackClient client, int maxPortName) throws VectorBratException {
         logger.info("registering jack port for " + channel);
-        String name = truncate(channel.name(), maxPortName);
+        String name = Util.truncate(channel.name(), maxPortName);
         try {
             return client.registerPort(name, JackPortType.AUDIO, TO_JACK);
         } catch (JackException e) {
             throw new VectorBratException("died trying to register port for channel " + channel, e);
         }
-    }
-
-    private static String truncate(String name, int maxLen) {
-        return name.substring(0, Math.min(name.length() - 1, maxLen - 1));
     }
 
     /**
@@ -276,7 +274,7 @@ public final class LaserDriver {
 
     }
 
-    public void setPathPlanner(Interpolator p) {
+    public void setPathPlanner(Pather p) {
         ArrayList<Float> xs = p.getXs();
         ArrayList<Float> ys = p.getYs();
         ArrayList<Float> rs = p.getRs();
@@ -303,6 +301,8 @@ public final class LaserDriver {
             this.rBuffer = br;
             this.gBuffer = bg;
             this.bBuffer = bb;
+            // make sure index is in range of current size
+            index = index % size;
         } finally {
             bufferLock.unlock();
         }

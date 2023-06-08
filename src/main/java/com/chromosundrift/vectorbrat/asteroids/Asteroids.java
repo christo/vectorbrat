@@ -40,10 +40,10 @@ public class Asteroids implements ModelAnimator {
     }
 
     @Override
-    public Model update(long time) {
+    public Model update(long nsTime) {
         List<Polyline> polyLines = new ArrayList<>();
         for (Asteroid asteroid : asteroids) {
-            asteroid.update(time);
+            asteroid.update(nsTime);
             polyLines.add(asteroid.toPolyline());
         }
         List<Point> points = new ArrayList<>();

@@ -10,10 +10,15 @@ import java.util.logging.LogManager;
 
 public class Util {
 
-    public static final long MILLI = 1000L;
-    public static final long MICRO = 1000 * MILLI;
-    public static final long NANO = 1000L * MICRO;
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
+
+    public static final long THOUSAND = 1000L;
+    public static final long MILLION = THOUSAND * THOUSAND;
+    public static final long BILLION = THOUSAND * MILLION;
+
+    public static long nanoToMilli(long nano) {
+        return nano / MILLION;
+    }
 
     /**
      * Needed for jna to load jack native libraries, must be called before jack initialisation. Depends on
@@ -41,5 +46,13 @@ public class Util {
         }
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
+    }
+
+    public static String truncate(String name, int maxLen) {
+        return name.substring(0, Math.min(name.length() - 1, maxLen - 1));
+    }
+
+    public static long millisToNanos(int msPeriod) {
+        return msPeriod * MILLION;
     }
 }

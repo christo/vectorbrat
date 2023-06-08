@@ -14,6 +14,7 @@ import static com.chromosundrift.vectorbrat.Util.setSystemLibraryPath;
 
 import com.chromosundrift.vectorbrat.asteroids.Asteroids;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
+import com.chromosundrift.vectorbrat.geom.BungeeAnimator;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Pattern;
 import com.chromosundrift.vectorbrat.geom.Rgb;
@@ -72,17 +73,23 @@ public class VectorBrat {
 
     private AppMap makeAppMap() {
         AppMap ar = new AppMap(this::setModel, System::nanoTime);
-        TextEngine te = new TextEngine(Rgb.CYAN, new AsteroidsFont());
-        String text = "ASTEROIDS";
-        float yScale = (float) (1.0 / text.length());
-        ar.add(te.textLine(text).scale(0.6f, yScale));
-        Model aModel = new AsteroidsFont().getChar('A');
-        ar.add(aModel);
+        String text = "VECTORBRAT";
+        Model textModel = mkTextModel(text);
+        ar.add(new BungeeAnimator(textModel, 900, 0.3f, 0.8f));
+        Model aModel = mkTextModel("A");
+        ar.add(new BungeeAnimator(aModel, 1500, 0.1f, 0.1f));
         ar.add(new Asteroids());
+
         ar.add(Pattern.testPattern1().scale(0.8f, 0.8f));
         ar.add(Pattern.sineWaves(Rgb.RED));
         ar.add(Pattern.boxGrid(3, 2, Rgb.CYAN));
         return ar;
+    }
+
+    private static Model mkTextModel(String text) {
+        TextEngine te = new TextEngine(Rgb.CYAN, new AsteroidsFont());
+        float yScale = (float) (1.0 / text.length());
+        return te.textLine(text).scale(0.6f, yScale);
     }
 
     private void start() throws VectorBratException {
@@ -90,7 +97,8 @@ public class VectorBrat {
         setModel(empty);
         this.frame.start();
         this.laser.start();
-        this.appMap.setDefaultAnimator();
+        appMap.setAnimator("VECTORBRAT");
+
         this.motion.submit(appMap);
         logger.info("started VectorBrat");
     }

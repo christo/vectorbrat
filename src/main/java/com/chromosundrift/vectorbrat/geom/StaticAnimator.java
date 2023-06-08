@@ -14,7 +14,7 @@ public class StaticAnimator extends AbstractAnimator {
     }
 
     @Override
-    public Model update(long time) {
+    public Model update(long nsTime) {
         return m;
     }
 }

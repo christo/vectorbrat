@@ -22,8 +22,8 @@ public interface ModelAnimator {
     /**
      * Implementors must perform model updates here.
      *
-     * @param time reference time in nanoseconds.
+     * @param nsTime reference time in nanoseconds.
      * @return updated model.
      */
-    Model update(long time) throws VectorBratException;
+    Model update(long nsTime) throws VectorBratException;
 }
