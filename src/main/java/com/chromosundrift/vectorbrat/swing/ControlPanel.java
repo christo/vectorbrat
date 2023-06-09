@@ -29,16 +29,10 @@ public class ControlPanel extends JPanel {
         logger.info("initialising ControlPanel");
         setBorder(new EmptyBorder(5, 5, 5, 5));
 
-//        // settings controls
-//        JComponent xy = new DeviceSelector("X/Y Device");
-//        JComponent rz = new DeviceSelector("Red/Z Device");
-//        JComponent gb = new DeviceSelector("Green/Blue Device");
-
         JCheckBox cb = new JCheckBox("debug");
         DisplayController displayController = controllers.displayController;
         cb.setSelected(displayController.isDrawPathPlan());
         cb.addActionListener(e -> displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected()));
-
 
         LaserController laserController = controllers.laserController;
         JPanel pps = createPpsSlider(config, laserController);
