@@ -18,17 +18,17 @@ public record Rgb(float red, float green, float blue) {
         this.blue = Util.clampNormal(blue);
     }
 
-    public static Rgb BLACK = new Rgb(0f, 0f, 0f);
-    public static Rgb WHITE = new Rgb(1f, 1f, 1f);
-    public static Rgb RED = new Rgb(1f, 0f, 0f);
-    public static Rgb GREEN = new Rgb(0f, 1f, 0f);
-    public static Rgb BLUE = new Rgb(0f, 0f, 1f);
-    public static Rgb CYAN = new Rgb(0f, 1f, 1f);
-    public static Rgb MAGENTA = new Rgb(1f, 0f, 1f);
-    public static Rgb YELLOW = new Rgb(1f, 1f, 0f);
-    public static Rgb GREY = new Rgb(0.5f, 0.5f, 0.5f);
-    public static Rgb LIGHT_GREY = new Rgb(0.75f, 0.75f, 0.75f);
-    public static Rgb DARK_GREY = new Rgb(0.25f, 0.25f, 0.25f);
+    public static final Rgb BLACK = new Rgb(0f, 0f, 0f);
+    public static final Rgb WHITE = new Rgb(1f, 1f, 1f);
+    public static final Rgb RED = new Rgb(1f, 0f, 0f);
+    public static final Rgb GREEN = new Rgb(0f, 1f, 0f);
+    public static final Rgb BLUE = new Rgb(0f, 0f, 1f);
+    public static final Rgb CYAN = new Rgb(0f, 1f, 1f);
+    public static final Rgb MAGENTA = new Rgb(1f, 0f, 1f);
+    public static final Rgb YELLOW = new Rgb(1f, 1f, 0f);
+    public static final Rgb GREY = new Rgb(0.5f, 0.5f, 0.5f);
+    public static final Rgb LIGHT_GREY = new Rgb(0.75f, 0.75f, 0.75f);
+    public static final Rgb DARK_GREY = new Rgb(0.25f, 0.25f, 0.25f);
     public static final Rgb ORANGE = new Rgb(1f, 0.75f, 0f);
 
 }
