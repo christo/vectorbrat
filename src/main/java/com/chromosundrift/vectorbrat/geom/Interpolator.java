@@ -176,50 +176,6 @@ public final class Interpolator implements Pather {
         }
     }
 
-    /**
-     * Fill out the model with interpolated intermediate path points based on the scanning speed in units per second.
-     * The path will be constructed as a loop with interpolation from the last point to the first, including black
-     * steps between gaps.
-     *
-     * @param m     the model to plan.
-     * @param start the start point, will draw the model from its closest point to this.
-     */
-    public void planNaive(Model m, Point start) {
-        // generate intermediate points along the course of the path to draw the model
-        Point prev = m.closeish(start);
-
-        List<Polyline> polylines = m._polylines();
-        for (int i = 0; i < polylines.size(); i++) {
-            Polyline polyline = polylines.get(i);
-            Point[] points = polyline._points();
-            for (Point next : points) {
-                // interpolate points along line segment
-                interpolate(prev, next);
-                prev = next;
-            }
-            // end of polyline, go to black for interconection to next Polyline
-            prev = prev.black();
-            penUp(blackPoints);
-        }
-
-        // now plan points
-        List<Point> points = m._points();
-        for (Point point : points) {
-            // interpolate black path points to the point
-            penUp(blackPoints);
-            interpolate(prev.black(), point, pointsPerPoint);
-            prev = point;
-        }
-
-        // return to the start point in black
-        penUp(blackPoints);
-        interpolate(prev.black(), start); // BUG: we always dwell assuming start was a vertex
-
-        if (xs.size() != ys.size() || xs.size() != rs.size() || xs.size() != gs.size() || xs.size() != bs.size()) {
-            throw new IllegalStateException("BUG! all internal lists should be the same size");
-        }
-    }
-
     void interpolate(Point source, Point target) {
         interpolate(source, target, vertexPoints);
     }
