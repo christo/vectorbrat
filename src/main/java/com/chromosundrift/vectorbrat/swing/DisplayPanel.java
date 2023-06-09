@@ -226,7 +226,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             // TODO move this to control panel
             String[] hudStats = new String[]{
                     s + " PATH POINTS",
-                    model.countPolylines() + " POLYLINES",
+                    model.countLines() + " LINES",
                     model.countPoints() + " ISOPOINTS",
                     model.countVertices() + " VERTICES",
                     blackPoints + " BLACK POINTS"

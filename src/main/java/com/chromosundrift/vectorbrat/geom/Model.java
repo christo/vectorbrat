@@ -67,10 +67,12 @@ public class Model implements Geom {
     }
 
     public boolean isEmpty() {
-        return polylines.size() == 0 && points.size() == 0;    }
+        return lines().toList().size() == 0 && points.size() == 0;
+    }
 
     public int countVertices() {
-        return polylines.stream().mapToInt(Polyline::size).sum() + points.size();    }
+        return lines().mapToInt(l -> 2).sum() + points.size();
+    }
 
     @Override
     public String toString() {
@@ -79,10 +81,6 @@ public class Model implements Geom {
 
     public String getName() {
         return name;
-    }
-
-    public int countPolylines() {
-        return polylines.size();
     }
 
     public int countPoints() {
@@ -155,4 +153,38 @@ public class Model implements Geom {
         }
     }
 
+    /**
+     * Crops the model to the range.
+     *
+     * @return cropped Model
+     */
+    public Model crop() {
+        List<Point> inPoints = points.stream().filter(Point::inBounds).toList();
+        List<Line> newLines = new ArrayList<>();
+
+        lines().forEach(line -> {
+            // check the line for intersections with the bounds
+            if (!line.from().inBounds() && !line.to().inBounds()) {
+                // both ends of line are out of bounds
+                // it's possible the line has a segment that is in bounds
+                // TODO find intersection points with bounds
+            } else if (!line.from().inBounds()) {
+                // only from is out of bounds
+                // TODO construct new line from "from" to  intersection with bounds
+            } else if (!line.to().inBounds()) {
+                // only to is out of bounds
+                // TODO construct new line from "to" to intersection with bounds
+            } else {
+                // both end points are in bounds, therefore whole line is in bounds
+                // this won't always be true for other cut intersection shapes
+                newLines.add(line);
+            }
+        });
+
+        return new Model(name, newLines.stream().map(Polyline::fromLine).toList(), inPoints);
+    }
+
+    public int countLines() {
+        return lines().toList().size();
+    }
 }
