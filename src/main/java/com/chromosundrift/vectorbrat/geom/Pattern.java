@@ -63,7 +63,7 @@ public class Pattern {
      * @return the Model
      */
     public static Model boxGrid(int nx, int ny, Rgb c) {
-        Model m = new Model("BoxGrid%sx%s".formatted(nx, ny));
+        List<Polyline> polys = new ArrayList<>();
         float extent = 2f;  // total width or height
         float offset = -1;  // add to extent to get coordinate range
         float w = extent / (nx * 2 + 1);
@@ -72,10 +72,10 @@ public class Pattern {
             for (int j = 0; j < ny; j++) {
                 float x = i * w * extent + offset + w;
                 float y = j * h * extent + offset + h;
-                m.add(Polyline.box(x, y, x + w, y + h, c));
+                polys.add(Polyline.box(x, y, x + w, y + h, c));
             }
         }
-        return m;
+        return new Model("BoxGrid%sx%s".formatted(nx, ny), polys);
     }
 
     public static Model midSquare(Rgb c) {
@@ -88,7 +88,8 @@ public class Pattern {
     }
 
     public static Model boundingBox(Rgb color) {
-        return new Model().add(Polyline.box(SAMPLE_MIN, SAMPLE_MIN, SAMPLE_MAX, SAMPLE_MAX, color));
+        Polyline box = Polyline.box(SAMPLE_MIN, SAMPLE_MIN, SAMPLE_MAX, SAMPLE_MAX, color);
+        return new Model("BoundingBox", List.of(box));
     }
 
     public static Model boundingBox() {
