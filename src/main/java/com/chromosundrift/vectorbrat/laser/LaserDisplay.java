@@ -78,7 +78,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     private Void render(Model model) {
 
-        if (modelDirty) {
+        if (modelDirty && !model.isEmpty()) {
 
             // calculate scan rate
             pathPlanner = new Interpolator(this.config);

@@ -137,7 +137,7 @@ public class Model implements Geom {
 
     @Override
     public String toString() {
-        return "Model{polyliness=" + polylines + ", points=" + points + '}';
+        return "Model{polylines=" + polylines + ", points=" + points + '}';
     }
 
     public String getName() {

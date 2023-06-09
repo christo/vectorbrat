@@ -63,7 +63,7 @@ public class Pattern {
      * @return the Model
      */
     public static Model boxGrid(int nx, int ny, Rgb c) {
-        Model m = new Model();
+        Model m = new Model("BoxGrid%sx%s".formatted(nx, ny));
         float extent = 2f;  // total width or height
         float offset = -1;  // add to extent to get coordinate range
         float w = extent / (nx * 2 + 1);

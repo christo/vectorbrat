@@ -2,7 +2,6 @@ package com.chromosundrift.vectorbrat;
 
 import io.materialtheme.darkstackoverflow.DarkStackOverflowTheme;
 import mdlaf.MaterialLookAndFeel;
-import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +9,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -70,6 +70,7 @@ public class VectorBrat {
         Util.bridgeJulToSlf4j();
         try {
             VectorBrat vectorBrat = new VectorBrat();
+            vectorBrat.appMap.getAnimators().forEach(a -> logger.info("animator: " + a));
             vectorBrat.start();
         } catch (VectorBratException e) {
             logger.error("can't create vectorbrat", e);
@@ -79,8 +80,7 @@ public class VectorBrat {
     private AppMap makeAppMap() {
         AppMap ar = new AppMap(this::setModel, System::nanoTime);
         String text = "VECTORBRAT";
-        Model textModel = mkTextModel(text);
-        ar.add(new BungeeAnimator(textModel, 900, 0.3f, 0.8f));
+        ar.add(new BungeeAnimator(mkTextModel(text), 900, 0.3f, 0.8f));
         Model aModel = mkTextModel("A");
         ar.add(new BungeeAnimator(aModel, 1500, 0.1f, 0.1f));
         ar.add(new Asteroids());
@@ -95,7 +95,7 @@ public class VectorBrat {
     private Model mkRock() {
         List<Polyline> pls = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            pls.add(new Asteroid(Asteroid.Size.LARGE).toPolyline());
+            pls.add(new Asteroid(Asteroid.Size.LARGE, new Random()).toPolyline());
         }
         return new Model("rock", pls);
     }

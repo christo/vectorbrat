@@ -1,9 +1,9 @@
 package com.chromosundrift.vectorbrat;
 
-import java.util.List;
+import java.util.Set;
 
 public interface AppController {
-    List<String> getAnimators();
+    Set<String> getAnimators();
 
     void setAnimator(String name) throws VectorBratException;
 }

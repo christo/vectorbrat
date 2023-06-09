@@ -13,6 +13,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -24,6 +25,7 @@ import java.util.stream.Stream;
 
 import static java.awt.BasicStroke.CAP_BUTT;
 import static java.awt.BasicStroke.JOIN_BEVEL;
+import static java.awt.BasicStroke.JOIN_ROUND;
 
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
@@ -44,11 +46,13 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private static final Logger logger = LoggerFactory.getLogger(DisplayPanel.class);
     private static final int MIN_WIDTH = 100;
     private static final int MIN_HEIGHT = 100;
-    private static final BasicStroke STROKE_PATH = new BasicStroke(3f);
-    private static final BasicStroke STROKE_PATH_OFF =
-            new BasicStroke(1f, CAP_BUTT, JOIN_BEVEL, 0, new float[]{1, 5}, 0);
-    private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.6f, 0.3f);
+    private static final Stroke STROKE_PATH = new BasicStroke(3f);
+    private static final Stroke STROKE_PATH_OFF =
+            new BasicStroke(1f, CAP_BUTT, JOIN_ROUND, 0, new float[]{1, 5}, 0);
+    private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.7f, 0.4f);
     public static final float MINIMUM_BRIGHTNESS = 0f;
+    private static final Stroke LASER_ON_DOT = new BasicStroke(4f, BasicStroke.CAP_ROUND, JOIN_ROUND);
+    private static final Stroke LASER_OFF_DOT = new BasicStroke(2f, BasicStroke.CAP_ROUND, JOIN_ROUND);
     private final Color colText = Color.getHSBColor(0.83f, 0.5f, 0.9f);
     private final Color colBg = Color.getHSBColor(0, 0, 0f);
     private final DoubleBufferedVectorDisplay vectorDisplay;
@@ -78,12 +82,12 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         strokeLine = new BasicStroke(config.getLineWidth());
 
         setMinimumSize(new Dimension(400, 300));
-        setPreferredSize(new Dimension(900, 700));
+        setPreferredSize(new Dimension(900, 600));
         vectorDisplay = new DoubleBufferedVectorDisplay(MINIMUM_BRIGHTNESS, true);
     }
 
     /**
-     * Not threadsafe, called with model lock.
+     * Not threadsafe, must only be called with model lock.
      */
     private void unsafePaint(final Graphics g, final Model model) {
         super.paint(g);
@@ -92,7 +96,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         int imHeight = Math.max(s.height, MIN_HEIGHT);
         float imageScale = 2.0f;
 
-        // TODO ? physical screen resolution so the image can be made at that scaling factor
+        // future: use physical screen resolution to calculate scaling factor for the image
         BufferedImage im = new BufferedImage((int) (imWidth * imageScale), (int) (imHeight * imageScale), BufferedImage.TYPE_INT_ARGB);
         final Graphics2D g2 = im.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -198,8 +202,10 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
                     g2.drawLine(px, py, x, y);
                 }
                 // draw a dot at the point
-                int r = laserOn ? 4 : 2; // dot size
-                g2.fillOval(x - r, y - r, r + r, r + r);
+                // dot size
+                g2.setStroke(laserOn ? LASER_ON_DOT : LASER_OFF_DOT);
+                //g2.fillOval(x - r, y - r, r + r, r + r);
+                g2.drawLine(x,y,x,y);
 
             }
             g2.setColor(Color.WHITE);

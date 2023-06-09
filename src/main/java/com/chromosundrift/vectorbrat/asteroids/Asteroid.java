@@ -1,11 +1,10 @@
 package com.chromosundrift.vectorbrat.asteroids;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.List;
 import java.util.Random;
 
 import com.chromosundrift.vectorbrat.Util;
+import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Polyline;
 
@@ -35,8 +34,11 @@ public class Asteroid {
     private long lastNanos = -1;
 
     public Asteroid(Size size) {
+        this(size, new Random());
+    }
 
-        Random r = new Random();
+    public Asteroid(Size size, Random r) {
+
         this.size = size;
         this.x = r.nextFloat(Asteroids.MIN_X, Asteroids.MAX_X);
         this.y = r.nextFloat(Asteroids.MIN_Y, Asteroids.MAX_Y);
@@ -90,6 +92,10 @@ public class Asteroid {
         return Polyline.closed(size.name() + " asteroid", Asteroids.COL_ASTEROID, points);
     }
 
+    public Model toModel() {
+        Polyline polyline = toPolyline();
+        return new Model(polyline.getName(), List.of(polyline));
+    }
 
     public enum Size {
         SMALL(0.05f, 40, 8),

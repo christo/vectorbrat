@@ -16,7 +16,7 @@ public final class Interpolator implements Pather {
      * Initial size of path in total points including interpolation. Big enough to reduce allocations
      * during time-sensitive loop.
      */
-    public static final int INITIAL_CAPACITY = 5000;
+    public static final int INITIAL_CAPACITY = 2000;
 
     /**
      * Number of to replicated path points per given isolated point.

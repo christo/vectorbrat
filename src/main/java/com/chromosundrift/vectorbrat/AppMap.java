@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -47,13 +48,13 @@ public class AppMap implements Runnable, AppController {
 
     public AppMap(Consumer<Model> modelConsumer,
                   Supplier<Long> clock) {
-        this(new HashMap<String, ModelAnimator>(), "", modelConsumer, clock);
+        this(new HashMap<>(), "", modelConsumer, clock);
     }
 
 
     @Override
-    public List<String> getAnimators() {
-        return animators.keySet().stream().toList();
+    public Set<String> getAnimators() {
+        return animators.keySet();
     }
 
     /**
@@ -67,6 +68,8 @@ public class AppMap implements Runnable, AppController {
     public void setAnimator(String name) throws VectorBratException {
         if (name == null) {
             throw new IllegalArgumentException("animator must not be null");
+        } else if(name.isBlank()) {
+            logger.warn("asked to set blank animator");
         }
         if (!name.equals(animator)) {
             ModelAnimator newAnimator = animators.get(name);
@@ -131,15 +134,24 @@ public class AppMap implements Runnable, AppController {
         logger.info("exiting");
     }
 
+    /**
+     * Adds the given model with a {@link StaticAnimator}.
+     *
+     * @param m the model.
+     */
     public void add(Model m) {
         this.add(new StaticAnimator(m.getName(), m));
     }
 
     public void add(ModelAnimator ma) {
-        if (this.animators.isEmpty()) {
-            this.defaultAnimator = ma.getName();
+        String name = ma.getName();
+        if (name.isBlank()) {
+            throw new IllegalArgumentException("cannot add an animator with a blank name");
         }
-        this.animators.put(ma.getName(), ma);
+        if (this.animators.isEmpty()) {
+            this.defaultAnimator = name;
+        }
+        this.animators.put(name, ma);
 
     }
 

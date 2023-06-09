@@ -5,8 +5,11 @@ package com.chromosundrift.vectorbrat.geom;
  */
 public class StaticAnimator extends AbstractAnimator {
 
-    // TODO make a sinusoidal pulsing animator with a model that is zoomed in and out
     private final Model m;
+
+    public StaticAnimator(Model m) {
+        this(m.getName(), m);
+    }
 
     public StaticAnimator(String name, Model m) {
         super(name);
