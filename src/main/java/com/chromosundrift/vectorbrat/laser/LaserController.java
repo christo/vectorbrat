@@ -4,6 +4,9 @@ import java.util.function.Consumer;
 
 import com.chromosundrift.vectorbrat.geom.Interpolator;
 
+/**
+ * Abstract model for controlling the laser.
+ */
 public interface LaserController {
 
     void addUpdateListener(Consumer<LaserController> clc);
@@ -13,14 +16,14 @@ public interface LaserController {
      *
      * @return true iff the laser is on.
      */
-    boolean getOn();
+    boolean getArmed();
 
     /**
      * Turn the laser on or off.
      *
-     * @param on if true, turns laser on, otherwise turns it off.
+     * @param armed if true, turns laser on, otherwise turns it off.
      */
-    void setOn(boolean on);
+    void setArmed(boolean armed);
 
     /**
      * Gets the current points per second speed.
@@ -56,5 +59,5 @@ public interface LaserController {
 
     void setPathPlanTime(long planTime);
 
-    Interpolator getPathPlanner();
+    Interpolator getInterpolator();
 }

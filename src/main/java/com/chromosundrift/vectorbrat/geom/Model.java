@@ -71,7 +71,8 @@ public class Model implements Geom {
     }
 
     public int countVertices() {
-        return lines().mapToInt(l -> 2).sum() + points.size();
+        int pointsInLine = 2;
+        return lines().mapToInt(l -> pointsInLine).sum() + points.size();
     }
 
     @Override
@@ -103,7 +104,7 @@ public class Model implements Geom {
 
     public Model merge(Model other) {
         List<Polyline> allPolylines = new ArrayList<>(this.polylines);
-        other.polylines.stream().forEach(allPolylines::add);
+        allPolylines.addAll(other.polylines);
         List<Point> allPoints = new ArrayList<>(this.points);
         other.points().forEach(allPoints::add);
         return new Model(name + other.getName(), allPolylines, allPoints);
@@ -155,7 +156,7 @@ public class Model implements Geom {
 
     /**
      * Crops the model to the range.
-     *
+     * // TODO WIP implement line cropping at boundary intersection
      * @return cropped Model
      */
     public Model crop() {
@@ -181,6 +182,7 @@ public class Model implements Geom {
             }
         });
 
+        // TODO change model from Polylines to Lines
         return new Model(name, newLines.stream().map(Polyline::fromLine).toList(), inPoints);
     }
 

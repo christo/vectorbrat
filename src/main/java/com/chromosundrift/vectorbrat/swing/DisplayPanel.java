@@ -24,7 +24,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.awt.BasicStroke.CAP_BUTT;
-import static java.awt.BasicStroke.JOIN_BEVEL;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
 import com.chromosundrift.vectorbrat.Config;
@@ -34,7 +33,6 @@ import com.chromosundrift.vectorbrat.geom.Line;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Interpolator;
 import com.chromosundrift.vectorbrat.geom.Point;
-import com.chromosundrift.vectorbrat.geom.Polyline;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.laser.LaserController;
 
@@ -53,8 +51,8 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             new BasicStroke(1f, CAP_BUTT, JOIN_ROUND, 0, new float[]{1, 5}, 0);
     private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.7f, 0.4f);
     public static final float MINIMUM_BRIGHTNESS = 0f;
-    private static final Stroke LASER_ON_DOT = new BasicStroke(4f, BasicStroke.CAP_ROUND, JOIN_ROUND);
-    private static final Stroke LASER_OFF_DOT = new BasicStroke(2f, BasicStroke.CAP_ROUND, JOIN_ROUND);
+    private static final Stroke LASER_ON_DOT = new BasicStroke(5f, BasicStroke.CAP_ROUND, JOIN_ROUND);
+    private static final Stroke LASER_OFF_DOT = new BasicStroke(3f, BasicStroke.CAP_ROUND, JOIN_ROUND);
     private final Color colText = Color.getHSBColor(0.83f, 0.5f, 0.9f);
     private final Color colBg = Color.getHSBColor(0, 0, 0f);
     private final DoubleBufferedVectorDisplay vectorDisplay;
@@ -64,6 +62,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private final DisplayController displayController;
     private final LaserController laserController;
     private final Font fontHud;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<BufferedImage> logo = Optional.empty();
 
     public DisplayPanel(Config config, DisplayController displayController, LaserController laserController) {
@@ -96,10 +95,13 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
         final Dimension s = getSize();
         int imWidth = Math.max(s.width, MIN_WIDTH);
         int imHeight = Math.max(s.height, MIN_HEIGHT);
-        float imageScale = 2.0f;
+        final float imageScale = 2.0f;
 
         // future: use physical screen resolution to calculate scaling factor for the image
-        BufferedImage im = new BufferedImage((int) (imWidth * imageScale), (int) (imHeight * imageScale), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage im = new BufferedImage(
+                (int) (imWidth * imageScale),
+                (int) (imHeight * imageScale),
+                BufferedImage.TYPE_INT_ARGB);
         final Graphics2D g2 = im.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
@@ -207,7 +209,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
                 // draw a dot at the point
                 // dot size
                 g2.setStroke(laserOn ? LASER_ON_DOT : LASER_OFF_DOT);
-                //g2.fillOval(x - r, y - r, r + r, r + r);
                 g2.drawLine(x,y,x,y);
 
             }
@@ -215,7 +216,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
             // draw start and end markers
             int markerRadius = 10;
             int d = markerRadius + markerRadius;
-            int x = (int) ((xs.get(0) / 2 + 0.5) * w);      // TODO IndexOutOfBoundsException
+            int x = (int) ((xs.get(0) / 2 + 0.5) * w);
             int y = (int) ((ys.get(0) / 2 + 0.5) * h);
             g2.drawOval(x - markerRadius, y - markerRadius, d, d);
             x = (int) ((xs.get(xs.size() - 1) / 2 + 0.5) * w);
@@ -236,7 +237,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     }
 
     private Interpolator getPathPlan() {
-        return laserController.getPathPlanner();
+        return laserController.getInterpolator();
     }
 
     private void hudLines(Graphics2D g2, int h, String[] lines) {

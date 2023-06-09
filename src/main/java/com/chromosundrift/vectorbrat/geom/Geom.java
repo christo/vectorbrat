@@ -3,6 +3,9 @@ package com.chromosundrift.vectorbrat.geom;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Abstract common interface for geometric elements.
+ */
 public interface Geom {
 
     /**
@@ -14,6 +17,11 @@ public interface Geom {
     Optional<Point> closest(Point other);
 
 
+    /**
+     * Gets all the (possibly zero) lines in this {@link Geom}.
+     *
+     * @return a stream of lines.
+     */
     Stream<Line> lines();
 
     /**

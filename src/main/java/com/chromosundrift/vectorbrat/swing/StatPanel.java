@@ -5,6 +5,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 
+/**
+ * A UI panel that shows single labelled value that can be dynamically updated.
+ */
 public class StatPanel extends JPanel {
     private final JLabel value;
 

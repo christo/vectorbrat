@@ -1,5 +1,8 @@
 package com.chromosundrift.vectorbrat.swing;
 
+/**
+ * Model for UI options.
+ */
 public class DisplayController {
     private boolean drawPathPlan;
     private Runnable repaintDisplay;

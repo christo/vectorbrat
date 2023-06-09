@@ -26,6 +26,7 @@ import com.chromosundrift.vectorbrat.geom.Model;
 public final class LaserDisplay implements VectorDisplay, LaserController {
 
     private static final Logger logger = LoggerFactory.getLogger(LaserDisplay.class);
+    private static final long MS_LISTENER_UPDATE = 100;
 
     private final DoubleBufferedVectorDisplay vectorDisplay;
     private final Supplier<LaserDriver> laserDriver;
@@ -34,6 +35,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private final Config config;
     private int pps;
     private volatile boolean running;
+
     /**
      * Controls the thread that continually updates the model.
      */
@@ -44,6 +46,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private volatile boolean modelDirty;
     private long lastPathPlanTime;
     private Interpolator pathPlanner;
+    private long msNextListenersUpdate = 0L;
 
     public LaserDisplay(final Config config) {
         logger.info("initialising LaserDisplay");
@@ -81,8 +84,11 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
         if (modelDirty && !model.isEmpty()) {
 
             // calculate scan rate
+
             pathPlanner = new Interpolator(this.config);
+            long startTime = System.nanoTime();
             pathPlanner.plan(model);
+            setPathPlanTime((System.nanoTime() - startTime) / 1000);
             laserDriver.get().setPathPlanner(pathPlanner);
             modelDirty = false;
         }
@@ -167,18 +173,18 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      * @return true iff we are armed.
      */
     @Override
-    public boolean getOn() {
+    public boolean getArmed() {
         return this.laserDriver.get().isOn();
     }
 
     /**
      * Called from ui thread.
      *
-     * @param on whether we are armed.
+     * @param armed whether we are armed.
      */
     @Override
-    public void setOn(boolean on) {
-        this.laserDriver.get().setOn(on);
+    public void setArmed(boolean armed) {
+        this.laserDriver.get().setOn(armed);
         this.tellListeners();
     }
 
@@ -227,7 +233,11 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     @Override
     public void setPathPlanTime(long planTime) {
         this.lastPathPlanTime = planTime;
-        this.tellListeners();   // TODO replace this mechanism with canonical listenable properties library
+        long msNow = System.currentTimeMillis();
+        if (msNow > msNextListenersUpdate) {
+            this.tellListeners();
+            msNextListenersUpdate = msNow + MS_LISTENER_UPDATE;
+        }
     }
 
     @Override
@@ -236,7 +246,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     }
 
     @Override
-    public Interpolator getPathPlanner() {
+    public Interpolator getInterpolator() {
         return this.pathPlanner;
     }
 
