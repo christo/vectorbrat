@@ -152,18 +152,6 @@ public class Model implements Geom {
         return points.size();
     }
 
-    /**
-     * Returns the closest model point to the given point - only considers isolated Points and Polyline start points.
-     * This exists from when polylines could only be drawn from their start point
-     */
-    public Point closeish(Point other) {
-        TreeSet<Point> closestToRef = new TreeSet<>(other.dist2Point());
-        // for now only consider points and the first point of each polyline
-        closestToRef.addAll(polylines.stream().map(p -> p._points()[0]).toList());
-        closestToRef.addAll(_points());
-        return closestToRef.first();
-    }
-
     public Model scale(float factorX, float factorY) {
         Model m = new Model(this.name);
         polylines().map(polyline -> polyline.scale(factorX, factorY)).forEach(m::add);
