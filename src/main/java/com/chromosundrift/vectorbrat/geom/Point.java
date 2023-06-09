@@ -8,8 +8,6 @@ import java.util.stream.Stream;
 import static com.chromosundrift.vectorbrat.Config.SAMPLE_MAX;
 import static com.chromosundrift.vectorbrat.Config.SAMPLE_MIN;
 
-import com.chromosundrift.vectorbrat.Config;
-
 /**
  * Immutable float-precision point.
  */
@@ -187,6 +185,19 @@ public final class Point implements Geom {
     @Override
     public Optional<Point> closest(Point other) {
         return Optional.of(this);
+    }
+
+    /**
+     * Scales then offsets.
+     *
+     * @param xS xScale
+     * @param yS yScale
+     * @param xO xOffset
+     * @param yO yOffset
+     * @return a new Point
+     */
+    public Point scaleOffset(float xS, float yS, float xO, float yO) {
+        return new Point(x * xS + xO, y * yS + yO, r, g, b);
     }
 
     static class PointFactory {

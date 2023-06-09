@@ -2,10 +2,9 @@ package com.chromosundrift.vectorbrat.geom;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.TreeSet;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,31 +12,28 @@ import static com.chromosundrift.vectorbrat.Config.SAMPLE_MIN;
 import static com.chromosundrift.vectorbrat.Config.SAMPLE_RANGE;
 
 /**
- * Vector display model with coordinates from (-1.0,-1.0) (top left) to 1.0, 1.0 (bottom right)
- * TODO WIP threadsafety - fix races and deadlocks and consider immutable updates
+ * Immutable vector display model.
+ * TODO WIP replace polylines with lines, remove all mutability and lock
  */
 public class Model implements Geom {
 
-    private final ReentrantLock lock = new ReentrantLock();
+    public static Model EMPTY = new Model("");
+
     private final List<Polyline> polylines;
     private final List<Point> points;
     private final String name;
 
-    public Model() {
-        this("");
-    }
-
-    public Model(String name) {
-        this(name, new ArrayList<>());
+    private Model(String name) {
+        this(name, Collections.emptyList());
     }
 
     public Model(String name, List<Polyline> polylines) {
-        this(name, polylines, new ArrayList<>());
+        this(name, polylines, Collections.emptyList());
     }
 
     public Model(String name, List<Polyline> polylines, List<Point> points) {
-        this.polylines = polylines;
-        this.points = points;
+        this.polylines = Collections.unmodifiableList(polylines);
+        this.points = Collections.unmodifiableList(points);
         this.name = name;
     }
 
@@ -61,79 +57,20 @@ public class Model implements Geom {
                 .offset(SAMPLE_MIN, SAMPLE_MIN);
     }
 
-    Model add(Point point) {
-        try {
-            lock.lock();
-            points.add(point);
-        } finally {
-            lock.unlock();
-        }
-        return this;
-    }
-
-    Model add(Polyline p) {
-        try {
-            lock.lock();
-            polylines.add(p);
-        } finally {
-            lock.unlock();
-        }
-        return this;
-    }
-
-    /**
-     * Stream of just the polylines (not points).
-     *
-     * @return polylines.
-     */
-    public Stream<Polyline> polylines() {
-        try {
-            lock.lock();
-            return new ArrayList<>(polylines).stream();
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    List<Polyline> _polylines() {
-        return this.polylines;
-    }
-
-    public List<Point> _points() {
-        return this.points;
-    }
-
     /**
      * Stream of just the points (not polylines)
      *
      * @return points.
      */
     public Stream<Point> points() {
-        try {
-            lock.lock();
-            return new ArrayList<>(points).stream();
-        } finally {
-            lock.unlock();
-        }
+        return points.stream();
     }
 
     public boolean isEmpty() {
-        try {
-            lock.lock();
-            return polylines.size() == 0 && points.size() == 0;
-        } finally {
-            lock.unlock();
-        }
-    }
+        return polylines.size() == 0 && points.size() == 0;    }
 
     public int countVertices() {
-        try {
-            lock.lock();
-            return polylines.stream().mapToInt(Polyline::size).sum() + points.size();
-        } finally {
-            lock.unlock();
-        }
-    }
+        return polylines.stream().mapToInt(Polyline::size).sum() + points.size();    }
 
     @Override
     public String toString() {
@@ -153,9 +90,9 @@ public class Model implements Geom {
     }
 
     public Model scale(float factorX, float factorY) {
-        Model m = new Model(this.name);
-        polylines().map(polyline -> polyline.scale(factorX, factorY)).forEach(m::add);
-        points().map(point -> point.scale(factorX, factorY)).forEach(m::add);
+        List<Polyline> newPolylines = polylines.stream().map(polyline -> polyline.scale(factorX, factorY)).toList();
+        List<Point> newPoints = points().map(point -> point.scale(factorX, factorY)).toList();
+        Model m = new Model(this.name, newPolylines, newPoints);
         if (this.countVertices() != m.countVertices()) {
             throw new IllegalStateException("scaled model should have same number of points");
         }
@@ -163,12 +100,12 @@ public class Model implements Geom {
     }
 
     public Stream<Line> lines() {
-        return this.polylines().flatMap(Polyline::lines);
+        return polylines.stream().flatMap(Polyline::lines);
     }
 
     public Model merge(Model other) {
         List<Polyline> allPolylines = new ArrayList<>(this.polylines);
-        other.polylines().forEach(allPolylines::add);
+        other.polylines.stream().forEach(allPolylines::add);
         List<Point> allPoints = new ArrayList<>(this.points);
         other.points().forEach(allPoints::add);
         return new Model(name + other.getName(), allPolylines, allPoints);
@@ -180,22 +117,20 @@ public class Model implements Geom {
         return new Model(name, allPolylines, allPoints);
     }
 
-    public Model colored(Rgb color) {
-        List<Polyline> polylines = this.polylines().map(polyline -> polyline.colored(color)).collect(Collectors.<Polyline>toList());
-        List<Point> allPoints = this.points().map(p -> p.colored(color)).collect(Collectors.toList());
+    public Model colored(Rgb c) {
+        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.colored(c)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = points().map(p -> p.colored(c)).collect(Collectors.toList());
         return new Model(this.name, polylines, allPoints);
     }
 
     @Override
     public Optional<Point> closest(Point other) {
-        return Stream.concat(polylines().flatMap(polyline -> points()), points()).min(other.dist2Point());
+        return Stream.concat(polylines.stream().flatMap(polyline -> points()), points()).min(other.dist2Point());
     }
 
     @Override
     public Optional<Box> bounds() {
-        Optional<Box> box = Optional.empty();
         if (!this.isEmpty()) {
-            // boomer way faster and simple enough if not functional / hipster-compliant
             float minX = Float.MAX_VALUE;
             float maxX = Float.MIN_VALUE;
             float minY = Float.MAX_VALUE;
@@ -214,8 +149,10 @@ public class Model implements Geom {
                 maxX = Math.max(point.x(), maxX);
                 maxY = Math.max(point.y(), maxY);
             }
-            box = Optional.of(new Box(minX, minY, maxX, maxY));
+            return Optional.of(new Box(minX, minY, maxX, maxY));
+        } else {
+            return Optional.empty();
         }
-        return box;
     }
+
 }

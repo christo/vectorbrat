@@ -48,14 +48,14 @@ public class ModelTest {
         Point orangeMin = new Point(-1f, -1f, Rgb.ORANGE);
         Model foo = new Model("foo", List.of(foo1), List.of(orangeMin));
         Model colored = foo.colored(Rgb.MAGENTA);
-        List<Polyline> offColorPolylines = colored.polylines()
-                .filter(polyline -> !polyline.getColor().equals(Rgb.MAGENTA))
+        List<Line> offColorLines = colored.lines()
+                .filter(line -> !line.from().getColor().equals(Rgb.MAGENTA) || !line.to().getColor().equals(Rgb.MAGENTA))
                 .toList();
-        assertEquals("polylines should have all been green", emptyList(), offColorPolylines);
+        assertEquals("lines should have all been magenta", emptyList(), offColorLines);
         List<Point> offColorPoints = colored.points()
-                .filter(polyline -> !polyline.getColor().equals(Rgb.MAGENTA))
+                .filter(point -> !point.getColor().equals(Rgb.MAGENTA))
                 .toList();
-        assertEquals("points should have all been green", emptyList(), offColorPoints);
+        assertEquals("points should have all been magenta", emptyList(), offColorPoints);
     }
 
 

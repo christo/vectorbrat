@@ -43,4 +43,25 @@ public record Line(Point from, Point to) implements Geom {
     public Box toBox() {
         return new Box(from, to);
     }
+
+    public Line scale(float xScale, float yScale) {
+        return new Line(from.scale(xScale, yScale), to.scale(xScale, yScale));
+    }
+
+    public Line offset(float offsetX, float offsetY) {
+        return new Line(from.offset(offsetX, offsetY), to.offset(offsetX, offsetY));
+    }
+
+    /**
+     * Scales then offsets.
+     *
+     * @param xS xScale
+     * @param yS yScale
+     * @param xO xOffset
+     * @param yO yOffset
+     * @return a new Line
+     */
+    public Line scaleOffset(float xS, float yS, float xO, float yO) {
+        return new Line(from.scaleOffset(xS, yS, xO, yO), to.scaleOffset(xS, yS, xO, yO));
+    }
 }

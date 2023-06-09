@@ -40,7 +40,7 @@ public class Composer implements ModelAnimator {
 
     @Override
     public Model update(long nsTime) throws VectorBratException {
-        Model m = new Model();
+        Model m = Model.EMPTY;
         for (ModelAnimator animator : animators) {
             m = m.merge(animator.update(nsTime));
         }

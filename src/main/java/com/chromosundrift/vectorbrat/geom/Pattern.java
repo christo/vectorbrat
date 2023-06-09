@@ -30,25 +30,27 @@ public class Pattern {
     }
 
     public static Model testPattern1() {
-        Model m = new Model("test pattern 1");
-        m.add(createMidSquare(Rgb.ORANGE));
+        List<Polyline> polys = new ArrayList<>();
+        List<Point> points = new ArrayList<>();
+        polys.add(createMidSquare(Rgb.ORANGE));
         // centre dots
         for (float i = 0; i < 0.4; i += 0.1) {
-            m.add(new Point(0.0f, i, Rgb.MAGENTA));
+            points.add(new Point(0.0f, i, Rgb.MAGENTA));
         }
 
         Rgb c = Rgb.CYAN;
-        m.add(Polyline.open("-y arrow", c, new Point(-0.15f, -0.35f, c), new Point(0.0f, -0.5f, c), new Point(0.15f, -0.35f, c)));
+        polys.add(Polyline.open("-y arrow", c, new Point(-0.15f, -0.35f, c), new Point(0.0f, -0.5f, c), new Point(0.15f, -0.35f, c)));
         // dot x-aligned with arrow point and y-aligned with wing tips
-        m.add(new Point(0.0f, -0.35f, Rgb.RED));
+        points.add(new Point(0.0f, -0.35f, Rgb.RED));
         // bottom right handle
         c = Rgb.BLUE;
-        m.add(Polyline.open("++ handle", c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
+        polys.add(Polyline.open("++ handle", c, new Point(0.5f, 0.5f, c), new Point(0.75f, 0.75f, c)));
 
-        m.add(Polyline.box("+-box", 0.8f, -1f, 1f, -0.8f, Rgb.GREEN));
-        m.add(Polyline.box("++box", 0.8f, 0.8f, 1f, 1f, Rgb.GREEN));
-        m.add(Polyline.box("-+box", -1f, 0.8f, -0.8f, 1f, Rgb.GREEN));
-        m.add(Polyline.box("--box", -1f, -1f, -0.8f, -0.8f, Rgb.GREEN));
+        polys.add(Polyline.box("+-box", 0.8f, -1f, 1f, -0.8f, Rgb.GREEN));
+        polys.add(Polyline.box("++box", 0.8f, 0.8f, 1f, 1f, Rgb.GREEN));
+        polys.add(Polyline.box("-+box", -1f, 0.8f, -0.8f, 1f, Rgb.GREEN));
+        polys.add(Polyline.box("--box", -1f, -1f, -0.8f, -0.8f, Rgb.GREEN));
+        Model m = new Model("test pattern 1", polys, points);
         logger.info("created test pattern: " + m);
         return m;
     }
@@ -79,8 +81,7 @@ public class Pattern {
     }
 
     public static Model midSquare(Rgb c) {
-        Model m = new Model("mid square");
-        return m.add(createMidSquare(c));
+        return new Model("mid square", List.of(createMidSquare(c)));
     }
 
     static Polyline createMidSquare(Rgb c) {

@@ -10,10 +10,10 @@ public class AsteroidsFontTest {
 
         Model a = af.getChar('A');
         Assert.assertEquals(0, a.countPoints());
-        a.polylines().forEach(polyline -> polyline.lines().forEach(line -> {
+        a.lines().forEach(line -> {
             TestUtils.assertInRange("from", line.from());
             TestUtils.assertInRange("to", line.to());
-        }));
+        });
     }
 
 }

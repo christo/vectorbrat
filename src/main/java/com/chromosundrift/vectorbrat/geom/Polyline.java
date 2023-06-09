@@ -22,6 +22,13 @@ public final class Polyline implements Geom {
     }
 
     /**
+     * Transition method to create a Polyline representation of a Line.
+     */
+    public static Polyline fromLine(Line line) {
+        return new Polyline("", line.from().getColor(), line.from(), line.to());
+    }
+
+    /**
      * Creates a closed polygon from the given points. This includes the join betwen last and first points.
      *
      * @param color  the color.

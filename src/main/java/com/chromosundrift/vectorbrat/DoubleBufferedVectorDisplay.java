@@ -25,7 +25,7 @@ public final class DoubleBufferedVectorDisplay implements VectorDisplay {
     }
 
     public DoubleBufferedVectorDisplay(float minimumBrightness, boolean blanking) {
-        this(new Model(), minimumBrightness, blanking);
+        this(Model.EMPTY, minimumBrightness, blanking);
     }
 
     /**

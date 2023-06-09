@@ -107,7 +107,7 @@ public class VectorBrat {
     }
 
     private void start() throws VectorBratException {
-        Model empty = new Model();
+        Model empty = Model.EMPTY;
         setModel(empty);
         this.frame.start();
         this.laser.start();

@@ -81,11 +81,8 @@ public final class Interpolator implements Pather {
      * @param m the model to plan.
      */
     public void plan(Model m) {
-
-        LinkedList<Line> lines = new LinkedList<>();
-        for (Polyline pl : m.polylines().toList()) {
-            lines.addAll(pl.lineList());
-        }
+        // use LinkedList for O(1) removal
+        List<Line> lines = new LinkedList<>(m.lines().toList());
         List<Point> points = new LinkedList<>(m.points().toList());
         Point prev;
         if (!lines.isEmpty()) {

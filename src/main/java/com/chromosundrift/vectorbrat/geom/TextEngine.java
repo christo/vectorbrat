@@ -42,7 +42,7 @@ public class TextEngine {
         // character width in normal units
         float charScale = (1 - spaceSpace) / chars.length;
 
-        Model m = new Model();
+        Model m = Model.EMPTY;
         for (int i = 0; i < chars.length; i++) {
             float charXOffset = ((gaps[i] + (1 - spaceSpace) / chars.length) * i);
 

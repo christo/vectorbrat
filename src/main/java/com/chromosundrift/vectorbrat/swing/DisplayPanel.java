@@ -30,8 +30,10 @@ import static java.awt.BasicStroke.JOIN_ROUND;
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorDisplay;
+import com.chromosundrift.vectorbrat.geom.Line;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Interpolator;
+import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Polyline;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.laser.LaserController;
@@ -123,14 +125,15 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
     private void drawModel(Model model, BufferedImage im, Graphics2D g2) {
         g2.setStroke(strokeLine);
-        Stream<Polyline> polylines = model.polylines();
+        Stream<Line> lines = model.lines();
         int xScale = im.getWidth();
         int yScale = im.getHeight();
-        polylines.forEach(p -> {
-            g2.setColor(toColor(p.getColor()));
-            int[] xPoints = p.xZeroScaled(xScale);
-            int[] yPoints = p.yZeroScaled(yScale);
-            g2.drawPolyline(xPoints, yPoints, xPoints.length);
+        lines.forEach(l -> {
+            g2.setColor(toColor(l.from().getColor()));
+            Line line = l.scaleOffset(0.5f, 0.5f, 0.5f, 0.5f);
+            Point from = line.from().scale(xScale, yScale);
+            Point to = line.to().scale(xScale, yScale);
+            g2.drawLine((int) from.x(), (int) from.y(), (int) to.x(), (int) to.y());
         });
         model.points().forEach(point -> {
             int x = (int) ((point.x() / 2 + 0.5) * xScale);
