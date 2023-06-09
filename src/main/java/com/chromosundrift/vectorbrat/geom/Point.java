@@ -5,6 +5,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static com.chromosundrift.vectorbrat.Config.SAMPLE_MAX;
+import static com.chromosundrift.vectorbrat.Config.SAMPLE_MIN;
+
+import com.chromosundrift.vectorbrat.Config;
+
 /**
  * Immutable float-precision point.
  */
@@ -209,5 +214,13 @@ public final class Point implements Geom {
     @Override
     public Optional<Box> bounds() {
         return Optional.of(new Box(this, this));
+    }
+
+    public boolean inBounds() {
+        return inBounds(SAMPLE_MIN, SAMPLE_MIN, SAMPLE_MAX, SAMPLE_MAX);
+    }
+
+    public boolean inBounds(float minX, float minY, float maxX, float maxY) {
+        return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
 }
