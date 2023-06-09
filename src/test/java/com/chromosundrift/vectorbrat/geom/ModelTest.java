@@ -34,10 +34,7 @@ public class ModelTest {
         int cols = 4;
         int rows = 4;
         Model model = Pattern.boxGrid(cols, rows, Rgb.CYAN);
-        LinkedList<Line> lines = new LinkedList<>();
-        for (Polyline pl : model._polylines()) {
-            lines.addAll(pl.lineList());
-        }
+        List<Line> lines = model.lines().toList();
         int boxSides = 4;
         lines.forEach(line -> System.out.println("line = " + line));
         assertEquals(cols * rows * boxSides, lines.size());
