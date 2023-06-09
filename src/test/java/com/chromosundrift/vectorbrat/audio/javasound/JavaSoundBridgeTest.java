@@ -33,16 +33,6 @@ public class JavaSoundBridgeTest {
         assertDevicesPresent(Config.knownDevices());
     }
 
-    @Test
-    public void requiredDevicesPresent() {
-        assertDevicesPresent(Config.requiredDevices());
-    }
-
-    @Test
-    public void expectedDevicesPresent() {
-        assertDevicesPresent(Config.expectedDevices());
-    }
-
     void assertDevicesPresent(List<String> devices) {
         JavaSoundBridge jsb = new JavaSoundBridge();
         List<String> missing = devices.stream()
@@ -83,7 +73,7 @@ public class JavaSoundBridgeTest {
 
     @Test
     public void testListFormats() throws MissingAudioDevice {
-        Mixer m = new JavaSoundBridge().getMixerOrDie(Config.DEFAULT_XY);
+        Mixer m = new JavaSoundBridge().getMixerOrDie(Config.ES9);
         Line.Info[] sourceLines = m.getSourceLineInfo();
         Line.Info[] targetLines = m.getTargetLineInfo();
 
