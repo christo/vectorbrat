@@ -16,7 +16,7 @@ import com.chromosundrift.vectorbrat.geom.Polyline;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
 
-public class Asteroids implements ModelAnimator {
+public final class Asteroids implements ModelAnimator {
     public static final float MIN_X = -1.0f;
     public static final float MAX_X = 1.0f;
     public static final float MIN_Y = -1.0f;
@@ -25,7 +25,7 @@ public class Asteroids implements ModelAnimator {
     public static final int NUM_ASTEROIDS = 5;
     public static final String NAME = "Asteroids";
     private final Composer game;
-    private final Random random = new Random(123L); // fixed seed for profiling
+    private final Random random = new Random(1234L); // fixed seed for profiling
 
     public Asteroids() {
         game = new Composer(NAME, List.of(new RockAnimator(), mkTitle()));
@@ -34,8 +34,8 @@ public class Asteroids implements ModelAnimator {
     private ModelAnimator mkTitle() {
         TextEngine te = new TextEngine(Rgb.CYAN, new AsteroidsFont());
         float yScale = (float) (0.5 / NAME.length());
-        Model textModel = te.textLine(NAME.toUpperCase()).scale(0.3f, yScale);
-        return new BungeeAnimator(textModel, 900, 0.2f, 0.8f);
+        Model textModel = te.textLine(NAME.toUpperCase()).scale(0.25f, yScale);
+        return new BungeeAnimator(textModel, 2000, 0.15f, 0.8f);
     }
 
     @Override
