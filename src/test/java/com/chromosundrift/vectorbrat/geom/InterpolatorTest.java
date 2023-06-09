@@ -1,20 +1,20 @@
 package com.chromosundrift.vectorbrat.geom;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.chromosundrift.vectorbrat.Config;
 
-public class PathPlannerTest {
+public class InterpolatorTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(PathPlannerTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(InterpolatorTest.class);
 
     @Test
     public void testInterpolateTo() {
@@ -23,7 +23,7 @@ public class PathPlannerTest {
         pp.interpolate(new Point(0, 0), new Point(1, 1), 1, 5);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
-        assertTrue(xs.size() == ys.size());
+        assertEquals(xs.size(), ys.size());
         assertTrue(xs.size() > 5);
     }
 
@@ -39,7 +39,7 @@ public class PathPlannerTest {
     }
 
     @Test
-    public void testPlanNextNearest() {
+    public void plan() {
         Config c = getTestConfig();
         c.setInterpolation(Interpolation.QUINTIC);
         Interpolator pp = new Interpolator(c);
