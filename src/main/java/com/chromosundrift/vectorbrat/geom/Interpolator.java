@@ -8,7 +8,6 @@ import com.chromosundrift.vectorbrat.Config;
 
 /**
  * Interpolating Pather. Holds the trace path for rendering shapes for renderers with physical acceleration limits.
- *
  */
 public final class Interpolator implements Pather {
 
@@ -28,6 +27,7 @@ public final class Interpolator implements Pather {
      */
     private final float pointsPerUnit;
     private final float vertexPoints;
+    private final float blackPoints;
     private final Interpolation interpolation;
 
     private final ArrayList<Float> xs = new ArrayList<>(INITIAL_CAPACITY);
@@ -36,7 +36,9 @@ public final class Interpolator implements Pather {
     private final ArrayList<Float> gs = new ArrayList<>(INITIAL_CAPACITY);
     private final ArrayList<Float> bs = new ArrayList<>(INITIAL_CAPACITY);
 
-    /** Base value */
+    /**
+     * Base value
+     */
     private final float pointsPerUnitOffset;
 
     /**
@@ -46,6 +48,7 @@ public final class Interpolator implements Pather {
         this.pointsPerPoint = config.getPointsPerPoint();
         this.pointsPerUnit = config.getPointsPerUnit();
         this.vertexPoints = config.getVertexPoints();
+        this.blackPoints = config.getBlackPoints();
         this.interpolation = config.getInterpolation();
         this.pointsPerUnitOffset = config.getPointsPerUnitOffset();
     }
@@ -150,7 +153,7 @@ public final class Interpolator implements Pather {
                 }
                 // if point is not the same as prev, interpolate to it first
                 if (!prev.equals(closestLine.from())) {
-                    penUp(pointsPerPoint);
+                    penUp(blackPoints);
                     interpolate(prev.black(), closestLine.from());
                 }
                 // interpolate the line
@@ -160,13 +163,13 @@ public final class Interpolator implements Pather {
                 // remove from the points list and add the point to the path plan
                 points.remove(closestPoint);
                 // interpolate to the new point, dwelling on arrival
-                penUp(pointsPerPoint);
-                interpolate(prev.black(), closestPoint, pointsPerPoint);
+                penUp(blackPoints);
+                interpolate(prev.black(), closestPoint, blackPoints);
                 prev = closestPoint;
             }
         }
         // now interpolate back to the beginning
-        penUp(pointsPerPoint);
+        penUp(blackPoints);
         interpolate(prev.black(), new Point(xs.get(0), ys.get(0)));
         if (xs.size() != ys.size() || xs.size() != rs.size() || xs.size() != gs.size() || xs.size() != bs.size()) {
             throw new IllegalStateException("BUG! all internal lists should be the same size");
@@ -196,20 +199,20 @@ public final class Interpolator implements Pather {
             }
             // end of polyline, go to black for interconection to next Polyline
             prev = prev.black();
-            penUp(pointsPerPoint);
+            penUp(blackPoints);
         }
 
         // now plan points
         List<Point> points = m._points();
         for (Point point : points) {
             // interpolate black path points to the point
-            penUp(pointsPerPoint);
+            penUp(blackPoints);
             interpolate(prev.black(), point, pointsPerPoint);
             prev = point;
         }
 
         // return to the start point in black
-        penUp(pointsPerPoint);
+        penUp(blackPoints);
         interpolate(prev.black(), start); // BUG: we always dwell assuming start was a vertex
 
         if (xs.size() != ys.size() || xs.size() != rs.size() || xs.size() != gs.size() || xs.size() != bs.size()) {
@@ -283,9 +286,11 @@ public final class Interpolator implements Pather {
     void penUp(float n) {
         int last = xs.size() - 1;
         if (last >= 0) {
-            for (int i = 0; i < vertexPoints; i++) {
-                xs.add(xs.get(last));
-                ys.add(ys.get(last));
+            Float lastX = xs.get(last);
+            Float lastY = ys.get(last);
+            for (int i = 0; i < n; i++) {
+                xs.add(lastX);
+                ys.add(lastY);
                 rs.add(0f);
                 gs.add(0f);
                 bs.add(0f);
