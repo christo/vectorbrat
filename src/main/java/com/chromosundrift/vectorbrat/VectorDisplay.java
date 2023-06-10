@@ -2,7 +2,7 @@ package com.chromosundrift.vectorbrat;
 
 import com.chromosundrift.vectorbrat.geom.Model;
 
-public interface VectorDisplay {
+public interface VectorDisplay<T> {
     void setModel(Model model);
 
     /**
@@ -12,6 +12,8 @@ public interface VectorDisplay {
      * @return the minimum brightness level between 0f-1f
      */
     float getMinimumBrightness();
+
+    T getTuning();
 
     boolean supportsBlank();
 }

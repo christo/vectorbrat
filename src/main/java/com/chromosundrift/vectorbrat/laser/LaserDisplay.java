@@ -23,12 +23,12 @@ import com.chromosundrift.vectorbrat.geom.Model;
  * Top level VectorDisplay for laser or scope. Delegates path interpolation to {@link Interpolator} and signal details
  * to {@link LaserDriver}.
  */
-public final class LaserDisplay implements VectorDisplay, LaserController {
+public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserController {
 
     private static final Logger logger = LoggerFactory.getLogger(LaserDisplay.class);
     private static final long MS_LISTENER_UPDATE = 100;
 
-    private final DoubleBufferedVectorDisplay vectorDisplay;
+    private final DoubleBufferedVectorDisplay<LaserTuning> vectorDisplay;
     private final Supplier<LaserDriver> laserDriver;
     private final ThreadFactory threadFactory;
     private final Set<Consumer<LaserController>> updateListeners;
@@ -51,7 +51,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     public LaserDisplay(final Config config) {
         logger.info("initialising LaserDisplay");
         this.laserTuning = config.getLaserTuning();
-        this.vectorDisplay = new DoubleBufferedVectorDisplay(laserTuning.getMinimumLaserBrightness(), true);
+        this.vectorDisplay = new DoubleBufferedVectorDisplay<>(laserTuning.getMinimumLaserBrightness(), true, laserTuning);
         this.laserDriver = Suppliers.memoize(() -> {
             try {
                 logger.info("Lazily creating LaserDriver (may throw)");
@@ -201,7 +201,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     @Override
     public int getPps() {
-        return getLaserTuning().getPps();
+        return getTuning().getPps();
     }
 
     /**
@@ -211,7 +211,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     @Override
     public void setPps(int pps) {
-        this.getLaserTuning().setPps(pps);
+        this.getTuning().setPps(pps);
         this.tellListeners();
     }
 
@@ -261,7 +261,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     }
 
     @Override
-    public LaserTuning getLaserTuning() {
+    public LaserTuning getTuning() {
         return laserTuning;
     }
 

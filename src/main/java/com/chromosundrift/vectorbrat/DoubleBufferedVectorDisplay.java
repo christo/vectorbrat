@@ -9,23 +9,25 @@ import com.chromosundrift.vectorbrat.geom.Model;
  * Threadsafe, double-buffered display. Call {@link DoubleBufferedVectorDisplay#withLockAndFlip(Function)} to render
  * the current model.
  */
-public final class DoubleBufferedVectorDisplay implements VectorDisplay {
+public final class DoubleBufferedVectorDisplay<T> implements VectorDisplay {
     private final ReentrantLock lock = new ReentrantLock();
     private Model frontModel;
     private Model backModel;
     private final float minimumBrightness;
     private final boolean blanking;
+    private final T tuning;
 
 
-    public DoubleBufferedVectorDisplay(Model initialModel, float minimumBrightness, boolean blanking) {
+    public DoubleBufferedVectorDisplay(Model initialModel, float minimumBrightness, boolean blanking, T tuning) {
         frontModel = initialModel;
         backModel = initialModel;
         this.minimumBrightness = minimumBrightness;
         this.blanking = blanking;
+        this.tuning = tuning;
     }
 
-    public DoubleBufferedVectorDisplay(float minimumBrightness, boolean blanking) {
-        this(Model.EMPTY, minimumBrightness, blanking);
+    public DoubleBufferedVectorDisplay(float minimumBrightness, boolean blanking, T tuning) {
+        this(Model.EMPTY, minimumBrightness, blanking, tuning);
     }
 
     /**
@@ -79,5 +81,10 @@ public final class DoubleBufferedVectorDisplay implements VectorDisplay {
     @Override
     public boolean supportsBlank() {
         return blanking;
+    }
+
+    @Override
+    public T getTuning() {
+        return tuning;
     }
 }

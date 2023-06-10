@@ -59,7 +59,7 @@ public interface LaserController {
 
     void setPathPlanTime(long planTime);
 
-    LaserTuning getLaserTuning();
+    LaserTuning getTuning();
 
     void setLaserTuning(LaserTuning laserTuning);
 

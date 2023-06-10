@@ -40,7 +40,7 @@ import com.chromosundrift.vectorbrat.laser.LaserController;
 /**
  * Threadsafe JPanel implementation of VectorDeplay.
  */
-public final class DisplayPanel extends JPanel implements VectorDisplay {
+public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTuning> {
 
     public static final Color HUD_COLOR = new Color(255, 255, 255, 80);
     private static final Logger logger = LoggerFactory.getLogger(DisplayPanel.class);
@@ -55,19 +55,21 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     private static final Stroke LASER_OFF_DOT = new BasicStroke(3f, BasicStroke.CAP_ROUND, JOIN_ROUND);
     private final Color colText = Color.getHSBColor(0.83f, 0.5f, 0.9f);
     private final Color colBg = Color.getHSBColor(0, 0, 0f);
-    private final DoubleBufferedVectorDisplay vectorDisplay;
+    private final DoubleBufferedVectorDisplay<RasterTuning> vectorDisplay;
     private final Font fontBranding;
     private final Config config;
     private final BasicStroke strokeLine;
     private final DisplayController displayController;
     private final LaserController laserController;
     private final Font fontHud;
+    private final RasterTuning tuning;
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<BufferedImage> logo = Optional.empty();
 
     public DisplayPanel(Config config, DisplayController displayController, LaserController laserController) {
         this.displayController = displayController;
         this.laserController = laserController;
+        this.tuning = new RasterTuning();
         logger.info("initialising DisplayPanel");
         this.config = config;
         try {
@@ -84,7 +86,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
 
         setMinimumSize(new Dimension(400, 300));
         setPreferredSize(new Dimension(900, 600));
-        vectorDisplay = new DoubleBufferedVectorDisplay(MINIMUM_BRIGHTNESS, true);
+        vectorDisplay = new DoubleBufferedVectorDisplay(MINIMUM_BRIGHTNESS, true, tuning);
     }
 
     /**
@@ -281,5 +283,10 @@ public final class DisplayPanel extends JPanel implements VectorDisplay {
     @Override
     public boolean supportsBlank() {
         return true;
+    }
+
+    @Override
+    public RasterTuning getTuning() {
+        return tuning;
     }
 }

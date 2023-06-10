@@ -19,6 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.Util;
 import com.chromosundrift.vectorbrat.VectorBratException;
+import com.chromosundrift.vectorbrat.audio.jack.JackLoggingOmniCallback;
 import com.chromosundrift.vectorbrat.geom.Pather;
 
 /**
@@ -307,5 +308,20 @@ public final class LaserDriver {
             bufferLock.unlock();
         }
 
+    }
+
+    void setupCallbacks() throws JackException {
+        JackLoggingOmniCallback jloc = new JackLoggingOmniCallback();
+        client.setPortConnectCallback(jloc);
+        client.setBuffersizeCallback(jloc);
+        client.setSampleRateCallback(jloc);
+        client.setClientRegistrationCallback(jloc);
+        client.setXrunCallback(jloc);
+        client.setPortRegistrationCallback(jloc);
+        client.setClientRegistrationCallback(jloc);
+        client.setGraphOrderCallback(jloc);
+        client.setSyncCallback(jloc);
+        client.setTimebaseCallback(jloc, false);
+        client.setXrunCallback(jloc);
     }
 }
