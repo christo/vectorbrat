@@ -71,14 +71,14 @@ public class ControlPanel extends JPanel {
 
     private static JPanel createPpsSlider(Config config, LaserController laserController) {
 
-        Hashtable<Integer, JLabel> sliderLabels = new Hashtable<>(4);
+        Hashtable<Integer, JLabel> sliderLabels = new Hashtable<>(5);
         sliderLabels.put(5, new JLabel("5"));
         sliderLabels.put(10000, new JLabel("10k"));
         sliderLabels.put(20000, new JLabel("20k"));
         sliderLabels.put(30000, new JLabel("30k"));
         sliderLabels.put(40000, new JLabel("40k"));
 
-        final JSlider ppsControl = new JSlider(JSlider.HORIZONTAL, Config.MIN_PPS, Config.MAX_PPS, config.getPps());
+        final JSlider ppsControl = new JSlider(JSlider.HORIZONTAL, Config.MIN_PPS, Config.MAX_PPS, config.getLaserTuning().getPps());
         ppsControl.setPaintLabels(true);
         ppsControl.setLabelTable(sliderLabels);
         ppsControl.addChangeListener(new PpsListener(config.liveControls(), laserController));

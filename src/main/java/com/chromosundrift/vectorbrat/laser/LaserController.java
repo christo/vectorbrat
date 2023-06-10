@@ -59,5 +59,9 @@ public interface LaserController {
 
     void setPathPlanTime(long planTime);
 
+    LaserTuning getLaserTuning();
+
+    void setLaserTuning(LaserTuning laserTuning);
+
     Interpolator getInterpolator();
 }

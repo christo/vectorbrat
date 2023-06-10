@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.chromosundrift.vectorbrat.geom.Interpolation;
+import com.chromosundrift.vectorbrat.laser.LaserTuning;
 
 
 /**
@@ -103,6 +104,7 @@ public final class Config {
     private static final float DEFAULT_VERTEX_POINTS = 6f;
     private static final float DEFAULT_BLACK_POINTS = 11f;
     private static final float DEFAULT_POINTS_PER_UNIT_OFFSET = 10f;
+
     private static final Interpolation DEFAULT_INTERPOLATION = Interpolation.QUINTIC;
     private final Channel channelX;
     private final Channel channelY;
@@ -112,20 +114,16 @@ public final class Config {
     private final String title;
     private final String tinyTitle;
     private final boolean liveControls;
-    private float pointsPerPoint = DEFAULT_POINTS_PER_POINT;
-    private float pointsPerUnit = DEFAULT_POINTS_PER_UNIT;
-    private float vertexPoints = DEFAULT_VERTEX_POINTS;
-    private float blackPoints = DEFAULT_BLACK_POINTS;
-    private float pointsPerUnitOffset = DEFAULT_POINTS_PER_UNIT_OFFSET;
+    private LaserTuning laserTuning;
+
     private Interpolation interpolation = DEFAULT_INTERPOLATION;
-    private int pps;
+
     private boolean lockout;
     private float lineWidth;
 
     public Config(String title, String tinyTitle) {
         this.title = title;
         this.tinyTitle = tinyTitle;
-        this.pps = DEFAULT_PPS;
         this.channelX = new Channel("X-channel", DEFAULT_ES9_CHANNEL_X);
         this.channelY = new Channel("Y-channel", DEFAULT_ES9_CHANNEL_Y);
         this.channelR = new Channel("R-channel", DEFAULT_ES9_CHANNEL_R);
@@ -133,6 +131,13 @@ public final class Config {
         this.channelB = new Channel("B-channel", DEFAULT_ES9_CHANNEL_B);
         this.lineWidth = DEFAULT_LINE_WIDTH;
         this.liveControls = true;
+        this.laserTuning = new LaserTuning(
+                DEFAULT_PPS,
+                DEFAULT_POINTS_PER_POINT,
+                DEFAULT_POINTS_PER_UNIT,
+                DEFAULT_VERTEX_POINTS,
+                DEFAULT_BLACK_POINTS,
+                DEFAULT_POINTS_PER_UNIT_OFFSET);
     }
 
     public Config() {
@@ -163,12 +168,8 @@ public final class Config {
         return "vectorbrat.png";
     }
 
-    public int getPps() {
-        return pps;
-    }
-
-    public void setPps(int pps) {
-        this.pps = pps;
+    public LaserTuning getLaserTuning() {
+        return laserTuning;
     }
 
     public Channel getChannelX() {
@@ -207,37 +208,7 @@ public final class Config {
         return LAF;
     }
 
-    public float getPointsPerPoint() {
-        return pointsPerPoint;
-    }
 
-    public void setPointsPerPoint(float pointsPerPoint) {
-        this.pointsPerPoint = pointsPerPoint;
-    }
-
-    public float getPointsPerUnit() {
-        return pointsPerUnit;
-    }
-
-    public void setPointsPerUnit(float pointsPerUnit) {
-        this.pointsPerUnit = pointsPerUnit;
-    }
-
-    public float getVertexPoints() {
-        return vertexPoints;
-    }
-
-    public void setVertexPoints(float vertexPoints) {
-        this.vertexPoints = vertexPoints;
-    }
-
-    public float getBlackPoints() {
-        return blackPoints;
-    }
-
-    public void setBlackPoints(float blackPoints) {
-        this.blackPoints = blackPoints;
-    }
 
     public Interpolation getInterpolation() {
         return interpolation;
@@ -247,21 +218,14 @@ public final class Config {
         this.interpolation = interpolation;
     }
 
-    public float getPointsPerUnitOffset() {
-        return this.pointsPerUnitOffset;
-    }
-
-    public void setPointsPerUnitOffset(float pointsPerUnitOffset) {
-        this.pointsPerUnitOffset = pointsPerUnitOffset;
-    }
-
     public String getTinyTitle() {
         return this.tinyTitle;
     }
 
-    public float getMinimumLaserBrightness() {
-        return 0.4f;
+    public void setLaserTuning(LaserTuning lt) {
+        this.laserTuning = lt;
     }
+
 
     /**
      * Represents a configured audio channel with our name and 1-based index.

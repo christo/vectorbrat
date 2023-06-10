@@ -33,7 +33,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
     private final ThreadFactory threadFactory;
     private final Set<Consumer<LaserController>> updateListeners;
     private final Config config;
-    private int pps;
+    private LaserTuning laserTuning;
     private volatile boolean running;
 
     /**
@@ -50,7 +50,8 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     public LaserDisplay(final Config config) {
         logger.info("initialising LaserDisplay");
-        this.vectorDisplay = new DoubleBufferedVectorDisplay(config.getMinimumLaserBrightness(), true);
+        this.laserTuning = config.getLaserTuning();
+        this.vectorDisplay = new DoubleBufferedVectorDisplay(laserTuning.getMinimumLaserBrightness(), true);
         this.laserDriver = Suppliers.memoize(() -> {
             try {
                 logger.info("Lazily creating LaserDriver (may throw)");
@@ -60,7 +61,6 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
                 throw new RuntimeException(e);
             }
         });
-        this.pps = config.getPps();
         this.threadFactory = r -> {
             Thread t = new Thread(r, "laser display");
             t.setPriority(Thread.MAX_PRIORITY);
@@ -201,7 +201,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     @Override
     public int getPps() {
-        return pps;
+        return getLaserTuning().getPps();
     }
 
     /**
@@ -211,7 +211,7 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
      */
     @Override
     public void setPps(int pps) {
-        this.pps = pps;
+        this.getLaserTuning().setPps(pps);
         this.tellListeners();
     }
 
@@ -252,11 +252,22 @@ public final class LaserDisplay implements VectorDisplay, LaserController {
 
     @Override
     public float getMinimumBrightness() {
-        return config.getMinimumLaserBrightness();
+        return laserTuning.getMinimumLaserBrightness();
     }
 
     @Override
     public boolean supportsBlank() {
         return true;
+    }
+
+    @Override
+    public LaserTuning getLaserTuning() {
+        return laserTuning;
+    }
+
+    @Override
+    public void setLaserTuning(LaserTuning laserTuning) {
+        this.laserTuning = laserTuning;
+        tellListeners();
     }
 }
