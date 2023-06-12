@@ -174,6 +174,8 @@ public final class LaserDriver {
     private void activateClient() throws VectorBratException {
         logger.info("activating");
         try {
+            setupCallbacks();
+
             client.activate();
         } catch (JackException e) {
             throw new VectorBratException("can't activate client", e);
