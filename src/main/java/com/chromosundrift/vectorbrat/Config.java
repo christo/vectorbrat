@@ -172,6 +172,10 @@ public final class Config {
         return laserTuning;
     }
 
+    public void setLaserTuning(LaserTuning lt) {
+        this.laserTuning = lt;
+    }
+
     public Channel getChannelX() {
         return channelX;
     }
@@ -208,8 +212,6 @@ public final class Config {
         return LAF;
     }
 
-
-
     public Interpolation getInterpolation() {
         return interpolation;
     }
@@ -221,11 +223,6 @@ public final class Config {
     public String getTinyTitle() {
         return this.tinyTitle;
     }
-
-    public void setLaserTuning(LaserTuning lt) {
-        this.laserTuning = lt;
-    }
-
 
     /**
      * Represents a configured audio channel with our name and 1-based index.

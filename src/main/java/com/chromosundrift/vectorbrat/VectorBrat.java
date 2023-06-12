@@ -77,6 +77,12 @@ public class VectorBrat {
         }
     }
 
+    private static Model mkTextModel(String text) {
+        TextEngine te = new TextEngine(Rgb.CYAN, new AsteroidsFont());
+        float yScale = (float) (1.0 / text.length());
+        return te.textLine(text).scale(0.6f, yScale);
+    }
+
     private AppMap makeAppMap() {
         AppMap ar = new AppMap(this::setModel, System::nanoTime);
         String text = "VECTORBRAT";
@@ -98,12 +104,6 @@ public class VectorBrat {
             pls.add(new Asteroid(Asteroid.Size.LARGE, new Random()).toPolyline());
         }
         return new Model("rock", pls);
-    }
-
-    private static Model mkTextModel(String text) {
-        TextEngine te = new TextEngine(Rgb.CYAN, new AsteroidsFont());
-        float yScale = (float) (1.0 / text.length());
-        return te.textLine(text).scale(0.6f, yScale);
     }
 
     private void start() throws VectorBratException {

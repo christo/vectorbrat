@@ -29,9 +29,9 @@ import static java.awt.BasicStroke.JOIN_ROUND;
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorDisplay;
+import com.chromosundrift.vectorbrat.geom.Interpolator;
 import com.chromosundrift.vectorbrat.geom.Line;
 import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.geom.Interpolator;
 import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.laser.LaserController;
@@ -43,6 +43,7 @@ import com.chromosundrift.vectorbrat.laser.LaserController;
 public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTuning> {
 
     public static final Color HUD_COLOR = new Color(255, 255, 255, 80);
+    public static final float MINIMUM_BRIGHTNESS = 0f;
     private static final Logger logger = LoggerFactory.getLogger(DisplayPanel.class);
     private static final int MIN_WIDTH = 100;
     private static final int MIN_HEIGHT = 100;
@@ -50,7 +51,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
     private static final Stroke STROKE_PATH_OFF =
             new BasicStroke(1f, CAP_BUTT, JOIN_ROUND, 0, new float[]{1, 5}, 0);
     private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.7f, 0.4f);
-    public static final float MINIMUM_BRIGHTNESS = 0f;
     private static final Stroke LASER_ON_DOT = new BasicStroke(5f, BasicStroke.CAP_ROUND, JOIN_ROUND);
     private static final Stroke LASER_OFF_DOT = new BasicStroke(3f, BasicStroke.CAP_ROUND, JOIN_ROUND);
     private final Color colText = Color.getHSBColor(0.83f, 0.5f, 0.9f);
@@ -211,7 +211,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
                 // draw a dot at the point
                 // dot size
                 g2.setStroke(laserOn ? LASER_ON_DOT : LASER_OFF_DOT);
-                g2.drawLine(x,y,x,y);
+                g2.drawLine(x, y, x, y);
 
             }
             g2.setColor(Color.WHITE);

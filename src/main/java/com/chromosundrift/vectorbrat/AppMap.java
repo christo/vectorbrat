@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -68,7 +67,7 @@ public class AppMap implements Runnable, AppController {
     public void setAnimator(String name) throws VectorBratException {
         if (name == null) {
             throw new IllegalArgumentException("animator must not be null");
-        } else if(name.isBlank()) {
+        } else if (name.isBlank()) {
             logger.warn("asked to set blank animator");
         }
         if (!name.equals(animator)) {

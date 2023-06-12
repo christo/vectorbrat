@@ -157,6 +157,7 @@ public class Model implements Geom {
     /**
      * Crops the model to the range.
      * // TODO WIP implement line cropping at boundary intersection
+     *
      * @return cropped Model
      */
     public Model crop() {

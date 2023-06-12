@@ -11,11 +11,11 @@ import com.chromosundrift.vectorbrat.geom.Model;
  */
 public final class DoubleBufferedVectorDisplay<T> implements VectorDisplay {
     private final ReentrantLock lock = new ReentrantLock();
-    private Model frontModel;
-    private Model backModel;
     private final float minimumBrightness;
     private final boolean blanking;
     private final T tuning;
+    private Model frontModel;
+    private Model backModel;
 
 
     public DoubleBufferedVectorDisplay(Model initialModel, float minimumBrightness, boolean blanking, T tuning) {

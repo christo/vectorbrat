@@ -10,11 +10,10 @@ import java.util.logging.LogManager;
 
 public class Util {
 
-    private static final Logger logger = LoggerFactory.getLogger(Util.class);
-
     public static final long THOUSAND = 1000L;
     public static final long MILLION = THOUSAND * THOUSAND;
     public static final long BILLION = THOUSAND * MILLION;
+    private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
     public static long nanoToMilli(long nano) {
         return nano / MILLION;

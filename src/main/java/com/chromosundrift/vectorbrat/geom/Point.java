@@ -200,18 +200,6 @@ public final class Point implements Geom {
         return new Point(x * xS + xO, y * yS + yO, r, g, b);
     }
 
-    static class PointFactory {
-        private final Rgb color;
-
-        public PointFactory(Rgb color) {
-            this.color = color;
-        }
-
-        Point p(float x, float y) {
-            return new Point(x, y, color);
-        }
-    }
-
     /**
      * A Point has no lines, always empty.
      *
@@ -233,5 +221,17 @@ public final class Point implements Geom {
 
     public boolean inBounds(float minX, float minY, float maxX, float maxY) {
         return x >= minX && x <= maxX && y >= minY && y <= maxY;
+    }
+
+    static class PointFactory {
+        private final Rgb color;
+
+        public PointFactory(Rgb color) {
+            this.color = color;
+        }
+
+        Point p(float x, float y) {
+            return new Point(x, y, color);
+        }
     }
 }
