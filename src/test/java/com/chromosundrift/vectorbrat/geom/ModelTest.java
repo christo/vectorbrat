@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -18,6 +17,10 @@ public class ModelTest {
 
     private static final Function<Line, Stream<Point>> ENDS = l -> Set.of(l.from(), l.to()).stream();
     private static final Logger logger = LoggerFactory.getLogger(ModelTest.class);
+
+    private static Set<Point> getLinePoints(Geom g) {
+        return g.lines().flatMap(ENDS).collect(Collectors.toSet());
+    }
 
     @Test
     public void lines() {
@@ -58,7 +61,6 @@ public class ModelTest {
         assertEquals("points should have all been magenta", emptyList(), offColorPoints);
     }
 
-
     @Test
     public void normalise() {
         Model model = Pattern.boundingBox().normalise();
@@ -77,10 +79,6 @@ public class ModelTest {
                 new Point(1f, 0f),
                 new Point(1f, 1f));
         assertEquals("line end points should be four corners", corners, linePoints);
-    }
-
-    private static Set<Point> getLinePoints(Geom g) {
-        return g.lines().flatMap(ENDS).collect(Collectors.toSet());
     }
 
     @Test

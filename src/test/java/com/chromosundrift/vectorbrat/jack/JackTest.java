@@ -19,6 +19,7 @@ public class JackTest {
 
     /**
      * Makes a one second beep through jack using its sound device. Requires jackd to be running.
+     *
      * @throws Exception
      */
     @Test

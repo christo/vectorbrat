@@ -12,15 +12,15 @@ import static org.junit.Assert.assertTrue;
  */
 public class SanityTest {
 
-    private enum TestEnum {
-        FOO, BAR, BAZ
-    }
-
     @Test
     public void enumSetMutability() {
         EnumSet<TestEnum> maybeMutable = EnumSet.noneOf(TestEnum.class);
         assertEquals(0, maybeMutable.size());
         maybeMutable.add(TestEnum.FOO);
         assertTrue(maybeMutable.contains(TestEnum.FOO));
+    }
+
+    private enum TestEnum {
+        FOO, BAR, BAZ
     }
 }

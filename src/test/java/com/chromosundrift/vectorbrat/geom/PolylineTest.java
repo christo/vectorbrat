@@ -10,6 +10,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class PolylineTest {
+    private static Polyline getOrangeTriangle() {
+        return Polyline.closed("orange triangle", Rgb.ORANGE, new Point(0, 0), new Point(1, 1), new Point(1, 0));
+    }
+
     @Test
     public void testPointColorInherited() {
         Polyline p = Polyline.open("test line", Rgb.GREEN, new Point(0, 0), new Point(1, 1));
@@ -56,9 +60,5 @@ public class PolylineTest {
             }
             assertTrue("I don't get the point", found);
         });
-    }
-
-    private static Polyline getOrangeTriangle() {
-        return Polyline.closed("orange triangle", Rgb.ORANGE, new Point(0, 0), new Point(1, 1), new Point(1, 0));
     }
 }

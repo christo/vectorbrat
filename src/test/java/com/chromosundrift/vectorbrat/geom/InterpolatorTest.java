@@ -17,6 +17,14 @@ public class InterpolatorTest {
 
     private static final Logger logger = LoggerFactory.getLogger(InterpolatorTest.class);
 
+    private static Config getTestConfig() {
+        Config c = new Config();
+        LaserTuning lt = new LaserTuning(30000, 1, 5, 1f, 0, 0);
+        c.setInterpolation(Interpolation.LINEAR);
+        c.setLaserTuning(lt);
+        return c;
+    }
+
     @Test
     public void testInterpolateTo() {
         Config c = getTestConfig();
@@ -26,14 +34,6 @@ public class InterpolatorTest {
         ArrayList<Float> ys = pp.getYs();
         assertEquals(xs.size(), ys.size());
         assertTrue(xs.size() > 5);
-    }
-
-    private static Config getTestConfig() {
-        Config c = new Config();
-        LaserTuning lt = new LaserTuning(30000, 1, 5, 1f, 0, 0);
-        c.setInterpolation(Interpolation.LINEAR);
-        c.setLaserTuning(lt);
-        return c;
     }
 
     @Test

@@ -1,10 +1,5 @@
 package com.chromosundrift.vectorbrat.audio.javasound;
 
-import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.VectorBratException;
-import com.chromosundrift.vectorbrat.audio.MissingAudioDevice;
-import com.chromosundrift.vectorbrat.audio.javasound.JavaSoundBridge;
-
 import junit.framework.AssertionFailedError;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,6 +17,10 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.join;
 
+import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.VectorBratException;
+import com.chromosundrift.vectorbrat.audio.MissingAudioDevice;
+
 /**
  * Requires audio devices connected and jackd running.
  */
@@ -29,7 +28,7 @@ public class JavaSoundBridgeTest {
 
     @Ignore
     @Test
-    public void allDevicesPresent(){
+    public void allDevicesPresent() {
         assertDevicesPresent(Config.knownDevices());
     }
 
