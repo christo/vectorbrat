@@ -80,9 +80,9 @@ public class VectorBrat {
     private AppMap makeAppMap() {
         AppMap ar = new AppMap(this::setModel, System::nanoTime);
         String text = "VECTORBRAT";
-        ar.add(new BungeeAnimator(mkTextModel(text), 900, 0.3f, 0.8f));
+        ar.add(new BungeeAnimator(mkTextModel(text), 900, 0.6f, 0.8f));
         Model aModel = mkTextModel("A");
-        ar.add(new BungeeAnimator(aModel, 1500, 0.1f, 0.1f));
+        ar.add(new BungeeAnimator(aModel, 1500, 0.9f, 0.1f));
         ar.add(new Asteroids());
 
         ar.add(Pattern.testPattern1().scale(0.8f, 0.8f));
@@ -110,8 +110,8 @@ public class VectorBrat {
         Model empty = Model.EMPTY;
         setModel(empty);
         this.frame.start();
-        this.laser.start();
-        appMap.setAnimator("Asteroids");
+        this.laser.start(); // TODO add a control to start the laser
+        appMap.setAnimator(Asteroids.NAME);
 
         this.motion.submit(appMap);
         logger.info("started VectorBrat");

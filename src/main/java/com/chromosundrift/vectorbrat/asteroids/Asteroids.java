@@ -23,7 +23,7 @@ public final class Asteroids implements ModelAnimator {
     public static final float MAX_Y = 1.0f;
     public static final Rgb COL_ASTEROID = Rgb.ORANGE;
     public static final int NUM_ASTEROIDS = 5;
-    public static final String NAME = "Asteroids";
+    public static final String NAME = "ASTEROIDS";
     private final Composer game;
     private final Random random = new Random(1234L); // fixed seed for profiling
 
@@ -34,8 +34,8 @@ public final class Asteroids implements ModelAnimator {
     private ModelAnimator mkTitle() {
         TextEngine te = new TextEngine(Rgb.CYAN, new AsteroidsFont());
         float yScale = (float) (0.5 / NAME.length());
-        Model textModel = te.textLine(NAME.toUpperCase()).scale(0.25f, yScale);
-        return new BungeeAnimator(textModel, 2000, 0.15f, 0.8f);
+        Model textModel = te.textLine(NAME).scale(0.25f, yScale);
+        return new BungeeAnimator(textModel, 2000, 1.55f, 0.8f);
     }
 
     @Override
