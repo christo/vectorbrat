@@ -1,5 +1,6 @@
 package com.chromosundrift.vectorbrat.laser;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.chromosundrift.vectorbrat.geom.Interpolator;
@@ -41,19 +42,18 @@ public interface LaserController {
     void setPps(int fps);
 
     /**
-     * Gets the current sample rate in Hz. Negative number means unknown / not applicable.
+     * Gets the current sample rate in Hz if we are running. Negative number means unknown / not applicable.
      *
      * @return the sample rate.
      */
-    float getSampleRate();
+    Optional<Float> getSampleRate();
 
     /**
-     * Gets the current buffer size. Can be updated by the driver implementation. Negative number means
-     * unknown / not applicable.
+     * Gets the current buffer size if applicable. Can be updated by the driver implementation.
      *
      * @return the number of samples in the buffer.
      */
-    int getBufferSize();
+    Optional<Integer> getBufferSize();
 
     long getPathPlanTime();
 

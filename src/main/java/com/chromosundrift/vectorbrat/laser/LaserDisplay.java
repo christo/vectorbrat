@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,6 +28,7 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
 
     private static final Logger logger = LoggerFactory.getLogger(LaserDisplay.class);
     private static final long MS_LISTENER_UPDATE = 100;
+    private static final int MS_POWER_NAP = 100;
 
     private final DoubleBufferedVectorDisplay<LaserTuning> vectorDisplay;
     private final Supplier<LaserDriver> laserDriver;
@@ -110,7 +112,7 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
             } else {
                 try {
                     //noinspection BusyWait
-                    Thread.sleep(100);
+                    Thread.sleep(MS_POWER_NAP);
                 } catch (InterruptedException ignored) {
 
                 }
@@ -174,17 +176,19 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
      */
     @Override
     public boolean getArmed() {
-        return this.laserDriver.get().isOn();
+        return this.running && this.laserDriver.get().isOn();
     }
 
     /**
-     * Called from ui thread.
+     * Called from ui thread. Arms the laser if it is running, otherwise makes no change to the armed state.
      *
-     * @param armed whether we are armed.
+     * @param armed true to arm.
      */
     @Override
     public void setArmed(boolean armed) {
-        this.laserDriver.get().setOn(armed);
+        if (running) {
+            this.laserDriver.get().setOn(armed);
+        }
         this.tellListeners();
     }
 
@@ -216,13 +220,23 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
     }
 
     @Override
-    public float getSampleRate() {
-        return laserDriver.get().getSampleRate();
+    public Optional<Float> getSampleRate() {
+        if (running) {
+            return Optional.of(laserDriver.get().getSampleRate());
+        } else {
+            return Optional.empty();
+        }
+
     }
 
     @Override
-    public int getBufferSize() {
-        return laserDriver.get().getBufferSize();
+    public Optional<Integer> getBufferSize() {
+        if (running) {
+            int bufferSize = laserDriver.get().getBufferSize();
+            return Optional.of(bufferSize);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override

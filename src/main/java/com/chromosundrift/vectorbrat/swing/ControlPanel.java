@@ -41,7 +41,7 @@ public class ControlPanel extends JPanel {
         StatPanel sampleRateStat = new StatPanel("sample rate");
         laserController.addUpdateListener(lc -> {
             pathPlanStat.setValue(lc.getPathPlanTime());
-            sampleRateStat.setValue((int) lc.getSampleRate());
+            lc.getSampleRate().ifPresent(sampleRateStat::setValue);
         });
 
         JComponent[] details = new JComponent[]{
