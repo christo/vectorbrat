@@ -12,7 +12,7 @@ public class StatPanel extends JPanel {
     private final JLabel value;
 
     public StatPanel(String label) {
-        this(label, "?");
+        this(label, "");
     }
 
     public StatPanel(String label, String initialValue) {

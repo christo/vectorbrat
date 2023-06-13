@@ -106,6 +106,7 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
         logger.info("running laser display");
         laserDriver.get().start();
         running = true;
+        tellListeners();
         while (running) {
             if (laserDriver.get().isOn()) {
                 vectorDisplay.withLockAndFlip(this::render);
@@ -283,5 +284,10 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
     public void setLaserTuning(LaserTuning laserTuning) {
         this.laserTuning = laserTuning;
         tellListeners();
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
     }
 }

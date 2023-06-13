@@ -26,7 +26,16 @@ public interface LaserController {
      */
     void setArmed(boolean armed);
 
+    /**
+     * Starts the LaserController and attempts to connect the driver - this does not arm the laser.
+     */
     void start();
+
+    /**
+     * Returns true only if the laser subsystem is running (not the same as if it is armed).
+     * @return true iff laser driver is running.
+     */
+    boolean isRunning();
 
     /**
      * Gets the current points per second speed.

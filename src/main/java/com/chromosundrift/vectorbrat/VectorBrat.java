@@ -110,7 +110,6 @@ public class VectorBrat {
         Model empty = Model.EMPTY;
         setModel(empty);
         this.frame.start();
-        this.laser.start(); // TODO add a control to start the laser
         appMap.setAnimator(Asteroids.NAME);
 
         this.motion.submit(appMap);
