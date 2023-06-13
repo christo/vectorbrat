@@ -26,7 +26,7 @@ import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.laser.LaserController;
 import com.chromosundrift.vectorbrat.laser.LaserTuning;
 
-public class ControlPanel extends JPanel {
+class ControlPanel extends JPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(ControlPanel.class);
 

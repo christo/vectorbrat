@@ -8,7 +8,7 @@ import java.awt.BorderLayout;
 /**
  * A UI panel that shows single labelled value that can be dynamically updated.
  */
-public class StatPanel extends JPanel {
+class StatPanel extends JPanel {
     private final JLabel value;
 
     public StatPanel(String label) {
