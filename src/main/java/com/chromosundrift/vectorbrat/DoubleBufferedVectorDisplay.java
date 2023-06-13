@@ -9,7 +9,7 @@ import com.chromosundrift.vectorbrat.geom.Model;
  * Threadsafe, double-buffered display. Call {@link DoubleBufferedVectorDisplay#withLockAndFlip(Function)} to render
  * the current model.
  */
-public final class DoubleBufferedVectorDisplay<T> implements VectorDisplay {
+public final class DoubleBufferedVectorDisplay<T> implements VectorDisplay<T> {
     private final ReentrantLock lock = new ReentrantLock();
     private final float minimumBrightness;
     private final boolean blanking;
