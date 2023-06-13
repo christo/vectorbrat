@@ -53,7 +53,7 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
     public LaserDisplay(final Config config) {
         logger.info("initialising LaserDisplay");
         this.laserTuning = config.getLaserTuning();
-        this.vectorDisplay = new DoubleBufferedVectorDisplay<>(laserTuning.getMinimumLaserBrightness(), true, laserTuning);
+        this.vectorDisplay = new DoubleBufferedVectorDisplay<>(true, laserTuning);
         this.laserDriver = Suppliers.memoize(() -> {
             try {
                 logger.info("Lazily creating LaserDriver (may throw)");
@@ -263,11 +263,6 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
     @Override
     public Interpolator getInterpolator() {
         return this.pathPlanner;
-    }
-
-    @Override
-    public float getMinimumBrightness() {
-        return laserTuning.getMinimumLaserBrightness();
     }
 
     @Override

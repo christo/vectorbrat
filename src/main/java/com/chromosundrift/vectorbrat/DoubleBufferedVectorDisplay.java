@@ -11,23 +11,20 @@ import com.chromosundrift.vectorbrat.geom.Model;
  */
 public final class DoubleBufferedVectorDisplay<T> implements VectorDisplay<T> {
     private final ReentrantLock lock = new ReentrantLock();
-    private final float minimumBrightness;
     private final boolean blanking;
     private final T tuning;
     private Model frontModel;
     private Model backModel;
 
-
-    public DoubleBufferedVectorDisplay(Model initialModel, float minimumBrightness, boolean blanking, T tuning) {
+    public DoubleBufferedVectorDisplay(Model initialModel, boolean blanking, T tuning) {
         frontModel = initialModel;
         backModel = initialModel;
-        this.minimumBrightness = minimumBrightness;
         this.blanking = blanking;
         this.tuning = tuning;
     }
 
-    public DoubleBufferedVectorDisplay(float minimumBrightness, boolean blanking, T tuning) {
-        this(Model.EMPTY, minimumBrightness, blanking, tuning);
+    public DoubleBufferedVectorDisplay(boolean blanking, T tuning) {
+        this(Model.EMPTY, blanking, tuning);
     }
 
     /**
@@ -71,12 +68,6 @@ public final class DoubleBufferedVectorDisplay<T> implements VectorDisplay<T> {
             lock.unlock();
         }
     }
-
-    @Override
-    public float getMinimumBrightness() {
-        return minimumBrightness;
-    }
-
 
     @Override
     public boolean supportsBlank() {

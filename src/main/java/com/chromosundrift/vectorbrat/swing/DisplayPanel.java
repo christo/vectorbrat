@@ -86,7 +86,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
 
         setMinimumSize(new Dimension(400, 300));
         setPreferredSize(new Dimension(900, 600));
-        vectorDisplay = new DoubleBufferedVectorDisplay(MINIMUM_BRIGHTNESS, true, tuning);
+        vectorDisplay = new DoubleBufferedVectorDisplay<>(true, tuning);
     }
 
     /**
@@ -268,16 +268,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
     public void setModel(final Model model) {
         vectorDisplay.setModel(model);
         this.repaint();
-    }
-
-    /**
-     * Minimum brightness is zero for this display.
-     *
-     * @return 0f
-     */
-    @Override
-    public float getMinimumBrightness() {
-        return MINIMUM_BRIGHTNESS;
     }
 
     @Override
