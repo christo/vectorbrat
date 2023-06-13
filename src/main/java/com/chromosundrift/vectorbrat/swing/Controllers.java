@@ -3,6 +3,9 @@ package com.chromosundrift.vectorbrat.swing;
 import com.chromosundrift.vectorbrat.AppController;
 import com.chromosundrift.vectorbrat.laser.LaserController;
 
+/**
+ * Various controllers grouped together for UI convenience.
+ */
 public class Controllers {
 
     public final DisplayController displayController;
