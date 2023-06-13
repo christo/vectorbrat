@@ -2,7 +2,6 @@ package com.chromosundrift.vectorbrat.swing;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.LookAndFeel;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 
