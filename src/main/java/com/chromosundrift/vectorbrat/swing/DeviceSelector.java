@@ -9,6 +9,9 @@ import java.awt.GridLayout;
 
 import com.chromosundrift.vectorbrat.Config;
 
+/**
+ * UI element for selecting an audio device (WIP).
+ */
 class DeviceSelector extends JPanel {
 
     final JComboBox<String> combo;
