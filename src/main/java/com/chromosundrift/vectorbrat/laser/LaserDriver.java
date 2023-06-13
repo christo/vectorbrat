@@ -212,7 +212,7 @@ public final class LaserDriver {
                         if (index >= xBuffer.length) {
                             index = 0;
                         }
-                        xBuffer1.put(i, xBuffer[index]); // TODO throws ArrayIndexOutOfBoundsException on model change
+                        xBuffer1.put(i, xBuffer[index]);
                         yBuffer1.put(i, yBuffer[index]);
                         rBuffer1.put(i, rBuffer[index]);
                         gBuffer1.put(i, gBuffer[index]);
