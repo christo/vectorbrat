@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.Controllers;
 
 public class VectorBratFrame extends JFrame {
 

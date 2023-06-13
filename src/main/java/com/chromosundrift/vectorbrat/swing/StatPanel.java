@@ -2,13 +2,14 @@ package com.chromosundrift.vectorbrat.swing;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.LookAndFeel;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 
 /**
  * A UI panel that shows single labelled value that can be dynamically updated.
  */
-class StatPanel extends JPanel {
+final class StatPanel extends JPanel {
     private final JLabel value;
 
     public StatPanel(String label) {

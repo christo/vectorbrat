@@ -25,7 +25,6 @@ import com.chromosundrift.vectorbrat.geom.Polyline;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
-import com.chromosundrift.vectorbrat.swing.Controllers;
 import com.chromosundrift.vectorbrat.swing.DisplayController;
 import com.chromosundrift.vectorbrat.swing.DisplayPanel;
 import com.chromosundrift.vectorbrat.swing.VectorBratFrame;

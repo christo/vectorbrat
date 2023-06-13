@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -23,6 +22,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.Controllers;
 import com.chromosundrift.vectorbrat.laser.LaserController;
 import com.chromosundrift.vectorbrat.laser.LaserTuning;
 
@@ -33,10 +33,10 @@ class ControlPanel extends JPanel {
     public ControlPanel(final Config config, final Controllers controllers) {
         logger.info("initialising ControlPanel");
         setBorder(new EmptyBorder(5, 5, 5, 5));
-        LaserController laserController = controllers.laserController;
+        LaserController laserController = controllers.laserController();
 
         JCheckBox cb = new JCheckBox("debug");
-        DisplayController displayController = controllers.displayController;
+        DisplayController displayController = controllers.displayController();
         cb.setSelected(displayController.isDrawPathPlan());
         cb.setEnabled(laserController.isRunning());
         cb.addActionListener(e -> displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected()));
@@ -44,20 +44,21 @@ class ControlPanel extends JPanel {
 
         JPanel pps = createPpsSlider(config, laserController);
 
-        final StatPanel pathPlanStat = new StatPanel("path plan (μs)");
-        final StatPanel sampleRateStat = new StatPanel("sample rate");
+        final StatPanel pathPlanTime = new StatPanel("path plan (μs)");
+        final StatPanel sampleRate = new StatPanel("sample rate");
         final StatPanel bufferSize = new StatPanel("buffer size");
         final StatPanel vertexPoints = new StatPanel("vertex points");
         final StatPanel blackPoints = new StatPanel("black points");
         final StatPanel pointsPerUnit = new StatPanel("points per unit");
         final StatPanel pointsPerPoint = new StatPanel("points per point");
         final StatPanel pointsPerPointOffset = new StatPanel("offset");
+        final StatPanel minBrightness = new StatPanel("min brightness");
 
 
         // update the stats when they change
         laserController.addUpdateListener(lc -> {
-            pathPlanStat.setValue(lc.getPathPlanTime());
-            lc.getSampleRate().ifPresent(sampleRateStat::setValue);
+            pathPlanTime.setValue(lc.getPathPlanTime());
+            lc.getSampleRate().ifPresent(sampleRate::setValue);
             lc.getBufferSize().ifPresent(bufferSize::setValue);
             LaserTuning tuning = laserController.getTuning();
             vertexPoints.setValue(tuning.getVertexPoints());
@@ -65,18 +66,20 @@ class ControlPanel extends JPanel {
             pointsPerUnit.setValue(tuning.getPointsPerUnit());
             pointsPerPoint.setValue(tuning.getPointsPerPoint());
             pointsPerPointOffset.setValue(tuning.getPointsPerUnitOffset());
+            minBrightness.setValue(tuning.getMinimumLaserBrightness());
         });
 
 
         List<StatPanel> details = List.of(
                 new StatPanel("Make", Config.LASER_MAKE),
                 new StatPanel("Model", Config.LASER_MODEL),
-                pathPlanStat,
-                sampleRateStat,
+                pathPlanTime,
+                sampleRate,
                 bufferSize,
                 vertexPoints,
                 blackPoints,
-                pointsPerUnit
+                pointsPerUnit,
+                minBrightness
         );
 
         JPanel stats = new JPanel(new GridLayout(details.size(), 1, 5, 5));
