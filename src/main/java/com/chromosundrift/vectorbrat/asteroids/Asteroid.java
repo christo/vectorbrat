@@ -98,8 +98,8 @@ public class Asteroid {
     }
 
     public enum Size {
-        SMALL(0.05f, 40, 8),
-        MEDIUM(0.1f, 25, 10),
+        SMALL(0.04f, 40, 8),
+        MEDIUM(0.08f, 25, 10),
         LARGE(0.17f, 10, 12);
 
         private final float units;
