@@ -26,6 +26,8 @@ public interface LaserController {
      */
     void setArmed(boolean armed);
 
+    void start();
+
     /**
      * Gets the current points per second speed.
      *
