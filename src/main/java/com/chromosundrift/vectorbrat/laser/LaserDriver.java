@@ -174,8 +174,7 @@ public final class LaserDriver {
     private void activateClient() throws VectorBratException {
         logger.info("activating");
         try {
-            setupCallbacks();
-
+            setupCallbacks(client);
             client.activate();
         } catch (JackException e) {
             throw new VectorBratException("can't activate client", e);
@@ -312,18 +311,24 @@ public final class LaserDriver {
 
     }
 
-    void setupCallbacks() throws JackException {
+    /**
+     * Sets the unused callbacks for logging, notably not shutdown or process.
+     * Must be called before client is activated, according to jack implementation.
+     * @param c the client to set the callbacks on.
+     * @throws JackException if callback registration fails.
+     */
+    static void setupCallbacks(JackClient c) throws JackException {
         JackLoggingOmniCallback jloc = new JackLoggingOmniCallback();
-        client.setPortConnectCallback(jloc);
-        client.setBuffersizeCallback(jloc);
-        client.setSampleRateCallback(jloc);
-        client.setClientRegistrationCallback(jloc);
-        client.setXrunCallback(jloc);
-        client.setPortRegistrationCallback(jloc);
-        client.setClientRegistrationCallback(jloc);
-        client.setGraphOrderCallback(jloc);
-        client.setSyncCallback(jloc);
-        client.setTimebaseCallback(jloc, false);
-        client.setXrunCallback(jloc);
+        c.setPortConnectCallback(jloc);
+        c.setBuffersizeCallback(jloc);
+        c.setSampleRateCallback(jloc);
+        c.setClientRegistrationCallback(jloc);
+        c.setXrunCallback(jloc);
+        c.setPortRegistrationCallback(jloc);
+        c.setClientRegistrationCallback(jloc);
+        c.setGraphOrderCallback(jloc);
+        c.setSyncCallback(jloc);
+        c.setTimebaseCallback(jloc, false);
+        c.setXrunCallback(jloc);
     }
 }
