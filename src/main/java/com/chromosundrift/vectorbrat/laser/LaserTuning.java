@@ -4,6 +4,8 @@ package com.chromosundrift.vectorbrat.laser;
 /**
  * Mutable set of tuning parameters for a laser-backed vector display.
  * May be useful for CRO and Vectrex but more likely they'll need a different implementation.
+ * future: create tuning implementation for modelling vector display deflection in Vectrex (electromagnetic) and
+ * Cathode Ray Oscilloscope (electrostatic)
  */
 public class LaserTuning {
     private int pps;
