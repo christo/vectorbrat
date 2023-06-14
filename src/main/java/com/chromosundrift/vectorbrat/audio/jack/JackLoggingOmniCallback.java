@@ -16,6 +16,9 @@ import org.jaudiolibs.jnajack.JackXrunCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Convenience implementation of all Jack's callbacks that merely logs the invocations.
+ */
 public class JackLoggingOmniCallback implements
         JackBufferSizeCallback,
         JackClientRegistrationCallback,
