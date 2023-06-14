@@ -1,6 +1,8 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -221,6 +223,10 @@ public final class Point implements Geom {
 
     public boolean inBounds(float minX, float minY, float maxX, float maxY) {
         return x >= minX && x <= maxX && y >= minY && y <= maxY;
+    }
+
+    public Model toModel() {
+        return new Model("", Collections.emptyList(), List.of(this));
     }
 
     static class PointFactory {

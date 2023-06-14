@@ -9,6 +9,7 @@ import java.util.Random;
 import com.chromosundrift.vectorbrat.Util;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
+import com.chromosundrift.vectorbrat.geom.BatchAnimator;
 import com.chromosundrift.vectorbrat.geom.BungeeAnimator;
 import com.chromosundrift.vectorbrat.geom.Composer;
 import com.chromosundrift.vectorbrat.geom.Model;
@@ -17,6 +18,7 @@ import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Polyline;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
+import com.chromosundrift.vectorbrat.geom.Updater;
 
 public final class Asteroids implements ModelAnimator {
     public static final float MIN_X = -1.0f;
@@ -44,7 +46,7 @@ public final class Asteroids implements ModelAnimator {
     private final Random random = new Random(1234L); // fixed seed to make successive profiling runs comparable
 
     public Asteroids() {
-        ParticleAnimator pa = new ParticleAnimator(0L, Rgb.MAGENTA, 200);
+        ModelAnimator pa = new BatchAnimator<>("bullets", 200, new ParticleUpdater(0, Rgb.MAGENTA));
         game = new Composer(NAME, List.of(new RockAnimator(), mkTitle(), pa));
     }
 
@@ -81,6 +83,28 @@ public final class Asteroids implements ModelAnimator {
 
     private float randomX() {
         return random.nextFloat(MIN_X, MAX_X);
+    }
+
+    private final class ParticleUpdater implements Updater<Particle>  {
+
+        private final long nsTime;
+        private final Rgb colour;
+
+        public ParticleUpdater(long nsTime, Rgb colour) {
+            this.nsTime = nsTime;
+            this.colour = colour;
+        }
+
+        @Override
+        public Particle create() {
+            return new Particle(randomX(), randomX(), randomVel(), randomVel(), nsTime);
+        }
+
+        @Override
+        public Model update(Particle item, long nsTime) {
+            item.update(nsTime);
+            return new Point(item.x, item.y, colour).toModel();
+        }
     }
 
     private static final class Particle {
@@ -122,47 +146,6 @@ public final class Asteroids implements ModelAnimator {
                 }
             }
             nsPrev = nsTime;
-        }
-    }
-
-    private class ParticleAnimator implements ModelAnimator {
-        private final long lastNanos;
-        private final Rgb colour;
-        private final int count;
-        private LinkedList<Particle> particles;
-
-        public ParticleAnimator(long lastNanos, Rgb colour, int count) {
-            this.lastNanos = lastNanos;
-            this.colour = colour;
-            this.count = count;
-        }
-
-        @Override
-        public String getName() {
-            return "bullets";
-        }
-
-        @Override
-        public void start() {
-            particles = new LinkedList<>();
-            for (int i = 0; i < count; i++) {
-                particles.add(new Particle(randomX(), randomX(), randomVel(), randomVel(), lastNanos));
-            }
-        }
-
-        @Override
-        public void stop() {
-            this.particles = null;
-        }
-
-        @Override
-        public Model update(long nsTime) throws VectorBratException {
-            List<Point> points = new ArrayList<>();
-            for (Particle particle : particles) {
-                particle.update(nsTime);
-                points.add(new Point(particle.x, particle.y, colour));
-            }
-            return new Model(getName(), Collections.emptyList(), points);
         }
     }
 
