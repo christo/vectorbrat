@@ -81,13 +81,19 @@ public class JackLoggingOmniCallback implements
     }
 
     @Override
-    public boolean syncPosition(JackClient jackClient, JackPosition jackPosition, JackTransportState jackTransportState) {
+    public boolean syncPosition(JackClient jackClient,
+                                JackPosition jackPosition,
+                                JackTransportState jackTransportState) {
         logger.info("sync position callback");
         return false;
     }
 
     @Override
-    public void updatePosition(JackClient jackClient, JackTransportState jackTransportState, int i, JackPosition jackPosition, boolean b) {
+    public void updatePosition(JackClient jackClient,
+                               JackTransportState jackTransportState,
+                               int i,
+                               JackPosition jackPosition,
+                               boolean b) {
         logger.info("update position callback");
     }
 
