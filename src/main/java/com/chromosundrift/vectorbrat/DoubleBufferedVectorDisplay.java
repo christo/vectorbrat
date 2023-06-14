@@ -44,7 +44,6 @@ public final class DoubleBufferedVectorDisplay<T> implements VectorDisplay<T> {
      * Sets the back buffer model only. Next render, this will be flipped to the front model.
      *
      * @param model the new model.
-     * @return this.
      */
     @Override
     public void setModel(Model model) {
