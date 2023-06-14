@@ -1,15 +1,24 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
  * A coloured line.
- *
- * @param from start point.
- * @param to   end point.
  */
-public record Line(Point from, Point to) implements Geom {
+public final class Line extends Pointless implements Geom {
+    private final Point from;
+    private final Point to;
+
+    /**
+     * @param from start point.
+     * @param to   end point.
+     */
+    public Line(Point from, Point to) {
+        this.from = from;
+        this.to = to;
+    }
 
     /**
      * Returns one of our two points closest to the other point.
@@ -64,4 +73,32 @@ public record Line(Point from, Point to) implements Geom {
     public Line scaleOffset(float xS, float yS, float xO, float yO) {
         return new Line(from.scaleOffset(xS, yS, xO, yO), to.scaleOffset(xS, yS, xO, yO));
     }
+
+    public Point from() {
+        return from;
+    }
+
+    public Point to() {
+        return to;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Line) obj;
+        return Objects.equals(this.from, that.from) &&
+                Objects.equals(this.to, that.to);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(from, to);
+    }
+
+    @Override
+    public String toString() {
+        return "Line[" + from + " -> " + to + ']';
+    }
+
 }

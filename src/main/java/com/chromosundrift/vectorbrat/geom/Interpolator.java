@@ -166,6 +166,8 @@ public final class Interpolator implements Pather {
                 penUp(blackPoints);
                 interpolate(prev.black(), closestPoint, blackPoints);
                 prev = closestPoint;
+
+                // TODO confirm we have replicated the point using pointsPerPoint
             }
         }
         // now interpolate back to the beginning

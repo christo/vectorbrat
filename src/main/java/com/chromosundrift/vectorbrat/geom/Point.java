@@ -240,4 +240,9 @@ public final class Point implements Geom {
             return new Point(x, y, color);
         }
     }
+
+    @Override
+    public Stream<Point> points() {
+        return Stream.of(this);
+    }
 }

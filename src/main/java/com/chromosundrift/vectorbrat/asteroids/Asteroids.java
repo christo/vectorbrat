@@ -5,7 +5,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
+import com.chromosundrift.vectorbrat.SystemClock;
 import com.chromosundrift.vectorbrat.Util;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
@@ -32,7 +34,7 @@ public final class Asteroids implements ModelAnimator {
     private static final int TARGET_FPS = 30;
 
     /**
-     * Calculate how many nanoseconds per frame so animation skips frames instead of changing speed.
+     * Calculate how many nanoseconds per frame so time variation skips frames instead of changing speed.
      */
     static final double NS_PER_FRAME = 1.0 * Util.BILLION / TARGET_FPS;
 
@@ -46,8 +48,21 @@ public final class Asteroids implements ModelAnimator {
     private final Random random = new Random(1234L); // fixed seed to make successive profiling runs comparable
 
     public Asteroids() {
-        ModelAnimator pa = new BatchAnimator<>("bullets", 200, new ParticleUpdater(0, Rgb.MAGENTA));
-        game = new Composer(NAME, List.of(new RockAnimator(), mkTitle(), pa));
+        ModelAnimator bullets = new BatchAnimator<>("bullets", 200, new ParticleUpdater(Rgb.MAGENTA));
+        Updater<Asteroid> asteroidUpdater = new Updater<>() {
+
+            @Override
+            public Asteroid create() {
+                return new Asteroid(Asteroid.Size.LARGE, random);
+            }
+
+            @Override
+            public Model update(Asteroid item, long nsTime) {
+                return item.update(nsTime).toModel();
+            }
+        };
+        BatchAnimator<Asteroid> rocks = new BatchAnimator<>("rocks", NUM_ASTEROIDS, asteroidUpdater);
+        game = new Composer(NAME, List.of(rocks, mkTitle(), bullets));
     }
 
     private ModelAnimator mkTitle() {
@@ -87,17 +102,21 @@ public final class Asteroids implements ModelAnimator {
 
     private final class ParticleUpdater implements Updater<Particle>  {
 
-        private final long nsTime;
+        private final Supplier<Long> clock;
         private final Rgb colour;
 
-        public ParticleUpdater(long nsTime, Rgb colour) {
-            this.nsTime = nsTime;
+        public ParticleUpdater(Rgb colour) {
+            this(SystemClock.INSTANCE, colour);
+        }
+
+        public ParticleUpdater(Supplier<Long> clock, Rgb colour) {
+            this.clock = clock;
             this.colour = colour;
         }
 
         @Override
         public Particle create() {
-            return new Particle(randomX(), randomX(), randomVel(), randomVel(), nsTime);
+            return new Particle(randomX(), randomX(), randomVel(), randomVel(), clock.get());
         }
 
         @Override
@@ -149,39 +168,5 @@ public final class Asteroids implements ModelAnimator {
         }
     }
 
-    /**
-     * Handles the floating rocks part of the game.
-     */
-    private class RockAnimator implements ModelAnimator {
-        private LinkedList<Asteroid> asteroids = new LinkedList<>();
 
-        @Override
-        public String getName() {
-            return "rocks";
-        }
-
-        @Override
-        public void start() {
-            asteroids = new LinkedList<>();
-            for (int i = 0; i < NUM_ASTEROIDS; i++) {
-                asteroids.add(new Asteroid(Asteroid.Size.LARGE, random));
-            }
-
-        }
-
-        @Override
-        public void stop() {
-            asteroids = null;
-        }
-
-        @Override
-        public Model update(long nsTime) {
-            List<Polyline> polyLines = new ArrayList<>();
-            for (Asteroid asteroid : asteroids) {
-                asteroid.update(nsTime);
-                polyLines.add(asteroid.toPolyline());
-            }
-            return new Model(getName(), polyLines);
-        }
-    }
 }

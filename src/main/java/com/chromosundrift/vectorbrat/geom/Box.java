@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 /**
  * An immutable rectangle with ordered points.
  */
-public final class Box implements Geom {
+public final class Box extends Pointless implements Geom {
     public final Point minMin;
     public final Point maxMax;
     public final Point minMax;

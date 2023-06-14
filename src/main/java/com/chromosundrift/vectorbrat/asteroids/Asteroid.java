@@ -6,9 +6,10 @@ import java.util.Random;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Polyline;
+import com.chromosundrift.vectorbrat.geom.Updater;
 
 /**
- * Geometric game object.
+ * Asteroid polygon with position, rotation and corresponding velocities per update.
  */
 public class Asteroid {
 
@@ -45,7 +46,7 @@ public class Asteroid {
         }
     }
 
-    public void update(long nsTime) {
+    public Asteroid update(long nsTime) {
         if (lastNanos >= 0) {
             // calculate the number of frames elapsed
             long nsElapsed = nsTime - lastNanos;
@@ -69,6 +70,7 @@ public class Asteroid {
             }
         }
         lastNanos = nsTime;
+        return this;
     }
 
     public Polyline toPolyline() {

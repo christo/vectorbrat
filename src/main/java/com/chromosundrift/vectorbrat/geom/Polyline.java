@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 /**
  * Series of end-to-end line segments.
  */
-public final class Polyline implements Geom {
+public final class Polyline extends Pointless implements Geom {
     private final String name;
     private final Rgb color;
     private final Point[] _points;

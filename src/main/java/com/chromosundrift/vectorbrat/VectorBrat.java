@@ -83,7 +83,7 @@ public class VectorBrat {
     }
 
     private AppMap makeAppMap() {
-        AppMap ar = new AppMap(this::setModel, System::nanoTime);
+        AppMap ar = new AppMap(this::setModel, SystemClock.INSTANCE);
         String text = "VECTORBRAT";
         ar.add(new BungeeAnimator(mkTextModel(text), 900, 0.6f, 0.8f));
         Model aModel = mkTextModel("A");

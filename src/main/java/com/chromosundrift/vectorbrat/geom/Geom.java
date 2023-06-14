@@ -24,6 +24,8 @@ public interface Geom {
      */
     Stream<Line> lines();
 
+    Stream<Point> points();
+
     /**
      * Return a bounding box that minimally contains all geometric elements.
      * If there are no elements in the geometry, returns empty.
