@@ -28,7 +28,7 @@ public class AppMap implements Runnable, AppController {
 
     private final Map<String, ModelAnimator> animators;
     private final Consumer<Model> modelConsumer;
-    private final Supplier<Long> clock;
+    private final Clock clock;
     private String defaultAnimator;
     private String animator;
 
@@ -36,7 +36,7 @@ public class AppMap implements Runnable, AppController {
             Map<String, ModelAnimator> animators,
             String defaultAnimator,
             Consumer<Model> modelConsumer,
-            Supplier<Long> clock
+            Clock clock
     ) {
         this.modelConsumer = modelConsumer;
         this.clock = clock;
@@ -46,7 +46,7 @@ public class AppMap implements Runnable, AppController {
     }
 
     public AppMap(Consumer<Model> modelConsumer,
-                  Supplier<Long> clock) {
+                  Clock clock) {
         this(new HashMap<>(), "", modelConsumer, clock);
     }
 
@@ -111,7 +111,7 @@ public class AppMap implements Runnable, AppController {
             if (deadAnimator == null) {
                 ModelAnimator modelAnimator = animators.get(animator);
                 try {
-                    modelConsumer.accept(modelAnimator.update(clock.get()));
+                    modelConsumer.accept(modelAnimator.update(clock.getNs()));
                 } catch (VectorBratException e) {
                     logger.error("Exception during update", e);
                     deadAnimator = new Crash(e.getMessage());
@@ -122,7 +122,7 @@ public class AppMap implements Runnable, AppController {
                 }
             } else {
                 try {
-                    modelConsumer.accept(deadAnimator.update(clock.get()));
+                    modelConsumer.accept(deadAnimator.update(clock.getNs()));
                 } catch (VectorBratException e) {
                     logger.error("Crash animator died", e);
                     running = false;

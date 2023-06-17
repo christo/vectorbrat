@@ -1,8 +1,10 @@
 package com.chromosundrift.vectorbrat;
 
-import java.util.function.Supplier;
 
-public final class SystemClock implements Supplier<Long> {
+/**
+ * Returns a unit time clock backed by System.nanoTime()
+ */
+public final class SystemClock implements Clock {
 
     public static final SystemClock INSTANCE = new SystemClock();
 
@@ -10,7 +12,13 @@ public final class SystemClock implements Supplier<Long> {
     }
 
     @Override
-    public Long get() {
+    public long getNs() {
         return System.nanoTime();
     }
+
+    @Override
+    public float rate() {
+        return 1f;
+    }
+
 }

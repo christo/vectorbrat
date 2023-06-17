@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -32,20 +33,17 @@ class ControlPanel extends JPanel {
 
     public ControlPanel(final Config config, final Controllers controllers) {
         logger.info("initialising ControlPanel");
-        setBorder(new EmptyBorder(5, 5, 5, 5));
         LaserController laserController = controllers.laserController();
-
-        JCheckBox cb = new JCheckBox("debug");
         DisplayController displayController = controllers.displayController();
-        cb.setSelected(displayController.isDrawPathPlan());
-        cb.setEnabled(laserController.isRunning());
-        cb.addActionListener(e -> displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected()));
-        laserController.addUpdateListener(lc -> cb.setEnabled(lc.isRunning()));
 
+        JPanel armStart = mkArmStart(laserController);
+
+        JComponent cb = mkDisplayChooser(laserController, displayController);
         JPanel pps = createPpsSlider(config, laserController);
-
         JPanel stats = mkStatPanel(laserController);
 
+        setBorder(new EmptyBorder(5, 5, 5, 5));
+        // this is totally gridbag
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -56,7 +54,28 @@ class ControlPanel extends JPanel {
         gbc.anchor = GridBagConstraints.LINE_END;
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        List.of(mkArmStart(laserController), pps, cb, stats).forEach(item -> add(item, gbc));
+        List.of(armStart, pps, cb, stats).forEach(item -> add(item, gbc));
+    }
+
+    /**
+     * Constructs a JComponent responsible for letting the user choose between alternate displays, including
+     * normal VectorDisplay, debug view and LaserSimulator. Wires up event handlers
+     *
+     * @param laserController for subscribing to laser parameter changes.
+     * @param displayController for choosing display options.
+     * @return the JComponent.
+     */
+    private static JComponent mkDisplayChooser(
+            final LaserController laserController,
+            final DisplayController displayController) {
+
+        // TODO change checkbox to three-way selector: VectorDisplay, Debug, Simulator
+        final JCheckBox cb = new JCheckBox("debug");
+        cb.setSelected(displayController.isDrawPathPlan());
+        cb.setEnabled(laserController.isRunning());
+        cb.addActionListener(e -> displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected()));
+        laserController.addUpdateListener(lc -> cb.setEnabled(lc.isRunning()));
+        return cb;
     }
 
     /**

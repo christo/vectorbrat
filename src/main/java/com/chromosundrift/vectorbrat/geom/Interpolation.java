@@ -5,5 +5,8 @@ package com.chromosundrift.vectorbrat.geom;
  */
 public enum Interpolation {
     LINEAR,
+    PARABOLIC,
+    HYPERBOLIC,
+    QUARTIC,
     QUINTIC
 }

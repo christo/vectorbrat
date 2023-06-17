@@ -19,10 +19,11 @@ import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.VectorDisplay;
 import com.chromosundrift.vectorbrat.geom.Interpolator;
 import com.chromosundrift.vectorbrat.geom.Model;
+import com.chromosundrift.vectorbrat.jack.JackLaserDriver;
 
 /**
- * Top level VectorDisplay for laser or scope. Delegates path interpolation to {@link Interpolator} and signal details
- * to {@link LaserDriver}.
+ * Top level VectorDisplay for laser or scope. Delegates path interpolation to {@link Interpolator} and send signal to
+ * to {@link JackLaserDriver}.
  */
 public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserController {
 
@@ -31,7 +32,7 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
     private static final int MS_POWER_NAP = 100;
 
     private final DoubleBufferedVectorDisplay<LaserTuning> vectorDisplay;
-    private final Supplier<LaserDriver> laserDriver;
+    private final Supplier<JackLaserDriver> laserDriver;
     private final ThreadFactory threadFactory;
     private final Set<Consumer<LaserController>> updateListeners;
     private final Config config;
@@ -57,7 +58,7 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
         this.laserDriver = Suppliers.memoize(() -> {
             try {
                 logger.info("Lazily creating LaserDriver (may throw)");
-                return new LaserDriver(config);
+                return new JackLaserDriver(config);
             } catch (VectorBratException e) {
                 logger.error("Lazy creation of LaserDriver exploded", e);
                 throw new RuntimeException(e);
@@ -91,7 +92,7 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
             long startTime = System.nanoTime();
             pathPlanner.plan(model);
             setPathPlanTime((System.nanoTime() - startTime) / 1000);
-            laserDriver.get().setPathPlanner(pathPlanner);
+            laserDriver.get().setPather(pathPlanner);
             modelDirty = false;
         }
 

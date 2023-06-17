@@ -18,7 +18,8 @@ public class SimplePather implements Pather {
     private final ArrayList<Float> bs;
 
     /**
-     * Construct paths from only points.
+     * Construct paths from only points. X, Y and colour determine the demand value as the signal is sent to the
+     * underlying device.
      *
      * @param points the points to use for the path.
      */

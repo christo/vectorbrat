@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import com.chromosundrift.vectorbrat.Clock;
 import com.chromosundrift.vectorbrat.SystemClock;
 import com.chromosundrift.vectorbrat.Util;
 import com.chromosundrift.vectorbrat.VectorBratException;
@@ -102,21 +103,21 @@ public final class Asteroids implements ModelAnimator {
 
     private final class ParticleUpdater implements Updater<Particle>  {
 
-        private final Supplier<Long> clock;
+        private final Clock clock;
         private final Rgb colour;
 
         public ParticleUpdater(Rgb colour) {
             this(SystemClock.INSTANCE, colour);
         }
 
-        public ParticleUpdater(Supplier<Long> clock, Rgb colour) {
+        public ParticleUpdater(Clock clock, Rgb colour) {
             this.clock = clock;
             this.colour = colour;
         }
 
         @Override
         public Particle create() {
-            return new Particle(randomX(), randomX(), randomVel(), randomVel(), clock.get());
+            return new Particle(randomX(), randomX(), randomVel(), randomVel(), clock.getNs());
         }
 
         @Override
