@@ -8,14 +8,14 @@ import java.awt.BorderLayout;
 /**
  * A UI panel that shows single labelled value that can be dynamically updated.
  */
-final class StatPanel extends JPanel {
+final class StatItem extends JPanel {
     private final JLabel value;
 
-    public StatPanel(String label) {
+    public StatItem(String label) {
         this(label, "");
     }
 
-    public StatPanel(String label, String initialValue) {
+    public StatItem(String label, String initialValue) {
         super(new BorderLayout());
         this.add(new JLabel(label), BorderLayout.WEST);
         this.value = new JLabel(initialValue);

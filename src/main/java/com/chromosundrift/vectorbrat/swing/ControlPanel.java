@@ -44,15 +44,37 @@ class ControlPanel extends JPanel {
 
         JPanel pps = createPpsSlider(config, laserController);
 
-        final StatPanel pathPlanTime = new StatPanel("path plan (μs)");
-        final StatPanel sampleRate = new StatPanel("sample rate");
-        final StatPanel bufferSize = new StatPanel("buffer size");
-        final StatPanel vertexPoints = new StatPanel("vertex points");
-        final StatPanel blackPoints = new StatPanel("black points");
-        final StatPanel pointsPerUnit = new StatPanel("points per unit");
-        final StatPanel pointsPerPoint = new StatPanel("points per point");
-        final StatPanel pointsPerPointOffset = new StatPanel("offset");
-        final StatPanel minBrightness = new StatPanel("min brightness");
+        JPanel stats = mkStatPanel(laserController);
+
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.gridwidth = 1;
+        gbc.gridheight = 1;
+        gbc.ipady = 10;
+        gbc.anchor = GridBagConstraints.LINE_END;
+
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        List.of(mkArmStart(laserController), pps, cb, stats).forEach(item -> add(item, gbc));
+    }
+
+    /**
+     * Create the many stats with their labels, values and update listeners.
+     *
+     * @param laserController to register for updates so statistics are updated live.
+     * @return a JPanel containing all the live stats.
+     */
+    private static JPanel mkStatPanel(LaserController laserController) {
+        final StatItem pathPlanTime = new StatItem("path plan (μs)");
+        final StatItem sampleRate = new StatItem("sample rate");
+        final StatItem bufferSize = new StatItem("buffer size");
+        final StatItem vertexPoints = new StatItem("vertex points");
+        final StatItem blackPoints = new StatItem("black points");
+        final StatItem pointsPerUnit = new StatItem("points per unit");
+        final StatItem pointsPerPoint = new StatItem("points per point");
+        final StatItem pointsPerPointOffset = new StatItem("offset");
+        final StatItem minBrightness = new StatItem("min brightness");
 
 
         // update the stats when they change
@@ -70,9 +92,9 @@ class ControlPanel extends JPanel {
         });
 
 
-        List<StatPanel> details = List.of(
-                new StatPanel("Make", Config.LASER_MAKE),
-                new StatPanel("Model", Config.LASER_MODEL),
+        List<StatItem> details = List.of(
+                new StatItem("Make", Config.LASER_MAKE),
+                new StatItem("Model", Config.LASER_MODEL),
                 pathPlanTime,
                 sampleRate,
                 bufferSize,
@@ -84,18 +106,7 @@ class ControlPanel extends JPanel {
 
         JPanel stats = new JPanel(new GridLayout(details.size(), 1, 5, 5));
         details.forEach(stats::add);
-
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = GridBagConstraints.RELATIVE;
-        gbc.gridwidth = 1;
-        gbc.gridheight = 1;
-        gbc.ipady = 10;
-        gbc.anchor = GridBagConstraints.LINE_END;
-
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        List.of(mkArmStart(laserController), pps, cb, stats).forEach(item -> add(item, gbc));
+        return stats;
     }
 
     private static JPanel createPpsSlider(Config config, LaserController laserController) {
