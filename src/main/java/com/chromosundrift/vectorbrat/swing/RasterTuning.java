@@ -1,9 +1,11 @@
 package com.chromosundrift.vectorbrat.swing;
 
 public class RasterTuning {
-    // TODO figure out what this needs
-    // stroke width
-    // stroke transparency
+    // TODO extract these from VectorDisplay
+    // line stroke width
+    // line stroke transparency
+    // point stroke
     // debug path color RGBA
-    // debag path stroke
+    // debug path stroke
+    // debug point stroke
 }
