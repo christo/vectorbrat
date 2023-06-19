@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.chromosundrift.vectorbrat.geom.Interpolation;
+import com.chromosundrift.vectorbrat.laser.LaserSpec;
 import com.chromosundrift.vectorbrat.laser.LaserTuning;
 
 
@@ -117,8 +118,7 @@ public final class Config {
     private LaserTuning laserTuning;
 
     private Interpolation interpolation = DEFAULT_INTERPOLATION;
-
-    private boolean lockout;
+    private final LaserSpec laserSpec;
     private float lineWidth;
 
     public Config(String title, String tinyTitle) {
@@ -138,6 +138,7 @@ public final class Config {
                 DEFAULT_VERTEX_POINTS,
                 DEFAULT_BLACK_POINTS,
                 DEFAULT_POINTS_PER_UNIT_OFFSET);
+        this.laserSpec = LaserSpec.LaserWorld1600Pro();
     }
 
     public Config() {
@@ -222,6 +223,10 @@ public final class Config {
 
     public String getTinyTitle() {
         return this.tinyTitle;
+    }
+
+    public LaserSpec getLaserSpec() {
+        return this.laserSpec;
     }
 
     /**
