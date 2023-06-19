@@ -1,11 +1,7 @@
 package com.chromosundrift.vectorbrat.asteroids;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Supplier;
 
 import com.chromosundrift.vectorbrat.Clock;
 import com.chromosundrift.vectorbrat.SystemClock;
@@ -18,7 +14,6 @@ import com.chromosundrift.vectorbrat.geom.Composer;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.ModelAnimator;
 import com.chromosundrift.vectorbrat.geom.Point;
-import com.chromosundrift.vectorbrat.geom.Polyline;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.geom.Updater;
@@ -101,7 +96,7 @@ public final class Asteroids implements ModelAnimator {
         return random.nextFloat(MIN_X, MAX_X);
     }
 
-    private final class ParticleUpdater implements Updater<Particle>  {
+    private final class ParticleUpdater implements Updater<Particle> {
 
         private final Clock clock;
         private final Rgb colour;
