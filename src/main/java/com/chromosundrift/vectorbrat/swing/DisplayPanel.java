@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
+import javax.security.auth.login.AccountLockedException;
 import javax.swing.JPanel;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -17,15 +18,20 @@ import java.awt.Stroke;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DEBUG;
+import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DISPLAY;
+import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.SIMULATOR;
 import static java.awt.BasicStroke.CAP_BUTT;
 import static java.awt.BasicStroke.JOIN_ROUND;
 
+import com.chromosundrift.vectorbrat.Clock;
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
 import com.chromosundrift.vectorbrat.VectorDisplay;
@@ -35,6 +41,7 @@ import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.laser.LaserController;
+import com.chromosundrift.vectorbrat.laser.LaserSimulator;
 
 
 /**
@@ -63,12 +70,13 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
     private final LaserController laserController;
     private final Font fontHud;
     private final RasterTuning tuning;
+    private final LaserSimulator laserSimulator;
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<BufferedImage> logo = Optional.empty();
 
-    public DisplayPanel(Config config, DisplayController displayController, LaserController laserController) {
-        this.displayController = displayController;
-        this.laserController = laserController;
+    public DisplayPanel(Config config, DisplayController dc, LaserController lc, Clock clock) {
+        this.displayController = dc;
+        this.laserController = lc;
         this.tuning = new RasterTuning();
         logger.info("initialising DisplayPanel");
         this.config = config;
@@ -83,6 +91,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
         fontBranding = new Font("HelveticaNeue", Font.PLAIN, 130);
         fontHud = new Font("HelveticaNeue", Font.PLAIN, 48);
         strokeLine = new BasicStroke(config.getLineWidth());
+        laserSimulator = new LaserSimulator(config.getLaserSpec(), lc.getTuning(), clock);
 
         setMinimumSize(new Dimension(400, 300));
         setPreferredSize(new Dimension(900, 600));
@@ -113,14 +122,29 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
 
         if (model.isEmpty()) {
             drawBranding(im, g2);
-        } else if (displayController.isDrawPathPlan()) {
-            drawPathPlan(model, im, g2);
         } else {
-            drawModel(model, im, g2);
+            switch (displayController.getMode()) {
+                case DEBUG -> drawPathPlan(model, im, g2);
+                case DISPLAY -> drawModel(model, im, g2);
+                case SIMULATOR -> drawSimulator(model, im, g2);
+            }
         }
 
         g.drawImage(im, 0, 0, imWidth, imHeight, Color.BLACK, null);
         g2.dispose();
+    }
+
+    private void drawSimulator(Model model, BufferedImage im, Graphics2D g2) {
+        Interpolator p = getPathPlan();
+        if (p != null && p.getXs().size() > 0) {
+            int w = im.getWidth();
+            int h = im.getHeight();
+            int[] buffer = new int[w * h];
+            laserSimulator.setPather(p);
+            laserSimulator.render(buffer);
+
+            im.setRGB(0, 0, w, h, buffer, 0, w);
+        }
     }
 
     private Color toColor(Rgb rgb) {

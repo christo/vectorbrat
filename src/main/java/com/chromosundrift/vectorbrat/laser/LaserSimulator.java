@@ -1,9 +1,13 @@
 package com.chromosundrift.vectorbrat.laser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
 
+import com.chromosundrift.vectorbrat.Clock;
 import com.chromosundrift.vectorbrat.geom.Pather;
 
 /**
@@ -15,6 +19,8 @@ import com.chromosundrift.vectorbrat.geom.Pather;
  * t-1, t-2 ... that fade to black, in effect simulating the eye-laser as a unified system.
  */
 public class LaserSimulator implements LaserDriver {
+
+    private static final Logger logger = LoggerFactory.getLogger(LaserSimulator.class);
 
     /*
       IDEAS FOR THE FUTURE:
@@ -30,7 +36,7 @@ public class LaserSimulator implements LaserDriver {
 
     private final LaserSpec laserSpec;
     private final LaserTuning tuning;
-    private final Supplier<Long> clock;
+    private final Clock clock;
     private static final int LENGTH_TRAIL = 100;
 
     /**
@@ -88,7 +94,8 @@ public class LaserSimulator implements LaserDriver {
      */
     private float[] b2;
 
-    public LaserSimulator(LaserSpec laserSpec, LaserTuning tuning, Supplier<Long> clock) {
+    public LaserSimulator(LaserSpec laserSpec, LaserTuning tuning, Clock clock) {
+        logger.info("initialising LaserSimulator");
         this.laserSpec = laserSpec;
         this.tuning = tuning;
         this.clock = clock;
@@ -99,13 +106,6 @@ public class LaserSimulator implements LaserDriver {
         this.x = new float[LENGTH_TRAIL];
         this.y = new float[LENGTH_TRAIL];
         this.index = 0;
-    }
-
-    /**
-     * Renders the simulation and flips the buffers.
-     */
-    public void drawAndFlip(long nsTime) {
-
     }
 
     @Override
@@ -121,7 +121,7 @@ public class LaserSimulator implements LaserDriver {
         // copy sample values into back buffers
         int s = xs.size();
         if (s != ys.size() || s != rs.size() || s != gs.size() || s != bs.size()) {
-            throw new IllegalArgumentException("Pather gave us nonuniform sized float buffers");
+            throw new IllegalArgumentException("Pather gave us float buffers of nonuniform size");
         }
 
         try {

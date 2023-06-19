@@ -22,6 +22,10 @@ import java.awt.GridLayout;
 import java.util.Hashtable;
 import java.util.List;
 
+import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DEBUG;
+import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DISPLAY;
+import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.SIMULATOR;
+
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.Controllers;
 import com.chromosundrift.vectorbrat.laser.LaserController;
@@ -34,11 +38,10 @@ class ControlPanel extends JPanel {
     public ControlPanel(final Config config, final Controllers controllers) {
         logger.info("initialising ControlPanel");
         LaserController laserController = controllers.laserController();
-        DisplayController displayController = controllers.displayController();
+        final DisplayController dc = controllers.displayController();
 
         JPanel armStart = mkArmStart(laserController);
-
-        JComponent cb = mkDisplayChooser(laserController, displayController);
+        Selector s = mkDisplaySelector(dc, laserController);
         JPanel pps = createPpsSlider(config, laserController);
         JPanel stats = mkStatPanel(laserController);
 
@@ -54,29 +57,22 @@ class ControlPanel extends JPanel {
         gbc.anchor = GridBagConstraints.LINE_END;
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        List.of(armStart, pps, cb, stats).forEach(item -> add(item, gbc));
+        List.of(armStart, s, pps, stats).forEach(item -> add(item, gbc));
     }
 
-    /**
-     * Constructs a JComponent responsible for letting the user choose between alternate displays, including
-     * normal VectorDisplay, debug view and LaserSimulator. Wires up event handlers
-     *
-     * @param laserController for subscribing to laser parameter changes.
-     * @param displayController for choosing display options.
-     * @return the JComponent.
-     */
-    private static JComponent mkDisplayChooser(
-            final LaserController laserController,
-            final DisplayController displayController) {
+    private static Selector mkDisplaySelector(DisplayController dc, LaserController lc) {
+        Selector.Selection[] items = {
+                new Selector.Selection(DISPLAY.getUiLabel(), () -> dc.setMode(DISPLAY)),
+                new Selector.Selection(DEBUG.getUiLabel(), () -> dc.setMode(DEBUG)),
+                new Selector.Selection(SIMULATOR.getUiLabel(), () -> dc.setMode(SIMULATOR))
+        };
 
-        // TODO change checkbox to three-way selector: VectorDisplay, Debug, Simulator
-        final JCheckBox cb = new JCheckBox("debug");
-        cb.setSelected(displayController.isDrawPathPlan());
-        cb.setEnabled(laserController.isRunning());
-        cb.addActionListener(e -> displayController.setDrawPathPlan(((JCheckBox) e.getSource()).isSelected()));
-        laserController.addUpdateListener(lc -> cb.setEnabled(lc.isRunning()));
-        return cb;
+        // TODO make sure turning debug mode on does not start the laser - path planning should run without it
+        Selector modeSelektor = new Selector("mode", items);
+        modeSelektor.setBorder(new EmptyBorder(6, 0, 7, 0));
+        return modeSelektor;
     }
+
 
     /**
      * Create the many stats with their labels, values and update listeners.

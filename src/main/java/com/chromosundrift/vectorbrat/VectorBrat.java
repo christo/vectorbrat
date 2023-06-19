@@ -46,8 +46,8 @@ public class VectorBrat {
         setLookAndFeel();
 
         laser = new LaserDisplay(config);
-        DisplayController displayController = new DisplayController(false);
-        displayPanel = new DisplayPanel(config, displayController, laser);
+        DisplayController displayController = new DisplayController(DisplayController.Mode.DISPLAY);
+        displayPanel = new DisplayPanel(config, displayController, laser, new BulletClock(1.0f));
         displayController.setRepaintDisplay(displayPanel::repaint);
         appMap = makeAppMap();
         Controllers controllers = new Controllers(displayController, laser, appMap);
