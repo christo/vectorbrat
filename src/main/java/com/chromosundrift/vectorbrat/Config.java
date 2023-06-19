@@ -16,11 +16,6 @@ public final class Config {
     public static final String DEFAULT_TITLE = "Vector Brat";
     public static final String DEFAULT_TINY_TITLE = "VBrat";
 
-    /**
-     * The look and feel to use for the ui.
-     */
-    public static final String LAF = "Mac OS X";
-
     public static final float DEFAULT_SAMPLE_RATE = 96000;
     public static final int DEFAULT_ES9_CHANNEL_X = 9;
     public static final int DEFAULT_ES9_CHANNEL_Y = 10;
@@ -207,10 +202,6 @@ public final class Config {
 
     public boolean liveControls() {
         return this.liveControls;
-    }
-
-    public String getLaf() {
-        return LAF;
     }
 
     public Interpolation getInterpolation() {
