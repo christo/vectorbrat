@@ -30,4 +30,15 @@ public record Rgb(float red, float green, float blue) {
         this.blue = Util.clampNormal(blue);
     }
 
+    /**
+     * Create an {@link Rgb} from a 0RGB integer with 24 bits of colour..
+     * @param rgb the red, green and blue values packed into the lower 24 bits of an integer.
+     * @return the Rgb
+     */
+    public static Rgb fromInt(int rgb) {
+        int r = (rgb >> 16) & 0xff;
+        int g = (rgb >> 8) & 0xff;
+        int b = (rgb) & 0xff;
+        return new Rgb(r / 255f, g / 255f, b / 255f);
+    }
 }
