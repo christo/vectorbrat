@@ -57,7 +57,7 @@ public final class DoubleBufferedVectorDisplay<T> implements VectorDisplay<T> {
     }
 
     /**
-     * Flips the back model to the front.
+     * Flips the back model to the front. Old frontModel is garbage collected.
      */
     public void flip() {
         try {
