@@ -25,8 +25,8 @@ import com.chromosundrift.vectorbrat.laser.LaserDriver;
 import com.chromosundrift.vectorbrat.laser.LaserDriverException;
 
 /**
- * Handles generation of audio buffers and connection to audio subsystem. Also provides nanosecond time from
- * audio device. Uses Jack and requires the jack server to be running.
+ * Handles generation of audio buffers and connection to audio subsystem. Also provides nanosecond time from audio
+ * device. Uses Jack and requires the jack server to be running.
  */
 public final class JackLaserDriver implements LaserDriver {
 
@@ -315,8 +315,9 @@ public final class JackLaserDriver implements LaserDriver {
     }
 
     /**
-     * Sets the unused callbacks for logging, notably not shutdown or process.
-     * Must be called before client is activated, according to jack implementation.
+     * Sets the unused callbacks for logging, notably not shutdown or process. Must be called before client is
+     * activated, according to jack implementation.
+     *
      * @param c the client to set the callbacks on.
      * @throws JackException if callback registration fails.
      */
