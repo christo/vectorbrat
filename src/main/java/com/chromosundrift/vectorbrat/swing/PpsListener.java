@@ -1,10 +1,10 @@
 package com.chromosundrift.vectorbrat.swing;
 
+import com.chromosundrift.vectorbrat.laser.LaserController;
+
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import com.chromosundrift.vectorbrat.laser.LaserController;
 
 class PpsListener implements ChangeListener {
 

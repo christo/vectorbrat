@@ -1,20 +1,21 @@
 package com.chromosundrift.vectorbrat.physics;
 
-import com.chromosundrift.vectorbrat.geom.Point;
-import com.chromosundrift.vectorbrat.geom.Rgb;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Stream;
-
+import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.data.SignalBuffer;
 import com.chromosundrift.vectorbrat.geom.Pather;
+import com.chromosundrift.vectorbrat.geom.Point;
+import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 import com.chromosundrift.vectorbrat.laser.LaserDriver;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Stream;
 
 /**
  * Physical simulation of vector display replicating real-world laser projector with scanner galvanometers and
@@ -40,6 +41,7 @@ public final class LaserSimulator implements LaserDriver {
      * brightness but for now, we are ignoring reactive pupil dilation due to changes in brightness.
      */
     private static final long NS_POV = 1_000_000_000 / FPS_POV;
+    private static final String THREAD_SIMULATOR = "simulator";
 
     /*
       IDEAS FOR THE FUTURE:
@@ -53,6 +55,7 @@ public final class LaserSimulator implements LaserDriver {
     private final LaserSpec laserSpec;
     private final BeamTuning tuning;
     private final Clock clock;
+    private final ExecutorService executorService;
 
     /**
      * Nanosecond time of previous frame.
@@ -104,6 +107,8 @@ public final class LaserSimulator implements LaserDriver {
         this.demandFront = new SignalBuffer(INITIAL_BUFFER_SIZE);
         this.demandBack = new SignalBuffer(INITIAL_BUFFER_SIZE);
         this.nsPrev = -1L;
+        this.trail = new SignalBuffer(5); // TODO determine appropriate trail size
+        executorService = Executors.newSingleThreadExecutor(r -> new Thread(r, THREAD_SIMULATOR));
     }
 
     @Override
@@ -127,12 +132,20 @@ public final class LaserSimulator implements LaserDriver {
     }
 
     /**
+     * Update the simulation using the default sample rate.
+     */
+    public void update() {
+        // TODO fix hack
+        update(Config.DEFAULT_SAMPLE_RATE);
+    }
+
+    /**
      * Update the physics simulation for the configured clock's current time, calculating the new vector position.
      * The sampleRate param enables sample rate changes to occur on simulation updates.
      *
      * @param sampleRate in samples per second (Hz)
      */
-    void update(float sampleRate) {
+    public void update(float sampleRate) {
         long nsNow = clock.getNs();
         if (nsPrev >= 0) {
             long nsDelta = nsNow - nsPrev;
@@ -161,7 +174,8 @@ public final class LaserSimulator implements LaserDriver {
     /**
      * Returns a stream of {@link Point Points} scaled to the given width and height. Each point
      * has a colour for drawing composed of its past beam locations.
-     * @param width horizontal scale.
+     *
+     * @param width  horizontal scale.
      * @param height vertical scale.
      * @return the points.
      */
@@ -175,4 +189,11 @@ public final class LaserSimulator implements LaserDriver {
         return Stream.of(beam);
     }
 
+    public void start() {
+        executorService.submit(() -> this.update());
+    }
+
+    public void stop() {
+        executorService.shutdown();
+    }
 }
