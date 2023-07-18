@@ -24,6 +24,7 @@ class SimulatorRenderer {
 
     SimulatorRenderer(LaserSimulator laserSimulator) {
         this.laserSimulator = laserSimulator;
+        this.beamStroke = STROKE_HARD_CODED;
     }
 
     /**
@@ -57,7 +58,7 @@ class SimulatorRenderer {
         // laser specifications include beam divergence, so a full physically-based
         // simulation would determine the beam spot diameter from the divergence and the
         // simulated distance to the projected image. We don't have any projection distance right now.
-        return STROKE_HARD_CODED;
+        return beamStroke;
     }
 
     void setSampleRate(float sampleRate) {
