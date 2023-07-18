@@ -17,4 +17,6 @@ public interface Pather {
     ArrayList<Float> getGs();
 
     ArrayList<Float> getBs();
+
+    int size();
 }

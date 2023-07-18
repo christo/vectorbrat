@@ -63,4 +63,9 @@ public class SimplePather implements Pather {
     public ArrayList<Float> getBs() {
         return bs;
     }
+
+    @Override
+    public int size() {
+        return xs.size();
+    }
 }

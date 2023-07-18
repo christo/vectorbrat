@@ -280,4 +280,9 @@ public final class Interpolator implements Pather {
     public ArrayList<Float> getBs() {
         return bs;
     }
+
+    @Override
+    public int size() {
+        return xs.size();
+    }
 }
