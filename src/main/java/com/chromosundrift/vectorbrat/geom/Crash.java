@@ -5,6 +5,9 @@ import java.util.Collections;
 
 import com.chromosundrift.vectorbrat.Util;
 
+/**
+ * Animation that renders an exception message.
+ */
 public class Crash extends StaticAnimator {
 
     /**
@@ -18,7 +21,7 @@ public class Crash extends StaticAnimator {
     }
 
     private static Model redX(String message) {
-        // TODO vector font rendered message with line breaks
+        // TODO message with line breaks
         Point.PointFactory red = new Point.PointFactory(Rgb.RED);
         Polyline bs = Polyline.open("\\", Rgb.RED, red.p(-0.1f, -0.1f), red.p(0.1f, 0.1f));
         Polyline fs = Polyline.open("/", Rgb.RED, red.p(0.1f, -0.1f), red.p(-0.1f, 0.1f));
