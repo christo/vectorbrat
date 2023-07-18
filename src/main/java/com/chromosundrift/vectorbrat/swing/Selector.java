@@ -16,7 +16,6 @@ import java.util.List;
  * UI selection from a list.
  */
 class Selector extends JPanel {
-    private static final Logger logger = LoggerFactory.getLogger(Selector.class);
 
     final JComboBox<Selection> combo;
 
