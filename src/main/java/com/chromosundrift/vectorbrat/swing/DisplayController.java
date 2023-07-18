@@ -8,7 +8,7 @@ public class DisplayController {
     private Runnable repaintDisplay;
 
     public enum Mode {
-        DEBUG("Path Debug"), DISPLAY("Vector Display"), SIMULATOR("Simulator");
+        DEBUG("Path Plan"), DISPLAY("Vector Display"), SIMULATOR("Simulator");
 
         private final String uiLabel;
 
@@ -37,6 +37,7 @@ public class DisplayController {
     }
 
     public void setRepaintDisplay(Runnable repaintDisplay) {
+        // WART: fugly hack
         this.repaintDisplay = repaintDisplay;
     }
 }
