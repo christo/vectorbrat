@@ -1,8 +1,5 @@
 package com.chromosundrift.vectorbrat.swing;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.Nonnull;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
