@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.laser.LaserTuning;
+import com.chromosundrift.vectorbrat.laser.BeamTuning;
 
 public class InterpolatorTest {
 
@@ -19,7 +19,7 @@ public class InterpolatorTest {
 
     private static Config getTestConfig() {
         Config c = new Config();
-        LaserTuning lt = new LaserTuning(30000, 1, 5, 1f, 0, 0);
+        BeamTuning lt = new BeamTuning(30000, 1, 5, 1f, 0, 0);
         c.setInterpolation(Interpolation.LINEAR);
         c.setLaserTuning(lt);
         return c;

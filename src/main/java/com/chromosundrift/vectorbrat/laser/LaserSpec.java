@@ -44,7 +44,7 @@ public final class LaserSpec {
     /**
      * Spec for target laser.
      */
-    public static LaserSpec LaserWorld1600Pro() {
+    public static LaserSpec laserWorld1600Pro() {
         LaserSpec laserSpec = new LaserSpec(30000, 50, 3, 1.3f);
         laserSpec.minRed = 0.4f;
         laserSpec.minGreen = 0.4f;
@@ -57,10 +57,11 @@ public final class LaserSpec {
     /**
      * With 60kpps scanner upgrade: <a href="https://www.kvantlasers.sk/products/clubmax-3000-fb4">details</a>.
      */
-    public static LaserSpec KvantClubmax3000Fb4Saturn() {
+    public static LaserSpec kvantClubmax3000Fb4Saturn() {
         float saturn1MaxDeflection = 60f;
         int saturn1MaxPps = 60000;
         return new LaserSpec(saturn1MaxPps, saturn1MaxDeflection, 4.5f, 0.5f);
     }
+
 
 }

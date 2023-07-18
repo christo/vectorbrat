@@ -25,19 +25,21 @@ import com.chromosundrift.vectorbrat.jack.JackLaserDriver;
  * Top level VectorDisplay for laser or scope. Delegates path interpolation to {@link Interpolator} and send signal to
  * to {@link JackLaserDriver}.
  */
-public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserController {
+public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserController {
 
     private static final Logger logger = LoggerFactory.getLogger(LaserDisplay.class);
     private static final long MS_LISTENER_UPDATE = 100;
     private static final int MS_POWER_NAP = 100;
 
-    private final DoubleBufferedVectorDisplay<LaserTuning> vectorDisplay;
+    private final DoubleBufferedVectorDisplay<BeamTuning> vectorDisplay;
     private final Supplier<JackLaserDriver> laserDriver;
     private final ThreadFactory threadFactory;
     private final Set<Consumer<LaserController>> updateListeners;
     private final Config config;
-    private LaserTuning laserTuning;
+    private BeamTuning beamTuning;
     private volatile boolean running;
+    private volatile boolean invertX = false;
+    private volatile boolean invertY = false;
 
     /**
      * Controls the thread that continually updates the model.
@@ -53,8 +55,8 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
 
     public LaserDisplay(final Config config) {
         logger.info("initialising LaserDisplay");
-        this.laserTuning = config.getLaserTuning();
-        this.vectorDisplay = new DoubleBufferedVectorDisplay<>(true, laserTuning);
+        this.beamTuning = config.getLaserTuning();
+        this.vectorDisplay = new DoubleBufferedVectorDisplay<>(true, beamTuning);
         this.laserDriver = Suppliers.memoize(() -> {
             try {
                 logger.info("Lazily creating LaserDriver (may throw)");
@@ -89,10 +91,12 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
             // calculate scan rate
 
             pathPlanner = new Interpolator(this.config);
+            float xScale = this.invertX ? -1f : 1f;
+            float yScale = this.invertY ? -1f : 1f;
             long startTime = System.nanoTime();
-            pathPlanner.plan(model);
+            pathPlanner.plan(model.scale(xScale, yScale));
             setPathPlanTime((System.nanoTime() - startTime) / 1000);
-            laserDriver.get().setPather(pathPlanner);
+            laserDriver.get().makePath(pathPlanner);
             modelDirty = false;
         }
 
@@ -200,26 +204,6 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
         }
     }
 
-    /**
-     * Called from ui thread.
-     *
-     * @return the pps
-     */
-    @Override
-    public int getPps() {
-        return getTuning().getPps();
-    }
-
-    /**
-     * Called from ui thread.
-     *
-     * @param pps new pps.
-     */
-    @Override
-    public void setPps(int pps) {
-        this.getTuning().setPps(pps);
-        this.tellListeners();
-    }
 
     @Override
     public Optional<Float> getSampleRate() {
@@ -272,18 +256,38 @@ public final class LaserDisplay implements VectorDisplay<LaserTuning>, LaserCont
     }
 
     @Override
-    public LaserTuning getTuning() {
-        return laserTuning;
+    public BeamTuning getTuning() {
+        return beamTuning;
     }
 
     @Override
-    public void setLaserTuning(LaserTuning laserTuning) {
-        this.laserTuning = laserTuning;
+    public void setLaserTuning(BeamTuning beamTuning) {
+        this.beamTuning = beamTuning;
         tellListeners();
     }
 
     @Override
     public boolean isRunning() {
         return running;
+    }
+
+    @Override
+    public boolean getInvertX() {
+        return this.invertX;
+    }
+
+    @Override
+    public void setInvertX(boolean inverted) {
+        this.invertX = inverted;
+    }
+
+    @Override
+    public boolean getInvertY() {
+        return this.invertY;
+    }
+
+    @Override
+    public void setInvertY(boolean inverted) {
+        this.invertY = inverted;
     }
 }

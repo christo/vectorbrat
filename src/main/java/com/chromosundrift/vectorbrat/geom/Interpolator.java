@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.laser.LaserTuning;
+import com.chromosundrift.vectorbrat.laser.BeamTuning;
 
 /**
  * Interpolating Pather. Holds the trace path for rendering shapes for renderers with physical acceleration limits.
@@ -46,12 +46,12 @@ public final class Interpolator implements Pather {
      * @param config configuration.
      */
     public Interpolator(Config config) {
-        LaserTuning laserTuning = config.getLaserTuning();
-        this.pointsPerPoint = laserTuning.getPointsPerPoint();
-        this.pointsPerUnit = laserTuning.getPointsPerUnit();
-        this.vertexPoints = laserTuning.getVertexPoints();
-        this.blackPoints = laserTuning.getBlackPoints();
-        this.pointsPerUnitOffset = laserTuning.getPointsPerUnitOffset();
+        BeamTuning beamTuning = config.getLaserTuning();
+        this.pointsPerPoint = beamTuning.getPointsPerPoint();
+        this.pointsPerUnit = beamTuning.getPointsPerUnit();
+        this.vertexPoints = beamTuning.getVertexPoints();
+        this.blackPoints = beamTuning.getBlackPoints();
+        this.pointsPerUnitOffset = beamTuning.getPointsPerUnitOffset();
         this.interpolation = config.getInterpolation();
     }
 

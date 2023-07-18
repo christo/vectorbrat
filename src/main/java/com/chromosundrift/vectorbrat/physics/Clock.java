@@ -1,4 +1,4 @@
-package com.chromosundrift.vectorbrat;
+package com.chromosundrift.vectorbrat.physics;
 
 public interface Clock {
     /**

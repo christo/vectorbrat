@@ -1,47 +1,29 @@
 package com.chromosundrift.vectorbrat.swing;
 
+import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
+import com.chromosundrift.vectorbrat.VectorDisplay;
+import com.chromosundrift.vectorbrat.geom.Point;
+import com.chromosundrift.vectorbrat.geom.*;
+import com.chromosundrift.vectorbrat.laser.LaserController;
+import com.chromosundrift.vectorbrat.physics.LaserSimulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
-import javax.security.auth.login.AccountLockedException;
-import javax.swing.JPanel;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Stroke;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DEBUG;
-import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DISPLAY;
-import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.SIMULATOR;
 import static java.awt.BasicStroke.CAP_BUTT;
 import static java.awt.BasicStroke.JOIN_ROUND;
-
-import com.chromosundrift.vectorbrat.Clock;
-import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
-import com.chromosundrift.vectorbrat.VectorDisplay;
-import com.chromosundrift.vectorbrat.geom.Interpolator;
-import com.chromosundrift.vectorbrat.geom.Line;
-import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.geom.Point;
-import com.chromosundrift.vectorbrat.geom.Rgb;
-import com.chromosundrift.vectorbrat.laser.LaserController;
-import com.chromosundrift.vectorbrat.laser.LaserSimulator;
 
 
 /**
@@ -71,31 +53,42 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
     private final Font fontHud;
     private final RasterTuning tuning;
     private final LaserSimulator laserSimulator;
+    private final SimulatorRenderer simulatorRenderer;
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private Optional<BufferedImage> logo = Optional.empty();
+    private final Optional<BufferedImage> logo;
 
-    public DisplayPanel(Config config, DisplayController dc, LaserController lc, Clock clock) {
+    public DisplayPanel(Config config, DisplayController dc, LaserController lc, LaserSimulator laserSimulator) {
+        logger.info("initialising DisplayPanel");
         this.displayController = dc;
         this.laserController = lc;
         this.tuning = new RasterTuning();
-        logger.info("initialising DisplayPanel");
         this.config = config;
-        try {
-            InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(config.logoUrl());
-            if (resourceAsStream != null) {
-                logo = Optional.of(ImageIO.read(resourceAsStream));
-            }
-        } catch (IOException e) {
-            logger.warn("Unable to load logo from url " + config.logoUrl(), e);
-        }
-        fontBranding = new Font("HelveticaNeue", Font.PLAIN, 130);
-        fontHud = new Font("HelveticaNeue", Font.PLAIN, 48);
+        logo = loadImage(config.logoUrl());
+        fontBranding = mkFont(130);
+        fontHud = mkFont(48);
         strokeLine = new BasicStroke(config.getLineWidth());
-        laserSimulator = new LaserSimulator(config.getLaserSpec(), lc.getTuning(), clock);
+        this.laserSimulator = laserSimulator;
+        simulatorRenderer = new SimulatorRenderer(this.laserSimulator);
 
         setMinimumSize(new Dimension(400, 300));
         setPreferredSize(new Dimension(900, 600));
         vectorDisplay = new DoubleBufferedVectorDisplay<>(true, tuning);
+    }
+
+    private static Optional<BufferedImage> loadImage(String imageUrl) {
+        try {
+            InputStream stream = DisplayPanel.class.getClassLoader().getResourceAsStream(imageUrl);
+            if (stream != null) {
+                return Optional.of(ImageIO.read(stream));
+            }
+        } catch (IOException e) {
+            logger.warn("Unable to load logo from url " + imageUrl, e);
+        }
+        return Optional.empty();
+    }
+
+    private static Font mkFont(int size) {
+        return new Font("HelveticaNeue", Font.PLAIN, size);
     }
 
     /**
@@ -126,7 +119,9 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
             switch (displayController.getMode()) {
                 case DEBUG -> drawPathPlan(model, im, g2);
                 case DISPLAY -> drawModel(model, im, g2);
-                case SIMULATOR -> drawSimulator(model, im, g2);
+                case SIMULATOR -> {
+                    drawSimulator(model, im, g2);
+                }
             }
         }
 
@@ -135,16 +130,12 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
     }
 
     private void drawSimulator(Model model, BufferedImage im, Graphics2D g2) {
+        // what do we need the model for here? See how drawPathPlan uses it only for stats
         Interpolator p = getPathPlan();
         if (p != null && p.getXs().size() > 0) {
-            int w = im.getWidth();
-            int h = im.getHeight();
-            int[] buffer = new int[w * h];
-            laserSimulator.setPather(p);
-            laserSimulator.render(buffer);
-
-            im.setRGB(0, 0, w, h, buffer, 0, w);
+            simulatorRenderer.draw(im, g2);
         }
+        hudLines(g2, im.getHeight(), new String[]{"simulator"});
     }
 
     private Color toColor(Rgb rgb) {
@@ -250,7 +241,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
             g2.drawLine(x - markerRadius, y - markerRadius, x + markerRadius, y + markerRadius);
             g2.drawLine(x + markerRadius, y - markerRadius, x - markerRadius, y + markerRadius);
 
-            // TODO move this to control panel
+            // TODO this was moved to control panel?
             String[] hudStats = new String[]{
                     s + " PATH POINTS",
                     model.countLines() + " LINES",
@@ -266,6 +257,13 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
         return laserController.getInterpolator();
     }
 
+    /**
+     * Renders a number of lines of subtle text in the bottom left of the given graphics.
+     *
+     * @param g2    the graphics to use for drawing
+     * @param h     the height of the display area, used to calculate bottom
+     * @param lines the text lines
+     */
     private void hudLines(Graphics2D g2, int h, String[] lines) {
         g2.setColor(HUD_COLOR);
         g2.setFont(fontHud);

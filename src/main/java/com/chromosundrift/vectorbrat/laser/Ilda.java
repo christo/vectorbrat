@@ -20,15 +20,28 @@ import com.chromosundrift.vectorbrat.geom.SimplePather;
 
 public class Ilda {
 
+    private static final Logger logger = LoggerFactory.getLogger(Ilda.class);
+
+    /**
+     * The canonical reference value for points per second during ILDA test pattern tuning.
+     */
+    public static final int STANDARD_TEST_PPS = 30000;
+
+    /**
+     * Canonical deflection angle for displaying the ILDA test pattern.
+     */
+    public static final float DEG_STANDARD_TEST_DEFLECTION = 8;
+
     /**
      * Add to ILDA values to get zero based range.
      */
     public static final int ILDA_OFFSET = 32768;
+
     /**
      * Range of ILDA coordinate values.
      */
     public static final float ILDA_SCALE = 65536f;
-    private static final Logger logger = LoggerFactory.getLogger(Ilda.class);
+
     /**
      * Constant defined by ILDA spec.
      */

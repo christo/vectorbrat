@@ -7,7 +7,7 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
  * approximations derived from calibration experiments. Returned latency values should be minimum expected within
  * some preconfigured accuracy.
  */
-public interface VectorPhysics {
+public interface BeamPhysics {
 
     /**
      * Colour transition latency from completely black to completely white.
@@ -54,5 +54,5 @@ public interface VectorPhysics {
      *
      * @return expected minimum latency in nanoseconds.
      */
-    long nanosTo(/* params should ~?? from velocity, from location, to location*/);
+    long nanosTo(BeamState from, BeamState to);
 }

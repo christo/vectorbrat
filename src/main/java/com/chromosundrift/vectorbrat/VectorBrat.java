@@ -1,5 +1,7 @@
 package com.chromosundrift.vectorbrat;
 
+import com.chromosundrift.vectorbrat.physics.LaserSimulator;
+import com.chromosundrift.vectorbrat.physics.LinearBeamPhysics;
 import io.materialtheme.darkstackoverflow.DarkStackOverflowTheme;
 import mdlaf.MaterialLookAndFeel;
 import org.slf4j.Logger;
@@ -25,6 +27,8 @@ import com.chromosundrift.vectorbrat.geom.Polyline;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
+import com.chromosundrift.vectorbrat.physics.BulletClock;
+import com.chromosundrift.vectorbrat.physics.SystemClock;
 import com.chromosundrift.vectorbrat.swing.DisplayController;
 import com.chromosundrift.vectorbrat.swing.DisplayPanel;
 import com.chromosundrift.vectorbrat.swing.VectorBratFrame;
@@ -46,13 +50,21 @@ public class VectorBrat {
         setLookAndFeel();
 
         laser = new LaserDisplay(config);
+        final BulletClock clock = new BulletClock(1.0f);
+        LaserSimulator laserSimulator = mkSimulator(config, laser, clock);
         DisplayController displayController = new DisplayController(DisplayController.Mode.DISPLAY);
-        displayPanel = new DisplayPanel(config, displayController, laser, new BulletClock(1.0f));
+        displayPanel = new DisplayPanel(config, displayController, laser, laserSimulator);
         displayController.setRepaintDisplay(displayPanel::repaint);
         appMap = makeAppMap();
         Controllers controllers = new Controllers(displayController, laser, appMap);
         frame = new VectorBratFrame(config, displayPanel, controllers);
         motion = Executors.newSingleThreadExecutor(r -> new Thread(r, THREAD_ANIMATION));
+    }
+
+    private static LaserSimulator mkSimulator(Config config, LaserDisplay laser, BulletClock clock) {
+        // TODO get beam physics from config and modify in control panel
+        LinearBeamPhysics physics = new LinearBeamPhysics(1f, 1f);
+        return new LaserSimulator(config.getLaserSpec(), laser.getTuning(), physics, clock);
     }
 
     private static void setLookAndFeel() throws VectorBratException {

@@ -1,10 +1,11 @@
 package com.chromosundrift.vectorbrat.asteroids;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.chromosundrift.vectorbrat.Clock;
-import com.chromosundrift.vectorbrat.SystemClock;
+import com.chromosundrift.vectorbrat.physics.Clock;
+import com.chromosundrift.vectorbrat.physics.SystemClock;
 import com.chromosundrift.vectorbrat.Util;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
@@ -44,28 +45,21 @@ public final class Asteroids implements ModelAnimator {
     private final Random random = new Random(1234L); // fixed seed to make successive profiling runs comparable
 
     public Asteroids() {
-        ModelAnimator bullets = new BatchAnimator<>("bullets", 200, new ParticleUpdater(Rgb.MAGENTA));
-        Updater<Asteroid> asteroidUpdater = new Updater<>() {
 
-            @Override
-            public Asteroid create() {
-                return new Asteroid(Asteroid.Size.LARGE, random);
-            }
+        List<ModelAnimator> animators = new ArrayList<>();
+        animators.add(new BatchAnimator<>("rocks", NUM_ASTEROIDS, new AsteroidUpdater()));
+        animators.add(mkTitle());
+        // bullets is no good for laser
+//        animators.add(new BatchAnimator<>("bullets", 2, new ParticleUpdater(Rgb.MAGENTA)));
 
-            @Override
-            public Model update(Asteroid item, long nsTime) {
-                return item.update(nsTime).toModel();
-            }
-        };
-        BatchAnimator<Asteroid> rocks = new BatchAnimator<>("rocks", NUM_ASTEROIDS, asteroidUpdater);
-        game = new Composer(NAME, List.of(rocks, mkTitle(), bullets));
+        game = new Composer(NAME, animators);
     }
 
     private ModelAnimator mkTitle() {
         TextEngine te = new TextEngine(Rgb.CYAN, new AsteroidsFont());
         float yScale = (float) (0.5 / NAME.length());
         Model textModel = te.textLine(NAME).scale(0.25f, yScale);
-        return new BungeeAnimator(textModel, 5000, 1.55f, 1.6f);
+        return new BungeeAnimator(textModel, 5000, 1.05f, 1.1f);
     }
 
     @Override
@@ -165,4 +159,16 @@ public final class Asteroids implements ModelAnimator {
     }
 
 
+    private class AsteroidUpdater implements Updater<Asteroid> {
+
+        @Override
+        public Asteroid create() {
+            return new Asteroid(Asteroid.Size.LARGE, random);
+        }
+
+        @Override
+        public Model update(Asteroid item, long nsTime) {
+            return item.update(nsTime).toModel();
+        }
+    }
 }

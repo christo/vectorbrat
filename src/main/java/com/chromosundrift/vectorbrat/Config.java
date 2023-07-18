@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.chromosundrift.vectorbrat.geom.Interpolation;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
-import com.chromosundrift.vectorbrat.laser.LaserTuning;
+import com.chromosundrift.vectorbrat.laser.BeamTuning;
 
 
 /**
@@ -110,7 +110,7 @@ public final class Config {
     private final String title;
     private final String tinyTitle;
     private final boolean liveControls;
-    private LaserTuning laserTuning;
+    private BeamTuning beamTuning;
 
     private Interpolation interpolation = DEFAULT_INTERPOLATION;
     private final LaserSpec laserSpec;
@@ -126,14 +126,14 @@ public final class Config {
         this.channelB = new Channel("B-channel", DEFAULT_ES9_CHANNEL_B);
         this.lineWidth = DEFAULT_LINE_WIDTH;
         this.liveControls = true;
-        this.laserTuning = new LaserTuning(
+        this.beamTuning = new BeamTuning(
                 DEFAULT_PPS,
                 DEFAULT_POINTS_PER_POINT,
                 DEFAULT_POINTS_PER_UNIT,
                 DEFAULT_VERTEX_POINTS,
                 DEFAULT_BLACK_POINTS,
                 DEFAULT_POINTS_PER_UNIT_OFFSET);
-        this.laserSpec = LaserSpec.LaserWorld1600Pro();
+        this.laserSpec = LaserSpec.laserWorld1600Pro();
     }
 
     public Config() {
@@ -164,12 +164,12 @@ public final class Config {
         return "vectorbrat.png";
     }
 
-    public LaserTuning getLaserTuning() {
-        return laserTuning;
+    public BeamTuning getLaserTuning() {
+        return beamTuning;
     }
 
-    public void setLaserTuning(LaserTuning lt) {
-        this.laserTuning = lt;
+    public void setLaserTuning(BeamTuning lt) {
+        this.beamTuning = lt;
     }
 
     public Channel getChannelX() {

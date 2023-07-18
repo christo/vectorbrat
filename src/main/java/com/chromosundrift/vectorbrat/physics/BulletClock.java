@@ -1,10 +1,10 @@
-package com.chromosundrift.vectorbrat;
+package com.chromosundrift.vectorbrat.physics;
 
 import javax.annotation.Nonnull;
 
 /**
  * Clock whose rate can be set and changed, based on an underlying clock. This is intended to be useful for analysing
- * {@link com.chromosundrift.vectorbrat.laser.LaserSimulator} paths at slower than real time (rates between 0 and 1.0).
+ * {@link LaserSimulator} paths at slower than real time (rates between 0 and 1.0).
  */
 public final class BulletClock implements Clock {
     private final Clock real;

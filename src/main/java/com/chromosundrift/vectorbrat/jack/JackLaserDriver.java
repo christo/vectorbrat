@@ -279,7 +279,7 @@ public final class JackLaserDriver implements LaserDriver {
     }
 
     @Override
-    public void setPather(Pather p) {
+    public void makePath(Pather p) {
         ArrayList<Float> xs = p.getXs();
         ArrayList<Float> ys = p.getYs();
         ArrayList<Float> rs = p.getRs();

@@ -20,7 +20,7 @@ class PpsListener implements ChangeListener {
     public void stateChanged(ChangeEvent e) {
         JSlider source = (JSlider) e.getSource();
         if (live || !source.getValueIsAdjusting()) {
-            lc.setPps(source.getValue());
+            lc.getTuning().setPps(source.getValue());
         }
     }
 }

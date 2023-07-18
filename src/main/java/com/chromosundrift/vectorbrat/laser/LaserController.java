@@ -38,21 +38,6 @@ public interface LaserController {
     boolean isRunning();
 
     /**
-     * Gets the current points per second speed.
-     *
-     * @return the current value.
-     */
-    int getPps();
-
-    /**
-     * Sets the current points per second laser speed. Actual setting is constraint between configured maximum and
-     * minimum values.
-     *
-     * @param fps the value.
-     */
-    void setPps(int fps);
-
-    /**
      * Gets the current sample rate in Hz if we are running. Negative number means unknown / not applicable.
      *
      * @return the sample rate.
@@ -70,9 +55,17 @@ public interface LaserController {
 
     void setPathPlanTime(long planTime);
 
-    LaserTuning getTuning();
+    BeamTuning getTuning();
 
-    void setLaserTuning(LaserTuning laserTuning);
+    void setLaserTuning(BeamTuning beamTuning);
 
     Interpolator getInterpolator();
+
+    boolean getInvertX();
+
+    void setInvertX(boolean inverted);
+
+    boolean getInvertY();
+
+    void setInvertY(boolean inverted);
 }
