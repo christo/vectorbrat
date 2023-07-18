@@ -85,7 +85,7 @@ public final class Interpolator implements Pather {
     public void plan(Model m) {
         // use LinkedList for O(1) removal
         List<Line> lines = new LinkedList<>(m.lines().toList());
-        List<Point> points = new LinkedList<>(m.points().toList());
+        List<Point> points = new LinkedList<>(m.isoPoints().toList());
         // come up with a start point
         Point prev;
         if (!lines.isEmpty()) {

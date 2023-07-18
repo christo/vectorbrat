@@ -10,7 +10,7 @@ abstract public class Pointless implements Geom {
      * Has no isopoints.
      * @return empty stream.
      */
-    public final Stream<Point> points() {
+    public final Stream<Point> isoPoints() {
         return Stream.empty();
     }
 }

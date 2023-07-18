@@ -154,7 +154,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
             Point to = line.to().scale(xScale, yScale);
             g2.drawLine((int) from.x(), (int) from.y(), (int) to.x(), (int) to.y());
         });
-        model.points().forEach(point -> {
+        model.isoPoints().forEach(point -> {
             int x = (int) ((point.x() / 2 + 0.5) * xScale);
             int y = (int) ((point.y() / 2 + 0.5) * yScale);
             g2.setColor(toColor(point.getColor()));

@@ -55,7 +55,7 @@ public class ModelTest {
                 .filter(line -> !line.from().getColor().equals(Rgb.MAGENTA) || !line.to().getColor().equals(Rgb.MAGENTA))
                 .toList();
         assertEquals("lines should have all been magenta", emptyList(), offColorLines);
-        List<Point> offColorPoints = colored.points()
+        List<Point> offColorPoints = colored.isoPoints()
                 .filter(point -> !point.getColor().equals(Rgb.MAGENTA))
                 .toList();
         assertEquals("points should have all been magenta", emptyList(), offColorPoints);

@@ -242,7 +242,7 @@ public final class Point implements Geom {
     }
 
     @Override
-    public Stream<Point> points() {
+    public Stream<Point> isoPoints() {
         return Stream.of(this);
     }
 }

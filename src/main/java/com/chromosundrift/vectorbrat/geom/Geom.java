@@ -24,7 +24,12 @@ public interface Geom {
      */
     Stream<Line> lines();
 
-    Stream<Point> points();
+    /**
+     * Get the isolated points in the model.
+     *
+     * @return points, does not include any geometric content with connected lines.
+     */
+    Stream<Point> isoPoints();
 
     /**
      * Return a bounding box that minimally contains all geometric elements.

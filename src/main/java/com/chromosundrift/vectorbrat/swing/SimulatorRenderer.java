@@ -24,7 +24,7 @@ class SimulatorRenderer {
     }
 
     /**
-     * Draw the simulation on the given image.
+     * Draw the simulation on the given image. Called from UI thread.
      *
      * @param image draw simulation on this image.
      */

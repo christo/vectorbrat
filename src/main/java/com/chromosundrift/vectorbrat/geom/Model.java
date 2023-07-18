@@ -62,7 +62,7 @@ public class Model implements Geom {
      *
      * @return points.
      */
-    public Stream<Point> points() {
+    public Stream<Point> isoPoints() {
         return points.stream();
     }
 
@@ -90,7 +90,7 @@ public class Model implements Geom {
 
     public Model scale(float factorX, float factorY) {
         List<Polyline> newPolylines = polylines.stream().map(polyline -> polyline.scale(factorX, factorY)).toList();
-        List<Point> newPoints = points().map(point -> point.scale(factorX, factorY)).toList();
+        List<Point> newPoints = isoPoints().map(point -> point.scale(factorX, factorY)).toList();
         Model m = new Model(this.name, newPolylines, newPoints);
         if (this.countVertices() != m.countVertices()) {
             throw new IllegalStateException("scaled model should have same number of points");
@@ -106,7 +106,7 @@ public class Model implements Geom {
         List<Polyline> allPolylines = new ArrayList<>(this.polylines);
         allPolylines.addAll(other.polylines);
         List<Point> allPoints = new ArrayList<>(this.points);
-        other.points().forEach(allPoints::add);
+        other.isoPoints().forEach(allPoints::add);
         return new Model(name + other.getName(), allPolylines, allPoints);
     }
 
@@ -118,13 +118,13 @@ public class Model implements Geom {
 
     public Model colored(Rgb c) {
         List<Polyline> polylines = this.polylines.stream().map(pl -> pl.colored(c)).collect(Collectors.<Polyline>toList());
-        List<Point> allPoints = points().map(p -> p.colored(c)).collect(Collectors.toList());
+        List<Point> allPoints = isoPoints().map(p -> p.colored(c)).collect(Collectors.toList());
         return new Model(this.name, polylines, allPoints);
     }
 
     @Override
     public Optional<Point> closest(Point other) {
-        return Stream.concat(polylines.stream().flatMap(polyline -> points()), points()).min(other.dist2Point());
+        return Stream.concat(polylines.stream().flatMap(polyline -> isoPoints()), isoPoints()).min(other.dist2Point());
     }
 
     @Override
