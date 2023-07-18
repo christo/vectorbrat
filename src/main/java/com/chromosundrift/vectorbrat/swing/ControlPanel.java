@@ -1,9 +1,19 @@
 package com.chromosundrift.vectorbrat.swing;
 
+import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.Controllers;
+import com.chromosundrift.vectorbrat.laser.BeamTuning;
+import com.chromosundrift.vectorbrat.laser.LaserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSlider;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -19,11 +29,6 @@ import java.util.stream.Stream;
 import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DEBUG;
 import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DISPLAY;
 import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.SIMULATOR;
-
-import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.Controllers;
-import com.chromosundrift.vectorbrat.laser.LaserController;
-import com.chromosundrift.vectorbrat.laser.BeamTuning;
 
 class ControlPanel extends JPanel {
 
@@ -123,7 +128,7 @@ class ControlPanel extends JPanel {
         sliderLabels.put(Config.MIN_PPS, new JLabel(Integer.toString(Config.MIN_PPS)));
         // go up in 10k increments
         int maxkPps = Config.MAX_PPS / 1000;
-        for (int i = 10; i <= maxkPps; i+=10) {
+        for (int i = 10; i <= maxkPps; i += 10) {
             int kpps = i * 1000;
             sliderLabels.put(kpps, new JLabel("%sk".formatted(i)));
         }
@@ -187,14 +192,14 @@ class ControlPanel extends JPanel {
 
         JCheckBox invertX = new JCheckBox("Invert X");
         invertX.addActionListener(e -> {
-            boolean inverted = ((JCheckBox)e.getSource()).isSelected();
+            boolean inverted = ((JCheckBox) e.getSource()).isSelected();
             if (lc.getInvertX() != inverted) {
                 lc.setInvertX(inverted);
             }
         });
         JCheckBox invertY = new JCheckBox("Invert Y");
         invertY.addActionListener(e -> {
-            boolean inverted = ((JCheckBox)e.getSource()).isSelected();
+            boolean inverted = ((JCheckBox) e.getSource()).isSelected();
             if (lc.getInvertY() != inverted) {
                 lc.setInvertY(inverted);
             }

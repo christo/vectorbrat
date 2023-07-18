@@ -1,12 +1,15 @@
 package com.chromosundrift.vectorbrat.swing;
 
-import java.awt.*;
+import com.chromosundrift.vectorbrat.geom.Point;
+import com.chromosundrift.vectorbrat.physics.LaserSimulator;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
-
-import com.chromosundrift.vectorbrat.geom.Point;
-import com.chromosundrift.vectorbrat.physics.LaserSimulator;
 
 /**
  * Helper for drawing the simulator beam with the swing api.

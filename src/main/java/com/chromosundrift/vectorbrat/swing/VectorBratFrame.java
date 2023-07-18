@@ -1,6 +1,8 @@
 package com.chromosundrift.vectorbrat.swing;
 
 
+import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.Controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,9 +17,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
-import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.Controllers;
 
 public class VectorBratFrame extends JFrame {
 
