@@ -56,26 +56,9 @@ public final class Config {
     public static final int MAX_PPS = 40000;    // without low-pass filter
 
     /**
-     * Deflection in degrees for maximum PPS
-     */
-    public static final int PPS_DEFLECTION_DEG = 4;
-
-    /**
      * Arbitrary low number not too slow for holding model locks.
      */
     public static final int MIN_PPS = 5;
-
-    public static final int MAX_DEFLECTION_DEG = 40;
-
-    /**
-     * Apparently there is a nonlinear relationship between the safe maximum pps capability of the laser at different
-     * arcs of deflection. Specifications typically quote pps with accompanying deflection in degrees (typically 8
-     * degrees, per ILDA). The laser's maximum deflection is much larger than the angle corresponding to the max pps.
-     * Therefore the following linear extrapolation will be incorrect. Most advice proposes to find an appropriate pps
-     * setting using the ILDA 30kpps test pattern and increasing the pps setting until either the test pattern
-     * loses geometric fidelity or the galvanometers start to whine louder.
-     */
-    public static final int MAX_PPS_FULL_DEFLECTION_WRONG = MAX_PPS * PPS_DEFLECTION_DEG / MAX_DEFLECTION_DEG;
 
     /**
      * Minimum value for a sample.
