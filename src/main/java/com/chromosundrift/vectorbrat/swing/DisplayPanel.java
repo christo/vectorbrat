@@ -290,7 +290,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
 
     @Override
     public void paint(final Graphics g) {
-        // TODO don't draw over the inset region
+        // TODO override paintComponent instead so border is not overwritten
         vectorDisplay.withLockAndFlip(model -> {
             unsafePaint(g, model);
             return null;
