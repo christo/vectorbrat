@@ -42,6 +42,7 @@ public class VectorBrat {
     private final DisplayPanel displayPanel;
     private final ExecutorService motion;
     private final AppMap appMap;
+    private final LaserSimulator simulator;
 
     public VectorBrat() throws VectorBratException {
         logger.info("initialising VectorBrat");
@@ -51,9 +52,9 @@ public class VectorBrat {
 
         laser = new LaserDisplay(config);
         final BulletClock clock = new BulletClock(1.0f);
-        LaserSimulator laserSimulator = mkSimulator(config, laser, clock);
+        simulator = mkSimulator(config, laser, clock);
         DisplayController displayController = new DisplayController(DisplayController.Mode.DISPLAY);
-        displayPanel = new DisplayPanel(config, displayController, laser, laserSimulator);
+        displayPanel = new DisplayPanel(config, displayController, laser, simulator);
         displayController.setRepaintDisplay(displayPanel::repaint);
         appMap = makeAppMap();
         Controllers controllers = new Controllers(displayController, laser, appMap);
@@ -124,6 +125,7 @@ public class VectorBrat {
         appMap.setAnimator(Asteroids.NAME);
 
         this.motion.submit(appMap);
+        this.simulator.start();
         logger.info("started VectorBrat");
     }
 
