@@ -22,11 +22,8 @@ public class VectorBratFrame extends JFrame {
 
     private static final Logger logger = LoggerFactory.getLogger(VectorBratFrame.class);
 
-    private final DisplayPanel vd;
-
     public VectorBratFrame(Config config, DisplayPanel displayPanel, Controllers controllers) {
         logger.info("initialising VectorBratFrame");
-        this.vd = displayPanel;
         this.setTitle(config.getTitle());
         setBackground(Color.BLACK);
 
