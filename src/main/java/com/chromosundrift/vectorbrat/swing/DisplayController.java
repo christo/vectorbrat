@@ -7,6 +7,26 @@ public class DisplayController {
     private Mode mode;
     private Runnable repaintDisplay;
 
+    public DisplayController(Mode mode) {
+        this.mode = mode;
+    }
+
+    public Mode getMode() {
+        return this.mode;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+        if (mode != Mode.SIMULATOR && repaintDisplay != null) {
+            repaintDisplay.run();
+        }
+    }
+
+    public void setRepaintDisplay(Runnable repaintDisplay) {
+        // WART: fugly hack
+        this.repaintDisplay = repaintDisplay;
+    }
+
     public enum Mode {
         DEBUG("Path Plan"), DISPLAY("Vector Display"), SIMULATOR("Simulator");
 
@@ -19,25 +39,5 @@ public class DisplayController {
         public String getUiLabel() {
             return uiLabel;
         }
-    }
-
-    public DisplayController(Mode mode) {
-        this.mode = mode;
-    }
-
-    public void setMode(Mode mode) {
-        this.mode = mode;
-        if (mode != Mode.SIMULATOR && repaintDisplay != null) {
-            repaintDisplay.run();
-        }
-    }
-
-    public Mode getMode() {
-        return this.mode;
-    }
-
-    public void setRepaintDisplay(Runnable repaintDisplay) {
-        // WART: fugly hack
-        this.repaintDisplay = repaintDisplay;
     }
 }
