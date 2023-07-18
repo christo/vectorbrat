@@ -7,12 +7,15 @@ import com.chromosundrift.vectorbrat.physics.BeamPhysics;
 import com.chromosundrift.vectorbrat.physics.LaserSimulator;
 import com.chromosundrift.vectorbrat.physics.LinearBeamPhysics;
 import com.chromosundrift.vectorbrat.physics.TimeMachine;
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Stream;
+
+import static org.junit.Assert.assertEquals;
 
 public class LaserSimulatorTest {
     private static final Logger logger = LoggerFactory.getLogger(LaserSimulatorTest.class);
@@ -25,15 +28,22 @@ public class LaserSimulatorTest {
         BeamTuning tuning = mkBeamTuning();
         TimeMachine clock = new TimeMachine();
         BeamPhysics physics = new LinearBeamPhysics(1f, 1f);
-        LaserSimulator basic = new LaserSimulator(LaserSpec.laserWorld1600Pro(), tuning, physics, clock);
+        LaserSimulator simulator = new LaserSimulator(LaserSpec.laserWorld1600Pro(), tuning, physics, clock);
 
-        List<Point> points = new Box(-1f, -1f, 1f, 1f).points().toList();
-        basic.makePath(new SimplePather(points));
+        Box box = new Box(-1f, -1f, 1f, 1f);
+        List<Point> points = GeomUtils.linePoints(box).toList();
+
+        // we expect 2 points per line although in a connected box, each vertex is repeated this way
+        int expected = 8;
+        assertEquals(expected, points.size());
+        SimplePather simplePather = new SimplePather(points);
+        assertEquals(expected, simplePather.size());
+        simulator.makePath(simplePather);
         int width = 100;
         int height = 100;
-        Stream<Point> trail = basic.getTrail(width, height);
-        // check the state of the raster
-        trail.forEach(p -> logger.info(p.toString()));
+        Stream<Point> trail = simulator.getTrail(width, height);
+        List<Point> trailPoints = trail.toList();
+        // TODO need to call update on the simulator to draw trail points and then make assertions about its content
     }
 
     private BeamTuning mkBeamTuning() {
