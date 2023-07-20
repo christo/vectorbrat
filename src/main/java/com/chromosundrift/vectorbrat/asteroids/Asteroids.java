@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.chromosundrift.vectorbrat.data.Maths;
 import com.chromosundrift.vectorbrat.physics.Clock;
-import com.chromosundrift.vectorbrat.physics.SystemClock;
-import com.chromosundrift.vectorbrat.Util;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
 import com.chromosundrift.vectorbrat.geom.BatchAnimator;
@@ -18,6 +17,7 @@ import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.geom.Updater;
+import com.chromosundrift.vectorbrat.physics.SystemClock;
 
 public final class Asteroids implements ModelAnimator {
     public static final float MIN_X = -1.0f;
@@ -33,7 +33,7 @@ public final class Asteroids implements ModelAnimator {
     /**
      * Calculate how many nanoseconds per frame so time variation skips frames instead of changing speed.
      */
-    static final double NS_PER_FRAME = 1.0 * Util.BILLION / TARGET_FPS;
+    static final double NS_PER_FRAME = 1.0 * Maths.BILLION / TARGET_FPS;
 
     /**
      * Calculate screen edge MARGIN big enough to contain a large Asteroid to disappear off the edge until we can split

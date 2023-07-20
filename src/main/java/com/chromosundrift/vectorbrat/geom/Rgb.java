@@ -1,6 +1,6 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import com.chromosundrift.vectorbrat.Util;
+import com.chromosundrift.vectorbrat.data.Maths;
 
 /**
  * Implementation of colour value with red, green and blue components specified in the range from 0f to 1f.
@@ -25,9 +25,9 @@ public record Rgb(float red, float green, float blue) {
     public static final Rgb DARK_GREY = new Rgb(0.25f, 0.25f, 0.25f);
     public static final Rgb ORANGE = new Rgb(1f, 0.75f, 0f);
     public Rgb(float red, float green, float blue) {
-        this.red = Util.clampNormal(red);
-        this.green = Util.clampNormal(green);
-        this.blue = Util.clampNormal(blue);
+        this.red = Maths.clampNormal(red);
+        this.green = Maths.clampNormal(green);
+        this.blue = Maths.clampNormal(blue);
     }
 
     /**

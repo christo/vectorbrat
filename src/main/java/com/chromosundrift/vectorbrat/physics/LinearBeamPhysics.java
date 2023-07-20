@@ -8,7 +8,14 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
  */
 public class LinearBeamPhysics implements BeamPhysics {
 
+    /**
+     * Maximum sample units per second (position sample range is -1-1).
+     */
     private final float xyRate;
+
+    /**
+     * Maximum sample units per second (colour sample range is 0-1).
+     */
     private final float colorRate;
 
     // TODO parametise with configuration the maximum and minimum values for colour and coordinates
@@ -56,7 +63,7 @@ public class LinearBeamPhysics implements BeamPhysics {
         float g = from.green();
         float b = from.blue();
 
-        float max = Math.max(r, Math.max(from.green(), from.blue()));
+        float max = Math.max(r, Math.max(g, b));
         return (long) (max * NANO / this.colorRate);
     }
 
@@ -85,8 +92,25 @@ public class LinearBeamPhysics implements BeamPhysics {
      */
     @Override
     public long nanosTo(BeamState from, BeamState to) {
-        float maxDistance = Math.max(Math.abs(from.xPos() - to.xPos()), Math.abs(from.yPos() - to.xPos()));
+        float maxDistance = Math.max(Math.abs(from.xPos - to.xPos), Math.abs(from.yPos - to.xPos));
         // xyRate is units per second, convert to nanos
-        return ((long)(maxDistance / xyRate)) * NANO; // this order reduces loss of precision
+        return ((long) (maxDistance / xyRate)) * NANO; // this order reduces loss of precision
+    }
+
+    /**
+     * Using linear physics means position is determined by linear extrapolation.
+     *
+     * @param state      previous state.
+     * @param nsTimeStep time increment to calculate the new state for.
+     */
+    @Override
+    public void timeStep(float demandX, float demandY, BeamState state, long nsTimeStep) {
+        float oldX = state.xPos;
+        float oldY = state.yPos;
+        float maxXyDelta = xyRate * (1e9f/nsTimeStep);
+        float demandDeltaX =  demandX - oldX;
+        float demandDeltaY = demandY - oldY;
+        state.xPos += Math.min(demandDeltaX, maxXyDelta);
+        state.yPos += Math.min(demandDeltaY, maxXyDelta);
     }
 }

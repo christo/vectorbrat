@@ -2,7 +2,7 @@ package com.chromosundrift.vectorbrat.audio.jack;
 
 import java.nio.FloatBuffer;
 
-import com.chromosundrift.vectorbrat.Util;
+import com.chromosundrift.vectorbrat.data.Maths;
 
 public class SoundGenerator {
 
@@ -11,7 +11,7 @@ public class SoundGenerator {
     }
 
     public static void whiteNoise(final float amplitude, final FloatBuffer... outputs) {
-        float amp = Util.clamp(amplitude, 0f, 1.0f);
+        float amp = Maths.clamp(amplitude, 0f, 1.0f);
         for (FloatBuffer buf : outputs) {
             int size = buf.capacity();
             for (int i = 0; i < size; i++) {

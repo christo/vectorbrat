@@ -1,6 +1,5 @@
 package com.chromosundrift.vectorbrat.physics;
 
-
 /**
  * Returns a unit time clock backed by System.nanoTime()
  */
@@ -15,10 +14,4 @@ public final class SystemClock implements Clock {
     public long getNs() {
         return System.nanoTime();
     }
-
-    @Override
-    public float rate() {
-        return 1f;
-    }
-
 }

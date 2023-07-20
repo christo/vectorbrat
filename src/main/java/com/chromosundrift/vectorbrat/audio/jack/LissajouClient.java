@@ -1,5 +1,6 @@
 package com.chromosundrift.vectorbrat.audio.jack;
 
+import com.chromosundrift.vectorbrat.data.Maths;
 import org.jaudiolibs.audioservers.AudioClient;
 import org.jaudiolibs.audioservers.AudioConfiguration;
 import org.jaudiolibs.audioservers.AudioServer;
@@ -10,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.nio.FloatBuffer;
 import java.util.List;
 
-import com.chromosundrift.vectorbrat.Util;
 import com.chromosundrift.vectorbrat.audio.audioservers.ServerRunner;
 import com.chromosundrift.vectorbrat.audio.audioservers.ServiceBridge;
 
@@ -62,7 +62,7 @@ public class LissajouClient implements AudioClient {
     }
 
     private static float clampFreq(float freqL) {
-        return Util.clamp(freqL, MIN_FREQ, MAX_FREQ);
+        return Maths.clamp(freqL, MIN_FREQ, MAX_FREQ);
     }
 
     public void stop() {

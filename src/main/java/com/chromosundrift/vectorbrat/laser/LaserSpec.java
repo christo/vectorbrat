@@ -64,4 +64,39 @@ public final class LaserSpec {
     }
 
 
+    public float getMinRed() {
+        return minRed;
+    }
+
+    public float getMinGreen() {
+        return minGreen;
+    }
+
+    public float getMinBlue() {
+        return minBlue;
+    }
+
+    public int getMaxPps() {
+        return maxPps;
+    }
+
+    public int getIldaPps() {
+        return ildaPps;
+    }
+
+    public float getIldaDeflection() {
+        return ildaDeflection;
+    }
+
+    public float getMaxDeflection() {
+        return maxDeflection;
+    }
+
+    public float getMmBeamDivergence() {
+        return mmBeamDivergence;
+    }
+
+    public float getmRadBeamDivergence() {
+        return mRadBeamDivergence;
+    }
 }

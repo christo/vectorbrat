@@ -85,6 +85,15 @@ public class BeamTuning {
     }
 
     public float getMinimumLaserBrightness() {
+        // this is a rough guestimate from experimenting with LW1600Pro
         return 0.4f;
+    }
+
+    /**
+     * Based on points per second, give number of nanoseconds per point.
+     * @return time per point in ns.
+     */
+    public long getNsPerPoint() {
+        return 1_000_000_000 / this.pps;
     }
 }

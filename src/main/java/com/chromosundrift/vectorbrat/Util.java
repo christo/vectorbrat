@@ -10,14 +10,7 @@ import java.util.logging.LogManager;
 
 public class Util {
 
-    public static final long THOUSAND = 1000L;
-    public static final long MILLION = THOUSAND * THOUSAND;
-    public static final long BILLION = THOUSAND * MILLION;
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
-
-    public static long nanoToMilli(long nano) {
-        return nano / MILLION;
-    }
 
     /**
      * Needed for jna to load jack native libraries, must be called before jack initialisation. Depends on
@@ -26,14 +19,6 @@ public class Util {
     public static void setSystemLibraryPath() {
         logger.info("setting up native library paths");
         System.setProperty("jna.library.path", "/opt/homebrew/lib");
-    }
-
-    public static float clamp(float x, float min, float max) {
-        return Math.min(Math.max(min, x), max);
-    }
-
-    public static float clampNormal(float red) {
-        return clamp(red, 0f, 1f);
     }
 
     public static final void bridgeJulToSlf4j() {
@@ -51,11 +36,4 @@ public class Util {
         return name.substring(0, Math.min(name.length() - 1, maxLen - 1));
     }
 
-    public static long millisToNanos(int msPeriod) {
-        return msPeriod * MILLION;
-    }
-
-    public static long msToNanos(int ms) {
-        return ms * MILLION;
-    }
 }

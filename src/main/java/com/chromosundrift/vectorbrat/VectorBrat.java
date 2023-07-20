@@ -2,6 +2,7 @@ package com.chromosundrift.vectorbrat;
 
 import com.chromosundrift.vectorbrat.physics.LaserSimulator;
 import com.chromosundrift.vectorbrat.physics.LinearBeamPhysics;
+import com.chromosundrift.vectorbrat.physics.SystemClock;
 import io.materialtheme.darkstackoverflow.DarkStackOverflowTheme;
 import mdlaf.MaterialLookAndFeel;
 import org.slf4j.Logger;
@@ -28,7 +29,6 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
 import com.chromosundrift.vectorbrat.physics.BulletClock;
-import com.chromosundrift.vectorbrat.physics.SystemClock;
 import com.chromosundrift.vectorbrat.swing.DisplayController;
 import com.chromosundrift.vectorbrat.swing.DisplayPanel;
 import com.chromosundrift.vectorbrat.swing.VectorBratFrame;

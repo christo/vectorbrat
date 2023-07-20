@@ -5,8 +5,11 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
 /**
  * Encapsulates parametric constraints for a physical vector display. Underlying implementations can use formulaic
  * approximations derived from calibration experiments. Returned latency values should be minimum expected within
- * some preconfigured accuracy.
+ * some preconfigured accuracy. May contain inherent assumptions about laser scanners.
+ * <p>
+ * Future: introduce a heteromorphic monochromatic oscilloscope physics used as a type parameter in Simulator?
  */
+@SuppressWarnings("unused")
 public interface BeamPhysics {
 
     /**
@@ -55,4 +58,13 @@ public interface BeamPhysics {
      * @return expected minimum latency in nanoseconds.
      */
     long nanosTo(BeamState from, BeamState to);
+
+    /**
+     * Perform state transition calculations based on the physics model of the implmementation. The
+     * state parameter is modified.
+     *
+     * @param state  state to be mutated.
+     * @param nsTimeStep time increment in nanoseconds to calculate the new state for.
+     */
+    void timeStep(float demandX, float demandY, BeamState state, long nsTimeStep);
 }

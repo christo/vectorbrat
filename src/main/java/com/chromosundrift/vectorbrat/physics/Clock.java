@@ -1,15 +1,16 @@
 package com.chromosundrift.vectorbrat.physics;
 
+/**
+ * Supplies current time. Implementations may provide ways to manipulate the time.
+ * Epoch is arbitrary starting point that must remain fixed during runtime.
+ */
 public interface Clock {
+
     /**
      * Gets the current time in nanoseconds.
-     * @return nanos.
+     *
+     * @return nanos since epoch.
      */
     long getNs();
 
-    /**
-     * Returns the current rate of time. For true clocks, this should always be 1.0. Negative values are illegal.
-     * @return clock rate.
-     */
-    float rate();
 }

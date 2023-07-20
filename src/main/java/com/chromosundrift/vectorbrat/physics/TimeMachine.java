@@ -15,8 +15,7 @@ public final class TimeMachine implements Clock {
         return ns;
     }
 
-    @Override
-    public float rate() {
-        return 1;
+    public void add(long nsDelta) {
+        this.ns += nsDelta;
     }
 }

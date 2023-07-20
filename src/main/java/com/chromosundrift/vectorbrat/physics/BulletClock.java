@@ -25,7 +25,7 @@ public final class BulletClock implements Clock {
     }
 
     /**
-     * Backed by {@link SystemClock}.
+     * Backed by system clock.
      *
      * @param rate time multiplier.
      */
@@ -38,7 +38,6 @@ public final class BulletClock implements Clock {
         return (long) (real.getNs() * rate);
     }
 
-    @Override
     public float rate() {
         return rate;
     }

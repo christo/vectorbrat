@@ -146,7 +146,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
         if (p != null && p.getXs().size() > 0) {
             simulatorRenderer.draw(im, g2);
         }
-        hudLines(g2, im.getHeight(), new String[]{"simulator"});
+
     }
 
     private Color toColor(Rgb rgb) {

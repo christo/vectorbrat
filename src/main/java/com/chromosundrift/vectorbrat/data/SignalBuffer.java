@@ -1,36 +1,46 @@
 package com.chromosundrift.vectorbrat.data;
 
-import java.util.ArrayList;
-
 import com.chromosundrift.vectorbrat.geom.Pather;
+import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Rgb;
+
+import javax.annotation.concurrent.NotThreadSafe;
+import java.util.ArrayList;
 
 /**
  * Concrete, reusable, performant container for 5-dimensional vector signal stream containing component
  * floats for x, y (bipolar normalised range -1 to 1) and r, g, b (unipolar normalised range 0-1). Not
  * threadsafe. Not immutable.
  */
+@NotThreadSafe
 public final class SignalBuffer {
 
     // currently implemented as 5 parallel float buffers
 
-    private final int size;
+    private final int maxSize;
     private final float[] xBuffer;
     private final float[] yBuffer;
     private final float[] rBuffer;
     private final float[] gBuffer;
     private final float[] bBuffer;
 
-    public SignalBuffer(int size) {
-        this.size = size;
-        if (size <= 0) {
+    /**
+     * Actual number of entries, may rise to the maximum size. Changed by calls to {@link #fillPath(Pather)} by
+     * inheriting its contents.
+     */
+    private int actualSize;
+
+    public SignalBuffer(int maxSize) {
+        if (maxSize <= 0) {
             throw new IllegalArgumentException("size must be greater than zero");
         }
-        xBuffer = new float[size];
-        yBuffer = new float[size];
-        rBuffer = new float[size];
-        gBuffer = new float[size];
-        bBuffer = new float[size];
+        this.maxSize = maxSize;
+        xBuffer = new float[maxSize];
+        yBuffer = new float[maxSize];
+        rBuffer = new float[maxSize];
+        gBuffer = new float[maxSize];
+        bBuffer = new float[maxSize];
+        this.actualSize = maxSize;
     }
 
     /**
@@ -38,7 +48,7 @@ public final class SignalBuffer {
      * doesn't fit.
      *
      * @param p the pather to get the data from.
-     * @return `the number of entries filled. Data beyond this value is junk.
+     * @return the number of entries filled. Any data at or beyond this index value is undefined.
      */
     public int fillPath(Pather p) {
         ArrayList<Float> xs = p.getXs();
@@ -46,17 +56,35 @@ public final class SignalBuffer {
         ArrayList<Float> rs = p.getRs();
         ArrayList<Float> gs = p.getGs();
         ArrayList<Float> bs = p.getBs();
-        int s = xs.size();
+        // set our actual size based on the pather up to our maxSize
+        actualSize = Math.min(maxSize, p.size());
 
-        int length = Math.min(size, s);
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < this.actualSize; i++) {
             xBuffer[i] = xs.get(i);
             yBuffer[i] = ys.get(i);
             rBuffer[i] = rs.get(i);
             gBuffer[i] = gs.get(i);
             bBuffer[i] = bs.get(i);
         }
-        return length;
+        return actualSize;
+    }
+
+    /**
+     * Update all buffer values at given index. No bounds checking done.
+     *
+     * @param x x value.
+     * @param y y value.
+     * @param r red value.
+     * @param g green value.
+     * @param b blue value.
+     * @param i index must be > 0 and no greater than maxSize - 1
+     */
+    public void set(float x, float y, float r, float g, float b, int i) {
+        xBuffer[i] = x;
+        yBuffer[i] = y;
+        rBuffer[i] = r;
+        gBuffer[i] = g;
+        bBuffer[i] = b;
     }
 
     public float getX(int i) {
@@ -81,10 +109,51 @@ public final class SignalBuffer {
 
     /**
      * Constructs an {@link Rgb} object for the given index using the internal r, g and b buffers.
+     *
      * @param i the index
      * @return the Rgb colour.
      */
     public Rgb getRgb(int i) {
         return new Rgb(getR(i), getG(i), getB(i));
+    }
+
+    public int getActualSize() {
+        return this.actualSize;
+    }
+
+    public int getMaxSize() {
+        return this.maxSize;
+    }
+
+    /**
+     * Fill with zeroes and set actualSize to maxSize.
+     */
+    public void reset() {
+        for (int i = 0; i < maxSize; i++) {
+            set(0, 0, 0, 0, 0, i);
+        }
+        actualSize = maxSize;
+    }
+
+    /**
+     * Constructs a coloured Point for the signal at the given index.
+     *
+     * @param i the index.
+     * @return a new {@link Point}.
+     * @throws ArrayIndexOutOfBoundsException if the index is negative or greater than or equal to the size.
+     */
+    public Point toPoint(int i) {
+        return new Point(getX(i), getY(i), getRgb(i));
+    }
+
+    /**
+     * Sets the actual size to something not exceeding the max size.
+     *
+     * @param actualSize the desired size.
+     * @return the new actual size.
+     */
+    public int setActualSize(int actualSize) {
+        this.actualSize = Math.min(this.maxSize, actualSize);
+        return actualSize;
     }
 }
