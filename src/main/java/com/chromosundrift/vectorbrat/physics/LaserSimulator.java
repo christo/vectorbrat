@@ -134,7 +134,7 @@ public final class LaserSimulator implements LaserDriver {
         this.demandFront = new SignalBuffer(INITIAL_BUFFER_SIZE);
         this.demandBack = new SignalBuffer(INITIAL_BUFFER_SIZE);
         this.nsPrev = -1L;
-        this.trail = new SignalBuffer(5); // only initial trail size
+        this.trail = new SignalBuffer(INITIAL_BUFFER_SIZE);
         this.trail.reset();
         this.executorService = Executors.newSingleThreadExecutor(r -> new Thread(r, THREAD_SIMULATOR));
         this.beamState = new BeamState();
@@ -201,7 +201,7 @@ public final class LaserSimulator implements LaserDriver {
                     {
                         // advance the trail, wrapping the trail ring buffer index if necessary
                         trailIndex++;
-                        int size = trail.getMaxSize();
+                        int size = trail.getActualSize();
                         if (trailIndex >= size) {
                             trailIndex -= size;
                         }
@@ -241,9 +241,12 @@ public final class LaserSimulator implements LaserDriver {
             this.sampleRate = sampleRate;
             // need to update the trail size based on pps and sample rate
             // samples per POV
-            int newTrailSize = (int) Math.ceil(sampleRate / FPS_POV);
-            if (newTrailSize != trail.getActualSize()) {
-                trail.setActualSize(newTrailSize);
+            int newSize = (int) Math.ceil(sampleRate / FPS_POV);
+            if (newSize != trail.getActualSize()) {
+                int size = trail.setActualSize(newSize);
+                if (size != newSize) {
+                    logger.warn("trail size could not be set to {}, set to {} instead", newSize, size);
+                }
             }
         } finally {
             bufferLock.unlock();

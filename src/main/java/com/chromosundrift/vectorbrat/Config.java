@@ -203,6 +203,10 @@ public final class Config {
         return this.laserSpec;
     }
 
+    public void setBeamTuning(BeamTuning tuning) {
+        this.beamTuning = tuning;
+    }
+
     /**
      * Represents a configured audio channel with our name and 1-based index.
      *

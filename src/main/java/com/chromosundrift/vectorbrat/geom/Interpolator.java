@@ -46,13 +46,13 @@ public final class Interpolator implements Pather {
      * @param config configuration.
      */
     public Interpolator(Config config) {
+        this.interpolation = config.getInterpolation();
         BeamTuning beamTuning = config.getLaserTuning();
         this.pointsPerPoint = beamTuning.getPointsPerPoint();
         this.pointsPerUnit = beamTuning.getPointsPerUnit();
         this.vertexPoints = beamTuning.getVertexPoints();
         this.blackPoints = beamTuning.getBlackPoints();
         this.pointsPerUnitOffset = beamTuning.getPointsPerUnitOffset();
-        this.interpolation = config.getInterpolation();
     }
 
     /**

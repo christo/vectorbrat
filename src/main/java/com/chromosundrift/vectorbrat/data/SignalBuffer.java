@@ -45,11 +45,12 @@ public final class SignalBuffer {
 
     /**
      * Copy the path from the pather into this buffer up to our size. Silently ignores excess data from pather that
-     * doesn't fit.
+     * doesn't fit. Actual size is updated to reflect the number of signal points from pather.
      *
      * @param p the pather to get the data from.
      * @return the number of entries filled. Any data at or beyond this index value is undefined.
      */
+    @SuppressWarnings("DuplicatedCode")
     public int fillPath(Pather p) {
         ArrayList<Float> xs = p.getXs();
         ArrayList<Float> ys = p.getYs();

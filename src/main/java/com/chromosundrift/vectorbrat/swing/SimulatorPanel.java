@@ -43,8 +43,8 @@ public class SimulatorPanel extends JPanel {
         if (showUpdates) {
             g2.setColor(Color.GREEN);
             g2.drawString("sim time (ns): %s".formatted(simulator.getTime()), 20, 20);
-            g2.drawString("points: %s".formatted(nPoints), 20, 35);
-            g2.drawString("trail: %s front: %s/%s".formatted(simulator.getTrailIndex(), simulator.getFrontIndex(), simulator.getFrontSize()), 20, 50);
+            g2.drawString("trail points: %s".formatted(nPoints), 20, 35);
+            g2.drawString("trailIndex: %s frontIndex: %s/%s".formatted(simulator.getTrailIndex(), simulator.getFrontIndex(), simulator.getFrontSize()), 20, 50);
         }
         g.drawImage(im, 0, 0, null);
     }
