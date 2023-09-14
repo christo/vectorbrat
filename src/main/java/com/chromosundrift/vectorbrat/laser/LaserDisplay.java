@@ -90,7 +90,7 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
 
             // calculate scan rate
 
-            pathPlanner = new Interpolator(this.config);
+            pathPlanner = new Interpolator(config.getInterpolation(), config.getLaserTuning());
             float xScale = this.invertX ? -1f : 1f;
             float yScale = this.invertY ? -1f : 1f;
             long startTime = System.nanoTime();

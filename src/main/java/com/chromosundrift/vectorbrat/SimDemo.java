@@ -1,18 +1,12 @@
 package com.chromosundrift.vectorbrat;
 
-import com.chromosundrift.vectorbrat.geom.GeomUtils;
-import com.chromosundrift.vectorbrat.geom.Interpolator;
-import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.geom.Pattern;
-import com.chromosundrift.vectorbrat.geom.Rgb;
-import com.chromosundrift.vectorbrat.geom.SimplePather;
+import com.chromosundrift.vectorbrat.geom.*;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
 import com.chromosundrift.vectorbrat.physics.BeamPhysics;
 import com.chromosundrift.vectorbrat.physics.BulletClock;
 import com.chromosundrift.vectorbrat.physics.LaserSimulator;
 import com.chromosundrift.vectorbrat.physics.LinearBeamPhysics;
-import com.chromosundrift.vectorbrat.physics.SystemClock;
 import com.chromosundrift.vectorbrat.swing.SimulatorPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +23,11 @@ public class SimDemo {
     private static final Logger logger = LoggerFactory.getLogger(SimDemo.class);
 
     public static void main(String[] args) {
-        JFrame jFrame = new JFrame("Laser Simulator");
+        JFrame jFrame = new JFrame("Laser Simulator Demo");
 
         BeamPhysics physics = new LinearBeamPhysics(0.001f, 1f);
         BeamTuning tuning = BeamTuning.noInterpolation(30000);
-        BulletClock clock = new BulletClock(SystemClock.INSTANCE, 0.1f);
+        BulletClock clock = new BulletClock(0.05f);
         LaserSimulator sim = new LaserSimulator(LaserSpec.laserWorld1600Pro(), tuning, physics, clock);
         sim.setSampleRate(Config.DEFAULT_SAMPLE_RATE);
 
@@ -41,7 +35,9 @@ public class SimDemo {
         Config config = new Config();
         config.setBeamTuning(tuning);
 
-        Interpolator pather = getInterpolator(m, config);
+        Interpolation interpolation = config.getInterpolation();
+        Interpolator pather = new Interpolator(interpolation, tuning);
+        pather.plan(m);
         sim.makePath(pather);
         SimulatorPanel simulatorPanel = new SimulatorPanel(sim);
         simulatorPanel.showUpdates(true);
@@ -64,12 +60,6 @@ public class SimDemo {
             }
 
         }
-    }
-
-    private static Interpolator getInterpolator(Model m, Config config) {
-        Interpolator pather = new Interpolator(config);
-        pather.plan(m);
-        return pather;
     }
 
     private static SimplePather getSimplePather(Model m) {

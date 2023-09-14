@@ -28,7 +28,7 @@ public class InterpolatorTest {
     @Test
     public void testInterpolateTo() {
         Config c = getTestConfig();
-        Interpolator pp = new Interpolator(c);
+        Interpolator pp = new Interpolator(c.getInterpolation(), c.getLaserTuning());
         pp.interpolate(new Point(0, 0), new Point(1, 1), 1, 5);
         ArrayList<Float> xs = pp.getXs();
         ArrayList<Float> ys = pp.getYs();
@@ -40,7 +40,7 @@ public class InterpolatorTest {
     public void plan() {
         Config c = getTestConfig();
         c.setInterpolation(Interpolation.QUINTIC);
-        Interpolator pp = new Interpolator(c);
+        Interpolator pp = new Interpolator(c.getInterpolation(), c.getLaserTuning());
         Model m = Pattern.boxGrid(5, 5, Rgb.YELLOW);
         pp.plan(m);
         ArrayList<Float> xs = pp.getXs();

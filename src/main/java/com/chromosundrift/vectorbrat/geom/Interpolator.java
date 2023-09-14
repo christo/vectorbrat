@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 
 /**
@@ -43,11 +42,13 @@ public final class Interpolator implements Pather {
     private final float pointsPerUnitOffset;
 
     /**
-     * @param config configuration.
+     * Constructor configured by interpolation and beam tuning.
+     *
+     * @param interpolation easing function.
+     * @param beamTuning parameters for adjusting geometric fidelity.
      */
-    public Interpolator(Config config) {
-        this.interpolation = config.getInterpolation();
-        BeamTuning beamTuning = config.getLaserTuning();
+    public Interpolator(Interpolation interpolation, BeamTuning beamTuning) {
+        this.interpolation = interpolation;
         this.pointsPerPoint = beamTuning.getPointsPerPoint();
         this.pointsPerUnit = beamTuning.getPointsPerUnit();
         this.vertexPoints = beamTuning.getVertexPoints();
