@@ -95,6 +95,7 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
             float yScale = this.invertY ? -1f : 1f;
             long startTime = System.nanoTime();
             pathPlanner.plan(model.scale(xScale, yScale));
+            // TODO check time scale - micros or millis?
             setPathPlanTime((System.nanoTime() - startTime) / 1000);
             laserDriver.get().makePath(pathPlanner);
             modelDirty = false;
