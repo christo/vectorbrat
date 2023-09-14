@@ -45,8 +45,8 @@ public final class LaserSimulator implements LaserDriver {
     public static final int FPS_POV = 25; // canonical value from movies
 
     /**
-     * Nanoseconds for full bright beam spot to fade to black, aka afterimage latency. This may depend on
-     * brightness but for now, we are ignoring reactive pupil dilation due to changes in brightness.
+     * Estimate of nanoseconds for full bright beam spot to fade to black, aka afterimage latency. An accurate estimate
+     * will depend on beam intensity, relative ambient brightness and individual ocular differences.
      */
     private static final long NS_POV = 1_000_000_000 / FPS_POV;
     private static final String THREAD_SIMULATOR = "simulator";
@@ -83,7 +83,6 @@ public final class LaserSimulator implements LaserDriver {
      * the zero index.
      */
     private int trailIndex = 0;
-
 
     /**
      * Reentrant lock for double buffered updates to the demand signal.
