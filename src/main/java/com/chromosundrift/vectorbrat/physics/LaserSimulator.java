@@ -27,7 +27,7 @@ import static java.lang.Math.floorMod;
  * <p>
  * Display of the simulator on a conventional raster display needs to simulate the effect of intense light in the eye,
  * so rendition of the state at time t shows the current beam position at the head of a trail of previous positions t-1,
- * t-2 ... that fade to black, in effect simulating the eye-laser as a unified system.
+ * t-2 ... that fade to black, in effect simulating the eye + laser as a unified system.
  */
 public final class LaserSimulator implements LaserDriver {
 
