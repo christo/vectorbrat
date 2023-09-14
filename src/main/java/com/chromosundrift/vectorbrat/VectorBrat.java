@@ -48,7 +48,7 @@ public class VectorBrat {
         logger.info("initialising VectorBrat");
         final Config config = new Config();
 
-        setLookAndFeel();
+        setUiGlobals();
 
         laser = new LaserDisplay(config);
         final BulletClock clock = new BulletClock(1.0f);
@@ -68,9 +68,10 @@ public class VectorBrat {
         return new LaserSimulator(config.getLaserSpec(), laser.getTuning(), physics, clock);
     }
 
-    private static void setLookAndFeel() throws VectorBratException {
+    private static void setUiGlobals() throws VectorBratException {
         try {
             logger.info("setting look and feel");
+            System.setProperty("sun.java2d.uiScale","2");
             UIManager.setLookAndFeel(new MaterialLookAndFeel(new DarkStackOverflowTheme()));
         } catch (UnsupportedLookAndFeelException e) {
             throw new VectorBratException(e);
