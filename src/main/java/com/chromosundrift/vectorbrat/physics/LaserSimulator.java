@@ -124,8 +124,8 @@ public final class LaserSimulator implements LaserDriver {
     private volatile boolean running = false;
 
     public LaserSimulator(LaserSpec laserSpec, BeamTuning tuning, BeamPhysics physics, Clock clock) {
-        this.physics = physics;
         logger.info("initialising LaserSimulator");
+        this.physics = physics;
         this.laserSpec = laserSpec;
         this.tuning = tuning;
         this.clock = clock;
