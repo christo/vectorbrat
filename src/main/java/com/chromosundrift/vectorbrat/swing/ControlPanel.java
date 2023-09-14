@@ -91,7 +91,7 @@ class ControlPanel extends JPanel {
 
         // update the stats when they change
         laserController.addUpdateListener(lc -> {
-            pathPlanTime.setValue(lc.getPathPlanTime());
+            pathPlanTime.setValue(lc.getPathPlanTime() / 1000); // convert to microseonds for UI
             lc.getSampleRate().ifPresent(sampleRate::setValue);
             lc.getBufferSize().ifPresent(bufferSize::setValue);
             BeamTuning tuning = laserController.getTuning();
@@ -132,7 +132,7 @@ class ControlPanel extends JPanel {
             int kpps = i * 1000;
             sliderLabels.put(kpps, new JLabel("%sk".formatted(i)));
         }
-        final JSlider ppsControl = new JSlider(JSlider.HORIZONTAL, Config.MIN_PPS, Config.MAX_PPS, config.getLaserTuning().getPps());
+        final JSlider ppsControl = new JSlider(JSlider.HORIZONTAL, Config.MIN_PPS, Config.MAX_PPS, config.getBeamTuning().getPps());
         ppsControl.setPaintLabels(true);
         ppsControl.setLabelTable(sliderLabels);
         ppsControl.addChangeListener(new PpsListener(config.liveControls(), laserController));

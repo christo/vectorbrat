@@ -51,8 +51,16 @@ public interface LaserController {
      */
     Optional<Integer> getBufferSize();
 
+    /**
+     * Return the time spent planning the path in nanoseconds.
+     * @return nanoseconds.
+     */
     long getPathPlanTime();
 
+    /**
+     * Sets the time spent planning the path in nanoseconds.
+     * @param planTime nanoseconds.
+     */
     void setPathPlanTime(long planTime);
 
     BeamTuning getTuning();

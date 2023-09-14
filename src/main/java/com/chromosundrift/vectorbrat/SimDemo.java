@@ -28,7 +28,7 @@ public class SimDemo {
 
         BeamPhysics physics = new LinearBeamPhysics(100f, 1f);
         BulletClock clock = new BulletClock(1f);
-        BeamTuning tuning = config.getLaserTuning();
+        BeamTuning tuning = config.getBeamTuning();
         LaserSimulator sim = new LaserSimulator(LaserSpec.laserWorld1600Pro(), tuning, physics, clock);
         sim.setSampleRate(Config.DEFAULT_SAMPLE_RATE);
 

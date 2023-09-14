@@ -55,7 +55,7 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
 
     public LaserDisplay(final Config config) {
         logger.info("initialising LaserDisplay");
-        this.beamTuning = config.getLaserTuning();
+        this.beamTuning = config.getBeamTuning();
         this.vectorDisplay = new DoubleBufferedVectorDisplay<>(true, beamTuning);
         this.laserDriver = Suppliers.memoize(() -> {
             try {
@@ -90,13 +90,12 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
 
             // calculate scan rate
 
-            pathPlanner = new Interpolator(config.getInterpolation(), config.getLaserTuning());
+            pathPlanner = new Interpolator(config.getInterpolation(), config.getBeamTuning());
             float xScale = this.invertX ? -1f : 1f;
             float yScale = this.invertY ? -1f : 1f;
             long startTime = System.nanoTime();
             pathPlanner.plan(model.scale(xScale, yScale));
-            // TODO check time scale - micros or millis?
-            setPathPlanTime((System.nanoTime() - startTime) / 1000);
+            setPathPlanTime(System.nanoTime() - startTime);
             laserDriver.get().makePath(pathPlanner);
             modelDirty = false;
         }

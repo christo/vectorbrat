@@ -147,11 +147,11 @@ public final class Config {
         return "vectorbrat.png";
     }
 
-    public BeamTuning getLaserTuning() {
+    public BeamTuning getBeamTuning() {
         return beamTuning;
     }
 
-    public void setLaserTuning(BeamTuning lt) {
+    public void getBeamTuning(BeamTuning lt) {
         this.beamTuning = lt;
     }
 
