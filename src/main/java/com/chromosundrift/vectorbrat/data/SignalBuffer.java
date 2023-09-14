@@ -40,7 +40,8 @@ public final class SignalBuffer {
         rBuffer = new float[maxSize];
         gBuffer = new float[maxSize];
         bBuffer = new float[maxSize];
-        this.actualSize = maxSize;
+        // start empty
+        this.actualSize = 0;
     }
 
     /**

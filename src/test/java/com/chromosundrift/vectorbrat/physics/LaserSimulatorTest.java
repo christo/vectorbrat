@@ -1,12 +1,6 @@
 package com.chromosundrift.vectorbrat.physics;
 
-import com.chromosundrift.vectorbrat.data.Maths;
-import com.chromosundrift.vectorbrat.geom.Box;
-import com.chromosundrift.vectorbrat.geom.GeomUtils;
-import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.geom.Pattern;
-import com.chromosundrift.vectorbrat.geom.Point;
-import com.chromosundrift.vectorbrat.geom.SimplePather;
+import com.chromosundrift.vectorbrat.geom.*;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
 import org.junit.Test;
@@ -48,7 +42,7 @@ public class LaserSimulatorTest {
             simulator.update();
             List<Point> trail = simulator.getTrail().toList();
             clock.add(nsOneSample);
-            logger.info("t={} trail points: {}", clock.getNs(), trail);
+            //logger.info("t={} trail points: {}", clock.getNs(), trail);
         }
 
         // TODO need to call update on the simulator to draw trail points and then make assertions about its content
@@ -64,6 +58,7 @@ public class LaserSimulatorTest {
         // 100 samples per point
         int sampleRate = 100 * pps;
         int nsPerSample = 1_000_000_000 / sampleRate;
+        logger.info("nsPerSample: {}", nsPerSample);
         ls.setSampleRate(sampleRate);
 
         // now make a trail
@@ -82,18 +77,11 @@ public class LaserSimulatorTest {
         for (int i = 0; i < n; i++) {
             ls.update();
             clock.add(nsPerSample);
+            long trailSize = ls.getTrail().count();
+            int ti = ls.getTrailIndex();
+            logger.info("update {} trailsize: {} trailIndex: {}", i, trailSize, ti);
         }
         // trail size currently hard-coded
         assertEquals(5, ls.getTrail().count());
-    }
-
-    @Test
-    public void descendingRing() {
-        assertEquals(List.of(4, 3, 2, 1, 0), Maths.decRing(5, 4).toList());
-        assertEquals(List.of(2, 1, 0, 4, 3), Maths.decRing(5, 2).toList());
-    }
-
-    public static LaserSimulator basicSim() {
-        return new LaserSimulator(LaserSpec.laserWorld1600Pro(), BeamTuning.noInterpolation(1), new TeleportBeamPhysics(), SystemClock.INSTANCE);
     }
 }

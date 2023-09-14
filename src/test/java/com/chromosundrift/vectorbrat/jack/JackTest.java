@@ -3,6 +3,7 @@ package com.chromosundrift.vectorbrat.jack;
 import org.jaudiolibs.jnajack.examples.SineAudioSource;
 import org.jaudiolibs.jnajack.util.SimpleAudioClient;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.chromosundrift.vectorbrat.Util;
@@ -19,10 +20,10 @@ public class JackTest {
 
     /**
      * Makes a one second beep through jack using its sound device. Requires jackd to be running.
-     *
-     * @throws Exception
+     * TODO: move to integration test
      */
     @Test
+    @Ignore
     public void baep() throws Exception {
         SimpleAudioClient client = SimpleAudioClient.create("sine", new String[0],
                 new String[]{"output-L", "output-R"}, true, true, new SineAudioSource());

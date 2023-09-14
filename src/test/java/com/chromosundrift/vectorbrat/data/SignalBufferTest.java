@@ -9,7 +9,7 @@ public class SignalBufferTest {
     @Test
     public void constructor() {
         SignalBuffer sb = new SignalBuffer(5);
-        assertEquals(5, sb.getActualSize());
+        assertEquals(0, sb.getActualSize());
         assertEquals(0f, sb.getX(0), 0.001f);
         assertEquals(0f, sb.getY(1), 0.001f);
         assertEquals(0f, sb.getR(2), 0.001f);

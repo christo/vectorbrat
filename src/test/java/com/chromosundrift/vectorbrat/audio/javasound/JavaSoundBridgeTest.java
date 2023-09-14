@@ -71,7 +71,9 @@ public class JavaSoundBridgeTest {
     }
 
     @Test
+    @Ignore
     public void testListFormats() throws MissingAudioDevice {
+        // TODO move to integration test
         Mixer m = new JavaSoundBridge().getMixerOrDie(Config.ES9);
         Line.Info[] sourceLines = m.getSourceLineInfo();
         Line.Info[] targetLines = m.getTargetLineInfo();

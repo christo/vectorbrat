@@ -18,7 +18,8 @@ import java.util.stream.Stream;
 
 /**
  * Physical simulation of vector display replicating real-world laser projector with scanner galvanometers and
- * brightness changes over time. Configuration is intended to produce equivalent output as a real laser.
+ * brightness changes over time. Configuration is intended to produce equivalent output to a real laser with
+ * equivalent capability. Actual capability can be derived experimentally.
  * <p>
  * The maximum points per second defined by the laserSpec is ignored by this simulation. Point rates
  * set in the tuning are simulated as-is.
@@ -50,7 +51,7 @@ public final class LaserSimulator implements LaserDriver {
     private static final String THREAD_SIMULATOR = "simulator";
 
     /*
-      IDEAS FOR THE FUTURE:
+      FUTURE: overly optimistic ideas
 
        * bloom effect
        * GPU acceleration
@@ -117,6 +118,10 @@ public final class LaserSimulator implements LaserDriver {
      * Current sample rate. Can change over time.
      */
     private float sampleRate;
+
+    /**
+     * Nanosecond deadline for next point.
+     */
     private long nsNextPoint;
     private volatile boolean running = false;
 
@@ -145,7 +150,7 @@ public final class LaserSimulator implements LaserDriver {
      */
     @Override
     public void makePath(Pather p) {
-        // pather gives us a complete set of coloured points model to work through at the configured sample rate
+        // pather gives us a complete set of coloured points to work through at the configured sample rate
         try {
             bufferLock.lock();
             int size = demandBack.fillPath(p);
@@ -161,7 +166,8 @@ public final class LaserSimulator implements LaserDriver {
     }
 
     /**
-     * Update the simulation using the current sample rate and point rate from {@link BeamTuning}.
+     * Update the simulation using the current sample rate and point rate from {@link BeamTuning}. Uses the given
+     * clock to determine simulation time.
      */
     public void update() {
 
@@ -241,7 +247,10 @@ public final class LaserSimulator implements LaserDriver {
             int newSize = (int) Math.ceil(sampleRate / FPS_POV);
             if (newSize != trail.getActualSize()) {
                 int size = trail.setActualSize(newSize);
-                logger.warn("trail size could not be set to {}, set to {} instead", newSize, size);
+                //noinspection ConstantValue
+                if (size != newSize) {
+                    logger.warn("cannot set trail size to {}, set to {} instead", newSize, size);
+                }
             }
         } finally {
             bufferLock.unlock();
@@ -249,9 +258,8 @@ public final class LaserSimulator implements LaserDriver {
     }
 
     /**
-     * Returns a stream of {@link Point Points} scaled to the given width and height. Each point
-     * has a colour for drawing composed of its past beam locations. For rendering points on
-     * conventional raster, they will need to be translated and scaled out of sample range.
+     * Returns a stream of beam {@link Point Points} in normalised sample range, each having a colour derived from its
+     * past beam locations.
      *
      * @return the points in sample range.
      */
@@ -261,6 +269,7 @@ public final class LaserSimulator implements LaserDriver {
         if (s == 0) {
             return Stream.empty();
         } else {
+            // convert trail to points using decreasing modulus index starting from current trailIndex
             return Maths.decRing(s, trailIndex).map(i -> trail.toPoint(i));
         }
     }
@@ -273,6 +282,7 @@ public final class LaserSimulator implements LaserDriver {
     private void run() {
         logger.info("run()");
         running = true;
+        // only log update every so often
         long nsPerLog = 1_000_000_00;
         long logUpdateDeadline = System.nanoTime() + nsPerLog;
         long nsUpdateDuration;
