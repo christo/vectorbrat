@@ -16,8 +16,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
-import static java.lang.Math.floorMod;
-
 /**
  * Physical simulation of vector display replicating real-world laser projector with scanner galvanometers and
  * brightness changes over time. Configuration is intended to produce equivalent output as a real laser.
@@ -243,9 +241,7 @@ public final class LaserSimulator implements LaserDriver {
             int newSize = (int) Math.ceil(sampleRate / FPS_POV);
             if (newSize != trail.getActualSize()) {
                 int size = trail.setActualSize(newSize);
-                if (size != newSize) {
-                    logger.warn("trail size could not be set to {}, set to {} instead", newSize, size);
-                }
+                logger.warn("trail size could not be set to {}, set to {} instead", newSize, size);
             }
         } finally {
             bufferLock.unlock();
