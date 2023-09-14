@@ -4,6 +4,7 @@ import com.chromosundrift.vectorbrat.data.Maths;
 import com.chromosundrift.vectorbrat.data.SignalBuffer;
 import com.chromosundrift.vectorbrat.geom.Pather;
 import com.chromosundrift.vectorbrat.geom.Point;
+import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 import com.chromosundrift.vectorbrat.laser.LaserDriver;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
@@ -153,6 +154,7 @@ public final class LaserSimulator implements LaserDriver {
         // pather gives us a complete set of coloured points to work through at the configured sample rate
         try {
             bufferLock.lock();
+            int patherSize = p.size();
             int size = demandBack.fillPath(p);
             // now flip buffer
             SignalBuffer temp = demandBack;
@@ -180,7 +182,7 @@ public final class LaserSimulator implements LaserDriver {
             // calculate how many samples to update for
             long nsPerSample = 1_000_000_000 / ((long) sampleRate);
             int samplesThisUpdate = (int) (nsElapsed / nsPerSample);
-            // simTime will be the time for each discrete simulation step calculation
+            // simTime will be the time at each discrete simulation step calculation
             long simTime = nsPrev;
             long nsPp = tuning.getNsPerPoint();
             // send some number of samples and advance the simulation for each sample
@@ -242,9 +244,12 @@ public final class LaserSimulator implements LaserDriver {
         try {
             bufferLock.lock();
             this.sampleRate = sampleRate;
-            // need to update the trail size based on pps and sample rate
-            // samples per POV
-            int newSize = (int) Math.ceil(sampleRate / FPS_POV);
+            // need to update the trail size based on pps and sample rate samples per POV
+            // we assume the full bright trail is visible for the entire persistence of vision duration,
+            // as derived by the FPS_POV constant
+
+            float samplesToFullFade = sampleRate / FPS_POV;
+            int newSize = (int) Math.ceil(samplesToFullFade);
             if (newSize != trail.getActualSize()) {
                 int size = trail.setActualSize(newSize);
                 //noinspection ConstantValue
@@ -257,9 +262,10 @@ public final class LaserSimulator implements LaserDriver {
         }
     }
 
+
     /**
      * Returns a stream of beam {@link Point Points} in normalised sample range, each having a colour derived from its
-     * past beam locations.
+     * past beam colour.
      *
      * @return the points in sample range.
      */
@@ -270,6 +276,7 @@ public final class LaserSimulator implements LaserDriver {
             return Stream.empty();
         } else {
             // convert trail to points using decreasing modulus index starting from current trailIndex
+            // trail needs to darken according to the fade rate
             return Maths.decRing(s, trailIndex).map(i -> trail.toPoint(i));
         }
     }

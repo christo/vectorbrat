@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  */
 class SimulatorRenderer {
 
-    public static final BasicStroke STROKE_HARD_CODED = new BasicStroke(5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static final BasicStroke STROKE_HARD_CODED = new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
     private static final Logger logger = LoggerFactory.getLogger(SimulatorRenderer.class);
 
@@ -52,6 +52,7 @@ class SimulatorRenderer {
             boolean firstPoint = prev.compareAndSet(null, point);
             // if no previous point, use current point for both ends of "line"
             Point fromPoint = firstPoint ? point : prev.get();
+            // should colour always be set to from point?
             Color colour = new Color(fromPoint.r(), fromPoint.g(), fromPoint.b());
             g2.setColor(colour);
             int x1 = (int) fromPoint.x();

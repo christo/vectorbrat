@@ -13,5 +13,4 @@ public class MathsTest {
         assertEquals(List.of(4, 3, 2, 1, 0), Maths.decRing(5, 4).toList());
         assertEquals(List.of(2, 1, 0, 4, 3), Maths.decRing(5, 2).toList());
     }
-
 }

@@ -24,16 +24,15 @@ public class SimDemo {
 
     public static void main(String[] args) {
         JFrame jFrame = new JFrame("Laser Simulator Demo");
+        Config config = new Config();
 
-        BeamPhysics physics = new LinearBeamPhysics(0.001f, 1f);
-        BeamTuning tuning = BeamTuning.noInterpolation(30000);
-        BulletClock clock = new BulletClock(0.05f);
+        BeamPhysics physics = new LinearBeamPhysics(100f, 1f);
+        BulletClock clock = new BulletClock(1f);
+        BeamTuning tuning = config.getLaserTuning();
         LaserSimulator sim = new LaserSimulator(LaserSpec.laserWorld1600Pro(), tuning, physics, clock);
         sim.setSampleRate(Config.DEFAULT_SAMPLE_RATE);
 
         Model m = Pattern.boxGrid(5, 5, Rgb.CYAN);
-        Config config = new Config();
-        config.setBeamTuning(tuning);
 
         Interpolation interpolation = config.getInterpolation();
         Interpolator pather = new Interpolator(interpolation, tuning);

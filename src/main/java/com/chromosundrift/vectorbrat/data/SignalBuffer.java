@@ -25,7 +25,7 @@ public final class SignalBuffer {
     private final float[] bBuffer;
 
     /**
-     * Actual number of entries, may rise to the maximum size. Changed by calls to {@link #fillPath(Pather)} by
+     * Actual number of entries, may be between 0 and the maximum size. Changed by calls to {@link #fillPath(Pather)} by
      * inheriting its contents.
      */
     private int actualSize;
@@ -41,7 +41,7 @@ public final class SignalBuffer {
         gBuffer = new float[maxSize];
         bBuffer = new float[maxSize];
         // start empty
-        this.actualSize = 0;
+        this.actualSize = maxSize;
     }
 
     /**

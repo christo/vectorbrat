@@ -3,6 +3,7 @@ package com.chromosundrift.vectorbrat.physics;
 import com.chromosundrift.vectorbrat.geom.*;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class LaserSimulatorTest {
     private static final Logger logger = LoggerFactory.getLogger(LaserSimulatorTest.class);
@@ -48,6 +50,7 @@ public class LaserSimulatorTest {
         // TODO need to call update on the simulator to draw trail points and then make assertions about its content
     }
 
+
     @Test
     public void getTrail() {
         int pps = 100;
@@ -71,17 +74,15 @@ public class LaserSimulatorTest {
         // this just sanity checks that SimplePather has done the expected
         assertEquals(46, modelPoints.size());
         assertEquals(46, ls.getFrontSize());
+        int samplesPerPov = sampleRate / LaserSimulator.FPS_POV;
 
         // run the simulation to fill up the trail
-        int n = 10;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < samplesPerPov; i++) {
             ls.update();
             clock.add(nsPerSample);
-            long trailSize = ls.getTrail().count();
-            int ti = ls.getTrailIndex();
-            logger.info("update {} trailsize: {} trailIndex: {}", i, trailSize, ti);
         }
-        // trail size currently hard-coded
-        assertEquals(5, ls.getTrail().count());
+        // assert that trail is as long as it takes to get to black
+        assertEquals(samplesPerPov, ls.getTrail().count());
+
     }
 }

@@ -45,4 +45,17 @@ public class Maths {
         }
         return Stream.iterate(start, i -> floorMod(i - 1, size)).limit(size);
     }
+
+    /**
+     * Calculates a factor to multiply a quantity by for exponential decay of a quantity given the starting and
+     * ending quantities and the number of time steps the factor will be applied over.
+     *
+     * @param from      the starting quantity
+     * @param to        the finishing quantity
+     * @param timeSteps the number of steps to take
+     * @return the factor
+     */
+    public static float expDecayFactor(float from, float to, float timeSteps) {
+        return (float) (-Math.log(to / from) / timeSteps);
+    }
 }
