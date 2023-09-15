@@ -89,7 +89,6 @@ public record Rgb(float red, float green, float blue) {
      * @return the resulting colour.
      */
     public Rgb screen(Rgb other) {
-        // TODO degenerate case(s)
         if (other == WHITE) {
             return this;
         } else if (this == WHITE) {
