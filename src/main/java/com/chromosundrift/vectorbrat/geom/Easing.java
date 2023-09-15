@@ -1,7 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
 /**
- * Representation of polarity for interpolation and easing functions.
+ * Polarity for interpolation and easing functions.
  */
 public enum Easing {
     BIPOLAR("ease in and out"),
