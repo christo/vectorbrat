@@ -52,7 +52,7 @@ public final class LaserSimulator implements LaserDriver {
     private static final String THREAD_SIMULATOR = "simulator";
 
     /*
-      FUTURE: overly optimistic ideas
+      FUTURE: some overly optimistic ideas
 
        * bloom effect
        * GPU acceleration
