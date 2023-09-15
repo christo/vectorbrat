@@ -11,8 +11,8 @@ import java.util.function.Consumer;
 
 import com.chromosundrift.vectorbrat.geom.Crash;
 import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.geom.ModelAnimator;
-import com.chromosundrift.vectorbrat.geom.StaticAnimator;
+import com.chromosundrift.vectorbrat.anim.ModelAnimator;
+import com.chromosundrift.vectorbrat.anim.StaticAnimator;
 import com.chromosundrift.vectorbrat.physics.Clock;
 
 /**

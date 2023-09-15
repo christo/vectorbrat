@@ -1,6 +1,7 @@
-package com.chromosundrift.vectorbrat.geom;
+package com.chromosundrift.vectorbrat.anim;
 
 import com.chromosundrift.vectorbrat.VectorBratException;
+import com.chromosundrift.vectorbrat.geom.Model;
 
 /**
  * SPI for things that animate by model updates over time.

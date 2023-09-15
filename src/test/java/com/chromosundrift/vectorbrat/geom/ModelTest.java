@@ -50,7 +50,7 @@ public class ModelTest {
         Polyline foo1 = Polyline.open("foo", Rgb.RED, greenOrigin, blueMax);
         Point orangeMin = new Point(-1f, -1f, Rgb.ORANGE);
         Model foo = new Model("foo", List.of(foo1), List.of(orangeMin));
-        Model colored = foo.colored(Rgb.MAGENTA);
+        Model colored = foo.coloured(Rgb.MAGENTA);
         List<Line> offColorLines = colored.lines()
                 .filter(line -> !line.from().getColor().equals(Rgb.MAGENTA) || !line.to().getColor().equals(Rgb.MAGENTA))
                 .toList();

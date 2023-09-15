@@ -1,4 +1,6 @@
-package com.chromosundrift.vectorbrat.geom;
+package com.chromosundrift.vectorbrat.anim;
+
+import com.chromosundrift.vectorbrat.geom.Model;
 
 import javax.annotation.Nonnull;
 

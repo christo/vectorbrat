@@ -21,7 +21,7 @@ import static com.chromosundrift.vectorbrat.Util.setSystemLibraryPath;
 import com.chromosundrift.vectorbrat.asteroids.Asteroid;
 import com.chromosundrift.vectorbrat.asteroids.Asteroids;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
-import com.chromosundrift.vectorbrat.geom.BungeeAnimator;
+import com.chromosundrift.vectorbrat.anim.BungeeAnimator;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Pattern;
 import com.chromosundrift.vectorbrat.geom.Polyline;

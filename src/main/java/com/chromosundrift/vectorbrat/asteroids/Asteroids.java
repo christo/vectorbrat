@@ -8,11 +8,11 @@ import com.chromosundrift.vectorbrat.data.Maths;
 import com.chromosundrift.vectorbrat.physics.Clock;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
-import com.chromosundrift.vectorbrat.geom.BatchAnimator;
-import com.chromosundrift.vectorbrat.geom.BungeeAnimator;
-import com.chromosundrift.vectorbrat.geom.Composer;
+import com.chromosundrift.vectorbrat.anim.BatchAnimator;
+import com.chromosundrift.vectorbrat.anim.BungeeAnimator;
+import com.chromosundrift.vectorbrat.anim.Composer;
 import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.geom.ModelAnimator;
+import com.chromosundrift.vectorbrat.anim.ModelAnimator;
 import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
@@ -41,7 +41,7 @@ public final class Asteroids implements ModelAnimator {
      */
     static final float MARGIN = Asteroid.Size.LARGE.units / 1.5f;
 
-    private final Composer game;
+    private final ModelAnimator game;
     private final Random random = new Random(1234L); // fixed seed to make successive profiling runs comparable
 
     public Asteroids() {

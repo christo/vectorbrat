@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 
@@ -195,5 +196,13 @@ public final class Polyline extends Pointless implements Geom {
             maxY = Math.max(point.y(), maxY);
         }
         return Optional.of(new Box(minX, minY, maxX, maxY));
+    }
+
+    public Polyline blend(Function<Rgb, Rgb> mode) {
+        Point[] points = new Point[this._points.length];
+        for (int i = 0; i < this._points.length; i++) {
+            points[i] = this._points[i].blend(mode);
+        }
+        return new Polyline(this.name, mode.apply(color), points);
     }
 }

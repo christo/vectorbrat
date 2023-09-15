@@ -1,9 +1,12 @@
-package com.chromosundrift.vectorbrat.geom;
+package com.chromosundrift.vectorbrat.anim;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.chromosundrift.vectorbrat.VectorBratException;
+import com.chromosundrift.vectorbrat.anim.ModelAnimator;
+import com.chromosundrift.vectorbrat.geom.Model;
+import com.chromosundrift.vectorbrat.geom.Updater;
 
 public class BatchAnimator<T> implements ModelAnimator {
     private final String name;

@@ -61,7 +61,7 @@ public class TextEngine {
             m = m.merge(denormalised);
         }
 
-        return m.colored(this.color);
+        return m.coloured(this.color);
     }
 
 }

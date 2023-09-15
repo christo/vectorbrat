@@ -1,6 +1,8 @@
-package com.chromosundrift.vectorbrat.geom;
+package com.chromosundrift.vectorbrat.anim;
 
+import com.chromosundrift.vectorbrat.anim.BungeeAnimator;
 import com.chromosundrift.vectorbrat.data.Maths;
+import com.chromosundrift.vectorbrat.geom.Pattern;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

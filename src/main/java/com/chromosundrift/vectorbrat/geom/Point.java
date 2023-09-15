@@ -1,6 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.chromosundrift.vectorbrat.Config.SAMPLE_MAX;
@@ -223,6 +224,10 @@ public final class Point implements Geom {
 
     public Model toModel() {
         return new Model("", Collections.emptyList(), List.of(this));
+    }
+
+    public Point blend(Function<Rgb, Rgb> mode) {
+        return new Point(x, y, mode.apply(color));
     }
 
     static class PointFactory {

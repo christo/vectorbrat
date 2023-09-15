@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import com.chromosundrift.vectorbrat.Util;
+import com.chromosundrift.vectorbrat.anim.StaticAnimator;
 
 /**
  * Animation that renders an exception message.

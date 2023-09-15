@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,6 +18,8 @@ import static com.chromosundrift.vectorbrat.Config.SAMPLE_RANGE;
  */
 public class Model implements Geom {
 
+    private static final boolean DEBUG = false;
+
     public static Model EMPTY = new Model("");
 
     private final List<Polyline> polylines;
@@ -25,6 +28,13 @@ public class Model implements Geom {
 
     private Model(String name) {
         this(name, Collections.emptyList());
+    }
+
+    /**
+     * Make an identical deep copy.
+     */
+    public Model deepClone() {
+        return modify(Function.identity(), Function.identity());
     }
 
     public Model(String name, List<Polyline> polylines) {
@@ -89,13 +99,7 @@ public class Model implements Geom {
     }
 
     public Model scale(float factorX, float factorY) {
-        List<Polyline> newPolylines = polylines.stream().map(polyline -> polyline.scale(factorX, factorY)).toList();
-        List<Point> newPoints = isoPoints().map(point -> point.scale(factorX, factorY)).toList();
-        Model m = new Model(this.name, newPolylines, newPoints);
-        if (this.countVertices() != m.countVertices()) {
-            throw new IllegalStateException("scaled model should have same number of points");
-        }
-        return m;
+        return modify(polyline -> polyline.scale(factorX, factorY), point -> point.scale(factorX, factorY));
     }
 
     public Stream<Line> lines() {
@@ -111,15 +115,11 @@ public class Model implements Geom {
     }
 
     public Model offset(float dx, float dy) {
-        List<Polyline> allPolylines = this.polylines.stream().map(pl -> pl.offset(dx, dy)).collect(Collectors.toList());
-        List<Point> allPoints = this.points.stream().map(p -> p.offset(dx, dy)).collect(Collectors.toList());
-        return new Model(name, allPolylines, allPoints);
+        return modify(pl -> pl.offset(dx, dy), p -> p.offset(dx, dy));
     }
 
-    public Model colored(Rgb c) {
-        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.colored(c)).collect(Collectors.<Polyline>toList());
-        List<Point> allPoints = isoPoints().map(p -> p.colored(c)).collect(Collectors.toList());
-        return new Model(this.name, polylines, allPoints);
+    public Model coloured(final Rgb c) {
+        return modify(pl -> pl.colored(c), p -> p.colored(c));
     }
 
     @Override
@@ -189,5 +189,21 @@ public class Model implements Geom {
 
     public int countLines() {
         return lines().toList().size();
+    }
+
+    /**
+     * Returns a new model derived from this one with colours modified by the given colour and
+     * blend mode.
+     *
+     * @return
+     */
+    public Model blend(final Function<Rgb, Rgb> mode) {
+        return modify(pl -> pl.blend(mode), p -> p.blend(mode));
+    }
+
+    public Model modify(final Function<Polyline, Polyline> plf, final Function<Point, Point> pf) {
+        List<Polyline> polylines = this.polylines.stream().map(plf).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = isoPoints().map(pf).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
     }
 }
