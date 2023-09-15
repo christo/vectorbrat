@@ -164,6 +164,8 @@ public class Model implements Geom {
         List<Point> inPoints = points.stream().filter(Point::inBounds).toList();
         List<Line> newLines = new ArrayList<>();
 
+        // implement crop and cut for Model https://github.com/christo/vectorbrat/issues/33
+
         lines().forEach(line -> {
             // check the line for intersections with the bounds
             if (!line.from().inBounds() && !line.to().inBounds()) {

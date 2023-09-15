@@ -117,7 +117,7 @@ public final class Asteroids implements ModelAnimator {
     }
 
     private static final class Particle {
-
+        // TODO generalise this for arbitrary Geom
         public Particle(float x, float y, float dx, float dy, long lastNanos) {
             this.x = x;
             this.y = y;
