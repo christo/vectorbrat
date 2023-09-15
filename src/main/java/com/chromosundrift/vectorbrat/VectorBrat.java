@@ -14,12 +14,16 @@ import mdlaf.MaterialLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.chromosundrift.vectorbrat.Util.setSystemLibraryPath;
 
+/**
+ * Main application class.
+ */
 public class VectorBrat {
 
     public static final String THREAD_ANIMATION = "Animation";
@@ -76,17 +80,17 @@ public class VectorBrat {
     private void start() throws VectorBratException {
         logger.info("starting VectorBrat");
         setModel(Model.EMPTY);
-        this.frame.start();
+        frame.start();
         appMap.setAnimator(Asteroids.NAME);
 
-        this.motion.submit(appMap);
-        this.simulator.start();
+        motion.submit(appMap);
+        simulator.start();
         logger.info("started VectorBrat");
     }
 
     private void setModel(Model m) {
-        this.displayPanel.setModel(m);
-        this.laser.setModel(m);
+        displayPanel.setModel(m);
+        laser.setModel(m);
     }
 
     private void dumpAnimators() {

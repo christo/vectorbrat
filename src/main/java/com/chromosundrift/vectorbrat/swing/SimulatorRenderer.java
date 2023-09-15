@@ -25,7 +25,7 @@ class SimulatorRenderer {
 
     private final LaserSimulator laserSimulator;
     private float sampleRate;
-    private Stroke beamStroke;
+    private final Stroke beamStroke;
 
     SimulatorRenderer(LaserSimulator laserSimulator) {
         this.laserSimulator = laserSimulator;
@@ -44,7 +44,7 @@ class SimulatorRenderer {
         g2.setStroke(getBeamStroke(width, height));
         Stream<Point> trail = laserSimulator.getTrail()
                 // scale out of sample space
-                .map(p -> p.offset(1f, 1f).scale((float) width /2, (float) height /2));
+                .map(p -> p.offset(1f, 1f).scale((float) width / 2, (float) height / 2));
         final AtomicReference<Point> prev = new AtomicReference<>(null);
         AtomicInteger nPoints = new AtomicInteger(0);
         trail.forEach(point -> {

@@ -3,7 +3,12 @@ package com.chromosundrift.vectorbrat;
 import com.chromosundrift.vectorbrat.anim.BungeeAnimator;
 import com.chromosundrift.vectorbrat.asteroids.Asteroid;
 import com.chromosundrift.vectorbrat.asteroids.Asteroids;
-import com.chromosundrift.vectorbrat.geom.*;
+import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
+import com.chromosundrift.vectorbrat.geom.Model;
+import com.chromosundrift.vectorbrat.geom.Pattern;
+import com.chromosundrift.vectorbrat.geom.Polyline;
+import com.chromosundrift.vectorbrat.geom.Rgb;
+import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.physics.SystemClock;
 
 import java.util.ArrayList;
