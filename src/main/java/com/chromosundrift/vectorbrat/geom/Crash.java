@@ -22,7 +22,7 @@ public class Crash extends StaticAnimator {
     }
 
     private static Model redX(String message) {
-        // TODO message with line breaks
+        // Support formatting text with line breaks: https://github.com/christo/vectorbrat/issues/35
         Point.PointFactory red = new Point.PointFactory(Rgb.RED);
         Polyline bs = Polyline.open("\\", Rgb.RED, red.p(-0.1f, -0.1f), red.p(0.1f, 0.1f));
         Polyline fs = Polyline.open("/", Rgb.RED, red.p(0.1f, -0.1f), red.p(-0.1f, 0.1f));
