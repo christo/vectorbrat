@@ -172,7 +172,6 @@ public final class LaserSimulator implements LaserDriver {
      * clock to determine simulation time.
      */
     public void update() {
-
         // if we have done a previous update, calculate the simulation updates based on the delta
         if (nsPrev >= 0) {
             // determine the now time for this update
@@ -283,11 +282,15 @@ public final class LaserSimulator implements LaserDriver {
 
     public void start() {
         logger.info("starting LaserSimulator");
+        if (sampleRate == 0) {
+            throw new IllegalStateException("sample rate is zero");
+        }
         executorService.submit(this::run);
     }
 
     private void run() {
         logger.info("run()");
+
         running = true;
         // only log update every so often
         long nsPerLog = 1_000_000_00;

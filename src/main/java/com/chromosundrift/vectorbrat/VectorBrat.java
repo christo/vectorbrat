@@ -84,6 +84,8 @@ public class VectorBrat {
         appMap.setAnimator(Asteroids.NAME);
 
         motion.submit(appMap);
+        // set initial sample rate, may need to be updated
+        simulator.setSampleRate(Config.DEFAULT_SAMPLE_RATE);
         simulator.start();
         logger.info("started VectorBrat");
     }
