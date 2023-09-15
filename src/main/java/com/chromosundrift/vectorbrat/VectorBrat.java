@@ -60,9 +60,9 @@ public class VectorBrat {
         setUiGlobals();
 
         laser = new LaserDisplay(config);
-        final BulletClock clock = new BulletClock(1.0f);
         // TODO get beam physics from config and modify in control panel
         LinearBeamPhysics physics = new LinearBeamPhysics(1f, 1f);
+        final BulletClock clock = new BulletClock(1.0f);
         simulator = new LaserSimulator(config.getLaserSpec(), laser.getTuning(), physics, clock);
         DisplayController displayController = new DisplayController(DisplayController.Mode.DISPLAY);
         displayPanel = new DisplayPanel(config, displayController, laser, simulator);
