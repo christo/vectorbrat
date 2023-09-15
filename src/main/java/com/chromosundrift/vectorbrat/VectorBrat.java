@@ -71,7 +71,7 @@ public class VectorBrat {
         DisplayController displayController = new DisplayController(DisplayController.Mode.DISPLAY);
         displayPanel = new DisplayPanel(config, displayController, laser, simulator);
         displayController.setRepaintDisplay(displayPanel::repaint);
-        appMap = Demos.mkAppMap(this::setModel);
+        appMap = Demos.mkAppMap(this::setModel, "VECTORBRAT");
         Controllers controllers = new Controllers(displayController, laser, appMap);
         frame = new VectorBratFrame(config, displayPanel, controllers);
         motion = Executors.newSingleThreadExecutor(r -> new Thread(r, THREAD_ANIMATION));

@@ -56,7 +56,7 @@ public final class Asteroids implements ModelAnimator {
     }
 
     private ModelAnimator mkTitle() {
-        TextEngine te = new TextEngine(Rgb.CYAN, new AsteroidsFont());
+        TextEngine te = new TextEngine(Rgb.CYAN, AsteroidsFont.INSTANCE);
         float yScale = (float) (0.5 / NAME.length());
         Model textModel = te.textLine(NAME).scale(0.25f, yScale);
         return new BungeeAnimator(textModel, 5000, 1.05f, 1.1f);

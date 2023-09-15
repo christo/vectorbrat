@@ -12,7 +12,7 @@ public class TextEngineTest {
 
     @Test
     public void color() {
-        TextEngine te = new TextEngine(Rgb.GREEN, new AsteroidsFont());
+        TextEngine te = new TextEngine(Rgb.GREEN, AsteroidsFont.INSTANCE);
         Model model = te.textLine("FOO");
         model.lines().forEach(line -> {
             TestUtils.assertPointColor("Wrong color for 'from' point", Rgb.GREEN, line.from());
@@ -22,7 +22,7 @@ public class TextEngineTest {
 
     @Test
     public void letterA() {
-        TextEngine te = new TextEngine(Rgb.GREEN, new AsteroidsFont());
+        TextEngine te = new TextEngine(Rgb.GREEN, AsteroidsFont.INSTANCE);
         Model model = te.textLine("0");
         // check all lines are in bounds for finer-grained failures
         model.lines().forEach(line -> {

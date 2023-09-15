@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
+/**
+ * Utility methods for creating chunks of models and animations with specific config
+ * to make good demos.
+ */
 public class Demos {
     static Model mkRock() {
         List<Polyline> pls = new ArrayList<>();
@@ -26,14 +30,13 @@ public class Demos {
     }
 
     static Model mkTextModel(String text) {
-        TextEngine te = new TextEngine(Rgb.CYAN, new AsteroidsFont());
+        TextEngine te = new TextEngine(Rgb.CYAN, AsteroidsFont.INSTANCE);
         float yScale = (float) (1.0 / text.length());
         return te.textLine(text).scale(0.6f, yScale);
     }
 
-    static AppMap mkAppMap(Consumer<Model> modelConsumer) {
+    static AppMap mkAppMap(Consumer<Model> modelConsumer, String text) {
         AppMap ar = new AppMap(modelConsumer, SystemClock.INSTANCE);
-        String text = "VECTORBRAT";
         ar.add(new BungeeAnimator(mkTextModel(text), 900, 0.6f, 0.8f));
         Model aModel = mkTextModel("A");
         ar.add(new BungeeAnimator(aModel, 1500, 0.9f, 0.1f));

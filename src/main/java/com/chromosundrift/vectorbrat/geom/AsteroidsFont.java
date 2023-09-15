@@ -12,11 +12,11 @@ import com.chromosundrift.vectorbrat.Config;
 
 public class AsteroidsFont implements Typeface {
 
-    public static final Typeface INSTANCE = new AsteroidsFont();
+    public static final AsteroidsFont INSTANCE = new AsteroidsFont();
     private static final Model MISSING_CHAR = createMissingChar();
     Map<Character, Model> chars;
 
-    public AsteroidsFont() {
+    private AsteroidsFont() {
         chars = buildCharMap();
     }
 
