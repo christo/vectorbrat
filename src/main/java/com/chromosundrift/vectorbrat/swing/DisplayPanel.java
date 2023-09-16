@@ -48,12 +48,13 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
     private static final Logger logger = LoggerFactory.getLogger(DisplayPanel.class);
     private static final int MIN_WIDTH = 100;
     private static final int MIN_HEIGHT = 100;
-    private static final Stroke STROKE_PATH = new BasicStroke(3f);
+    private static final Stroke STROKE_PATH = new BasicStroke(1f);
     private static final Stroke STROKE_PATH_OFF =
-            new BasicStroke(1f, CAP_BUTT, JOIN_ROUND, 0, new float[]{1, 5}, 0);
+            new BasicStroke(0.5f, CAP_BUTT, JOIN_ROUND, 0, new float[]{1, 5}, 0);
     private static final Color COL_PATH_OFF = new Color(0.6f, 0.6f, 0.7f, 0.4f);
     private static final Stroke LASER_ON_DOT = new BasicStroke(5f, BasicStroke.CAP_ROUND, JOIN_ROUND);
     private static final Stroke LASER_OFF_DOT = new BasicStroke(3f, BasicStroke.CAP_ROUND, JOIN_ROUND);
+    private static BufferedImage im;
     private final Color colText = Color.getHSBColor(0.83f, 0.5f, 0.9f);
     private final Color colBg = Color.getHSBColor(0, 0, 0f);
     private final DoubleBufferedVectorDisplay<RasterTuning> vectorDisplay;
@@ -111,13 +112,9 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
         final Dimension s = getSize();
         int imWidth = Math.max(s.width, MIN_WIDTH);
         int imHeight = Math.max(s.height, MIN_HEIGHT);
-        final float imageScale = 2.0f;
 
         // future: use physical screen resolution to calculate scaling factor for the image
-        BufferedImage im = new BufferedImage(
-                (int) (imWidth * imageScale),
-                (int) (imHeight * imageScale),
-                BufferedImage.TYPE_INT_ARGB);
+        BufferedImage im = getImage(imWidth, imHeight);
         final Graphics2D g2 = im.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
@@ -139,6 +136,13 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
 
         g.drawImage(im, 0, 0, imWidth, imHeight, Color.BLACK, null);
         g2.dispose();
+    }
+
+    private static BufferedImage getImage(int imWidth, int imHeight) {
+        if (im == null || imWidth != im.getWidth() || imHeight != im.getHeight()) {
+            im = new BufferedImage(imWidth * 2, imHeight * 2, BufferedImage.TYPE_INT_ARGB);
+        }
+        return im;
     }
 
     private void drawSimulator(Model model, BufferedImage im, Graphics2D g2) {

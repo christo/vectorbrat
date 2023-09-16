@@ -24,6 +24,12 @@ public interface Geom {
      */
     Stream<Line> lines();
 
+    Stream<Rgb> colours();
+
+    boolean inBounds();
+
+    boolean inBounds(float minX, float minY, float maxX, float maxY);
+
     /**
      * Get the isolated points in the model.
      *
@@ -31,11 +37,7 @@ public interface Geom {
      */
     Stream<Point> isoPoints();
 
-    /**
-     * Return a bounding box that minimally contains all geometric elements.
-     * If there are no elements in the geometry, returns empty.
-     *
-     * @return the bounding box.
-     */
     Optional<Box> bounds();
+
+    public Model toModel();
 }

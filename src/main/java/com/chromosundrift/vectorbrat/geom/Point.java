@@ -210,18 +210,16 @@ public final class Point implements Geom {
     }
 
     @Override
-    public Optional<Box> bounds() {
-        return Optional.of(new Box(this, this));
-    }
-
     public boolean inBounds() {
         return inBounds(SAMPLE_MIN, SAMPLE_MIN, SAMPLE_MAX, SAMPLE_MAX);
     }
 
+    @Override
     public boolean inBounds(float minX, float minY, float maxX, float maxY) {
         return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
 
+    @Override
     public Model toModel() {
         return new Model("", Collections.emptyList(), List.of(this));
     }
@@ -245,5 +243,15 @@ public final class Point implements Geom {
     @Override
     public Stream<Point> isoPoints() {
         return Stream.of(this);
+    }
+
+    @Override
+    public Stream<Rgb> colours() {
+        return Stream.of(this.color);
+    }
+
+    @Override
+    public Optional<Box> bounds() {
+        return Optional.of(new Box(this, this));
     }
 }

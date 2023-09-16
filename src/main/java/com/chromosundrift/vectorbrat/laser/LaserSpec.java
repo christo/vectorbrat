@@ -3,6 +3,8 @@ package com.chromosundrift.vectorbrat.laser;
 
 import com.chromosundrift.vectorbrat.geom.Rgb;
 
+import java.util.function.Predicate;
+
 /**
  * Represents the performance specification of a scanning RGB laser.
  */
@@ -109,5 +111,9 @@ public final class LaserSpec {
 
     public float getmRadBeamDivergence() {
         return mRadBeamDivergence;
+    }
+
+    public boolean visible(Rgb colour) {
+        return colour.red() > minRed || colour.green() > minGreen || colour.blue() > minBlue;
     }
 }

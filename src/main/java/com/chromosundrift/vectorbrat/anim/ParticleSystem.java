@@ -20,7 +20,7 @@ import static com.chromosundrift.vectorbrat.geom.Model.EMPTY;
  */
 public class ParticleSystem extends AbstractAnimator {
 
-    private static final int MAX_MAX = 100;
+    private static final int MAX_MAX = 3000;
     private final Supplier<Mover<Model>> seed;
     private final List<Mover<Model>> particles;
     private final Impulse<Mover<Model>> impulse;

@@ -27,9 +27,9 @@ public record Rgb(float red, float green, float blue) {
     public static final Rgb ORANGE = new Rgb(1f, 0.75f, 0f);
 
     public Rgb(float red, float green, float blue) {
-        this.red = Maths.clampNormal(red);
-        this.green = Maths.clampNormal(green);
-        this.blue = Maths.clampNormal(blue);
+        this.red = Maths.clamp0to1(red);
+        this.green = Maths.clamp0to1(green);
+        this.blue = Maths.clamp0to1(blue);
     }
 
     /**

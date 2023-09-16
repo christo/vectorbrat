@@ -17,12 +17,12 @@ public class Maths {
         return Math.min(Math.max(min, x), max);
     }
 
-    public static float clampNormal(float red) {
-        return clamp(red, 0f, 1f);
+    public static double clamp(double x, double min, double max) {
+        return Math.min(Math.max(min, x), max);
     }
 
-    public static long millisToNanos(int msPeriod) {
-        return msPeriod * MILLION;
+    public static float clamp0to1(float x) {
+        return clamp(x, 0f, 1f);
     }
 
     public static long msToNanos(int ms) {

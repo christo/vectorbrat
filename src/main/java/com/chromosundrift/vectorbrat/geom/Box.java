@@ -1,5 +1,6 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -112,5 +113,29 @@ public final class Box extends Pointless implements Geom {
 
     public float height() {
         return maxMax.y() - minMin.y();
+    }
+
+    @Override
+    public Stream<Rgb> colours() {
+        return Stream.of(minMin, minMax, maxMax, maxMin).map(Point::getColor);
+    }
+
+    @Override
+    public boolean inBounds() {
+        return minMin.inBounds() || minMax.inBounds() || maxMax.inBounds() || maxMin.inBounds();
+    }
+
+    @Override
+    public boolean inBounds(float minX, float minY, float maxX, float maxY) {
+        return minMin.inBounds(minX, minY, maxX, maxY)
+                || minMax.inBounds(minX, minY, maxX, maxY)
+                || maxMax.inBounds(minX, minY, maxX, maxY)
+                || maxMin.inBounds(minX, minY, maxX, maxY);
+    }
+
+    @Override
+    public Model toModel() {
+        Polyline pl = Polyline.closed("box", minMin.getColor(), minMin, minMax, maxMax, maxMin);
+        return new Model("box", List.of(pl));
     }
 }

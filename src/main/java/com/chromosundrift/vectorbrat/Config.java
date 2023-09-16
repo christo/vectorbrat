@@ -76,7 +76,7 @@ public final class Config {
     public static final float SAMPLE_RANGE = Math.abs(Config.SAMPLE_MAX - Config.SAMPLE_MIN);
 
     private static final int DEFAULT_PPS = 30000;
-    private static final float DEFAULT_LINE_WIDTH = 5.5f;
+    private static final float DEFAULT_LINE_WIDTH = 1.5f;
 
     private static final float DEFAULT_POINTS_PER_POINT = 13f;
     private static final float DEFAULT_POINTS_PER_UNIT = 110f;

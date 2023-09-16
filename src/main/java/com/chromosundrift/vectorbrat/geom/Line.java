@@ -1,15 +1,19 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * A coloured line.
+ * A line connecting two points.
  */
 public final class Line extends Pointless implements Geom {
     private final Point from;
     private final Point to;
+
+    // TODO intersectX(float) intersectY(float) - useful special cases that give an Optional<Point>
 
     /**
      * @param from start point.
@@ -101,4 +105,22 @@ public final class Line extends Pointless implements Geom {
         return "Line[" + from + " -> " + to + ']';
     }
 
+    public Stream<Rgb> colours() {
+        return Stream.of(from.getColor(), to.getColor());
+    }
+
+    @Override
+    public boolean inBounds() {
+        return from.inBounds() || to().inBounds();
+    }
+
+    @Override
+    public boolean inBounds(float minX, float minY, float maxX, float maxY) {
+        return from.inBounds(minX, minY, maxX, maxY);
+    }
+
+    @Override
+    public Model toModel() {
+        return new Model("", List.of(Polyline.fromLine(this)), Collections.emptyList());
+    }
 }

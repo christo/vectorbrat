@@ -71,7 +71,7 @@ public class VectorBrat {
         DisplayController displayController = new DisplayController(DisplayController.Mode.DISPLAY);
         displayPanel = new DisplayPanel(config, displayController, laser, simulator);
         displayController.setRepaintDisplay(displayPanel::repaint);
-        appMap = Demos.mkAppMap(this::setModel, "VECTORBRAT");
+        appMap = Demos.mkAppMap(this::setModel, "VECTORBRAT", config.getLaserSpec());
         Controllers controllers = new Controllers(displayController, laser, appMap);
         frame = new VectorBratFrame(config, displayPanel, controllers);
         motion = Executors.newSingleThreadExecutor(r -> new Thread(r, THREAD_ANIMATION));
@@ -81,12 +81,12 @@ public class VectorBrat {
         logger.info("starting VectorBrat");
         setModel(Model.EMPTY);
         frame.start();
-        appMap.setAnimator(Asteroids.NAME);
+        appMap.setAnimator("fire");
 
         motion.submit(appMap);
         // set initial sample rate, may need to be updated
-        simulator.setSampleRate(Config.DEFAULT_SAMPLE_RATE);
-        simulator.start();
+//        simulator.setSampleRate(Config.DEFAULT_SAMPLE_RATE);
+//        simulator.start();
         logger.info("started VectorBrat");
     }
 

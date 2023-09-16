@@ -34,7 +34,7 @@ public class Model implements Geom {
      * Make an identical deep copy.
      */
     public Model deepClone() {
-        return modify(Function.identity(), Function.identity());
+        return new Model(this.name, this.polylines, this.points);
     }
 
     public Model(String name, List<Polyline> polylines) {
@@ -99,7 +99,9 @@ public class Model implements Geom {
     }
 
     public Model scale(float factorX, float factorY) {
-        return modify(polyline -> polyline.scale(factorX, factorY), point -> point.scale(factorX, factorY));
+        List<Polyline> polylines = this.polylines.stream().map(polyline -> polyline.scale(factorX, factorY)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = isoPoints().map(point -> point.scale(factorX, factorY)).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
     }
 
     public Stream<Line> lines() {
@@ -107,6 +109,7 @@ public class Model implements Geom {
     }
 
     public Model merge(Model other) {
+        // TODO check the defensive copies are complete here
         List<Polyline> allPolylines = new ArrayList<>(this.polylines);
         allPolylines.addAll(other.polylines);
         List<Point> allPoints = new ArrayList<>(this.points);
@@ -115,11 +118,21 @@ public class Model implements Geom {
     }
 
     public Model offset(float dx, float dy) {
-        return modify(pl -> pl.offset(dx, dy), p -> p.offset(dx, dy));
+        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.offset(dx, dy)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = isoPoints().map(p -> p.offset(dx, dy)).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
+    }
+
+    public Model offset(Vec2 v) {
+        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.offset((float) v.x(), (float) v.y())).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = isoPoints().map(p -> p.offset((float) v.x(), (float) v.y())).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
     }
 
     public Model coloured(final Rgb c) {
-        return modify(pl -> pl.colored(c), p -> p.colored(c));
+        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.colored(c)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = isoPoints().map(p -> p.colored(c)).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
     }
 
     @Override
@@ -200,12 +213,29 @@ public class Model implements Geom {
      * @return new {@link Model}
      */
     public Model blend(final Function<Rgb, Rgb> mode) {
-        return modify(pl -> pl.blend(mode), p -> p.blend(mode));
+        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.blend(mode)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = isoPoints().map(p -> p.blend(mode)).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
     }
 
-    public Model modify(final Function<Polyline, Polyline> plf, final Function<Point, Point> pf) {
-        List<Polyline> polylines = this.polylines.stream().map(plf).collect(Collectors.<Polyline>toList());
-        List<Point> allPoints = isoPoints().map(pf).collect(Collectors.toList());
-        return new Model(this.name, polylines, allPoints);
+    @Override
+    public Stream<Rgb> colours() {
+        return Stream.concat(isoPoints().map(Point::getColor), lines().flatMap(Line::colours));
+    }
+
+    @Override
+    public boolean inBounds() {
+        return isoPoints().anyMatch(Point::inBounds) || lines().anyMatch(Line::inBounds);
+    }
+
+    @Override
+    public boolean inBounds(float minX, float minY, float maxX, float maxY) {
+        return isoPoints().anyMatch(p -> p.inBounds(minX, minY, maxX, maxY))
+                || lines().anyMatch(line -> line.inBounds(minX, minY, maxX, maxY));
+    }
+
+    @Override
+    public Model toModel() {
+        return this;
     }
 }

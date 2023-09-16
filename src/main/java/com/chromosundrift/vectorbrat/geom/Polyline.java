@@ -98,7 +98,9 @@ public final class Polyline extends Pointless implements Geom {
                 '}';
     }
 
+
     Point[] _points() {
+        // WART: this makes us mutable!
         return this._points;
     }
 
@@ -205,5 +207,35 @@ public final class Polyline extends Pointless implements Geom {
             points[i] = this._points[i].blend(mode);
         }
         return new Polyline(this.name, mode.apply(color), points);
+    }
+
+    @Override
+    public Stream<Rgb> colours() {
+        return Arrays.stream(_points).map(Point::getColor);
+    }
+
+    @Override
+    public boolean inBounds() {
+        for (Point point : _points) {
+            if (!point.inBounds()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean inBounds(float minX, float minY, float maxX, float maxY) {
+        for (Point point : _points) {
+            if (!point.inBounds(minX, minY, maxX, maxY)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Model toModel() {
+        return null;
     }
 }

@@ -13,5 +13,5 @@ import java.util.function.Function;
  */
 @FunctionalInterface
 public interface Impulse<T> {
-    T apply(long nsDelta, T model);
+    T apply(long nsDelta, T subject);
 }
