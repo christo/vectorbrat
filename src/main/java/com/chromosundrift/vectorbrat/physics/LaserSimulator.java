@@ -288,6 +288,9 @@ public final class LaserSimulator implements LaserDriver {
         executorService.submit(this::run);
     }
 
+    /**
+     * Runs the simulation loop, intended to run inside {@link ExecutorService}.
+     */
     private void run() {
         logger.info("run()");
 
@@ -303,7 +306,7 @@ public final class LaserSimulator implements LaserDriver {
                     update();
                 } catch (Exception e) {
                     logger.error("update spewed", e);
-                    // no point rethrowing; executor swallows exception anyway?
+                    // no point rethrowing; executor swallows exception
                 }
                 long nsPostUpdateTime = System.nanoTime();
                 nsUpdateDuration = nsPostUpdateTime - nsPreUpdateTime;
@@ -319,7 +322,7 @@ public final class LaserSimulator implements LaserDriver {
     }
 
     public void stop() {
-        executorService.shutdown();
+        running = false;
     }
 
     /**
