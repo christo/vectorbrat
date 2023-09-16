@@ -1,6 +1,8 @@
 package com.chromosundrift.vectorbrat.laser;
 
 
+import com.chromosundrift.vectorbrat.geom.Rgb;
+
 /**
  * Represents the performance specification of a scanning RGB laser.
  */
@@ -63,6 +65,15 @@ public final class LaserSpec {
         return new LaserSpec(saturn1MaxPps, saturn1MaxDeflection, 4.5f, 0.5f);
     }
 
+    /**
+     * Whether or not the colour is too dark to see on this laser.
+     *
+     * @param colour the colour to check against minimum brightness.
+     * @return true iff rgb components are all under minimum visible values.
+     */
+    public boolean invisible(Rgb colour) {
+        return colour.red() < minRed && colour.green() < minGreen && colour.blue() < minBlue;
+    }
 
     public float getMinRed() {
         return minRed;
