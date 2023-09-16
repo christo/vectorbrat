@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.chromosundrift.vectorbrat.anim.AbstractAnimator;
 import com.chromosundrift.vectorbrat.data.Maths;
 import com.chromosundrift.vectorbrat.physics.Clock;
 import com.chromosundrift.vectorbrat.VectorBratException;
@@ -19,7 +20,7 @@ import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.geom.Updater;
 import com.chromosundrift.vectorbrat.physics.SystemClock;
 
-public final class Asteroids implements ModelAnimator {
+public final class Asteroids extends AbstractAnimator {
     public static final float MIN_X = -1.0f;
     public static final float MAX_X = 1.0f;
     public static final float MIN_Y = -1.0f;
@@ -45,7 +46,7 @@ public final class Asteroids implements ModelAnimator {
     private final Random random = new Random(1234L); // fixed seed to make successive profiling runs comparable
 
     public Asteroids() {
-
+        super(NAME);
         List<ModelAnimator> animators = new ArrayList<>();
         animators.add(new BatchAnimator<>("rocks", NUM_ASTEROIDS, new AsteroidUpdater()));
         animators.add(mkTitle());
@@ -60,11 +61,6 @@ public final class Asteroids implements ModelAnimator {
         float yScale = (float) (0.5 / NAME.length());
         Model textModel = te.textLine(NAME).scale(0.25f, yScale);
         return new BungeeAnimator(textModel, 5000, 1.05f, 1.1f);
-    }
-
-    @Override
-    public String getName() {
-        return NAME;
     }
 
     @Override
