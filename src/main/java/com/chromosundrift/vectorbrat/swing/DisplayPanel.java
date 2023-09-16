@@ -38,7 +38,8 @@ import static java.awt.BasicStroke.JOIN_ROUND;
 
 
 /**
- * Threadsafe JPanel implementation of VectorDeplay.
+ * Threadsafe JPanel implementation of VectorDeplay. Shows the ideal model in the app or the path plan with
+ * connecting lines indicating the blank path, also interpolated points.
  */
 public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTuning> {
 
@@ -200,7 +201,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
 
     private void drawPathPlan(final Model model, final BufferedImage im, final Graphics2D g2) {
         Interpolator p = getPathPlan();
-        if (p != null && p.getXs().size() > 0) {
+        if (p != null && !p.getXs().isEmpty()) {
             int w = im.getWidth();
             int h = im.getHeight();
 
@@ -214,10 +215,12 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
 
             float pointAlpha = 0.6f;
             int blackPoints = 0;
+            final float xInvert = laserController.getInvertX() ? -1f : 1f;
+            final float yInvert = laserController.getInvertY() ? -1f : 1f;
             for (int i = 0; i < s; i++) {
 
-                int x = (int) ((xs.get(i) / 2 + 0.5) * w);
-                int y = (int) ((ys.get(i) / 2 + 0.5) * h);
+                int x = (int) (((xs.get(i) * xInvert) / 2 + 0.5) * w);
+                int y = (int) (((ys.get(i) * yInvert) / 2 + 0.5) * h);
 
                 boolean laserOn = rs.get(i) > 0.01 || gs.get(i) > 0.01 || bs.get(i) > 0.01;
                 if (laserOn) {
@@ -230,8 +233,8 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
                     blackPoints++;
                 }
                 if (i != 0) {
-                    int px = (int) ((xs.get(i - 1) / 2 + 0.5) * w);
-                    int py = (int) ((ys.get(i - 1) / 2 + 0.5) * h);
+                    int px = (int) (((xs.get(i - 1) * xInvert) / 2 + 0.5) * w);
+                    int py = (int) (((ys.get(i - 1) * yInvert) / 2 + 0.5) * h);
                     g2.drawLine(px, py, x, y);
                 }
                 // draw a dot at the point
