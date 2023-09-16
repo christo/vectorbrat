@@ -31,6 +31,7 @@ public final class Polyline extends Pointless implements Geom {
 
     /**
      * Creates a closed polygon from the given points. This includes the join betwen last and first points.
+     * Note the points will be coloured to the given colour, overriding any colour they have.
      *
      * @param color  the color.
      * @param points the points.
@@ -46,7 +47,7 @@ public final class Polyline extends Pointless implements Geom {
     }
 
     /**
-     * Creaetes a sequence of connected lines with no implicit join from last to first.
+     * Creates a sequence of connected lines with no implicit join from last to first.
      *
      * @param c      the color.
      * @param points the points.
