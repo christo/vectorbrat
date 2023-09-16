@@ -194,10 +194,10 @@ public class Model implements Geom {
     }
 
     /**
-     * Returns a new model derived from this one with colours modified by the given colour and
+     * Returns a new {@link Model} derived from this one with colours modified by the given colour and
      * blend mode.
      *
-     * @return
+     * @return new {@link Model}
      */
     public Model blend(final Function<Rgb, Rgb> mode) {
         return modify(pl -> pl.blend(mode), p -> p.blend(mode));
