@@ -18,7 +18,8 @@ import java.util.function.Consumer;
 
 /**
  * Utility methods for creating chunks of models and animations with specific config
- * to make good demos.
+ * to make good demos. This contains a lot of content and configuration that we want
+ * to keep {@link VectorBrat} clean from.
  */
 public class Demos {
     static Model mkRock() {
@@ -36,16 +37,19 @@ public class Demos {
     }
 
     static AppMap mkAppMap(Consumer<Model> modelConsumer, String text) {
-        AppMap ar = new AppMap(modelConsumer, SystemClock.INSTANCE);
-        ar.add(new BungeeAnimator(mkTextModel(text), 900, 0.6f, 0.8f));
-        Model aModel = mkTextModel("A");
-        ar.add(new BungeeAnimator(aModel, 1500, 0.9f, 0.1f));
-        ar.add(new Asteroids());
+        AppMap appMap = new AppMap(modelConsumer, SystemClock.INSTANCE);
+        appMap.add(mkBungeeText(text));
+        appMap.add(new BungeeAnimator(mkTextModel("A"), 1500, 0.9f, 0.1f));
+        appMap.add(new Asteroids());
 
-        ar.add(Pattern.testPattern1().scale(0.8f, 0.8f));
-        ar.add(Pattern.sineWaves(Rgb.RED));
-        ar.add(Pattern.boxGrid(3, 2, Rgb.CYAN));
-        ar.add(mkRock());
-        return ar;
+        appMap.add(Pattern.testPattern1().scale(0.8f, 0.8f));
+        appMap.add(Pattern.sineWaves(Rgb.RED));
+        appMap.add(Pattern.boxGrid(3, 2, Rgb.CYAN));
+        appMap.add(mkRock());
+        return appMap;
+    }
+
+    private static BungeeAnimator mkBungeeText(String text) {
+        return new BungeeAnimator(mkTextModel(text), 900, 0.6f, 0.8f);
     }
 }
