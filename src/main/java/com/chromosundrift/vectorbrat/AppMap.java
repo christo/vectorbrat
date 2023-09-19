@@ -26,7 +26,7 @@ public class AppMap implements Runnable, AppController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppMap.class);
 
-    private final Map<String, ModelAnimator> animators;
+    private final TreeMap<String, ModelAnimator> animators;
     private final Consumer<Model> modelConsumer;
     private final Clock clock;
     private String defaultAnimator;
@@ -47,10 +47,15 @@ public class AppMap implements Runnable, AppController {
 
     public AppMap(Consumer<Model> modelConsumer,
                   Clock clock) {
-        this(new HashMap<>(), "", modelConsumer, clock);
+        this(new TreeMap<>(), "", modelConsumer, clock);
     }
 
 
+    /**
+     * Returns the animator names.
+     *
+     * @return animator names.
+     */
     @Override
     public Set<String> getAnimators() {
         return animators.keySet();
