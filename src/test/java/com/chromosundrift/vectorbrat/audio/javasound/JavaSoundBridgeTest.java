@@ -20,6 +20,7 @@ import static java.lang.String.join;
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.audio.MissingAudioDevice;
+import org.junit.platform.suite.api.Suite;
 
 /**
  * Requires audio devices connected and jackd running.
@@ -71,9 +72,8 @@ public class JavaSoundBridgeTest {
     }
 
     @Test
-    @Ignore
+    @Ignore // TODO move to integration test
     public void testListFormats() throws MissingAudioDevice {
-        // TODO move to integration test
         Mixer m = new JavaSoundBridge().getMixerOrDie(Config.ES9);
         Line.Info[] sourceLines = m.getSourceLineInfo();
         Line.Info[] targetLines = m.getTargetLineInfo();
@@ -83,7 +83,6 @@ public class JavaSoundBridgeTest {
         Arrays.stream(sourceLines).map(dump).forEach(System.out::println);
         System.out.println("targetLines");
         Arrays.stream(targetLines).map(dump).forEach(System.out::println);
-
     }
 
     @Test
