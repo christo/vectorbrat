@@ -7,6 +7,7 @@ import com.chromosundrift.vectorbrat.laser.LaserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -38,12 +39,6 @@ class ControlPanel extends JPanel {
         logger.info("initialising ControlPanel");
         LaserController laserController = controllers.laserController();
         final DisplayController dc = controllers.displayController();
-
-        JPanel armStart = mkArmStart(laserController);
-        Selector modeSelektor = mkModeSelektor(dc, laserController);
-        JPanel pps = mkPpsSlider(config, laserController);
-        JPanel stats = mkStatPanel(laserController);
-
         setBorder(new EmptyBorder(5, 5, 5, 5));
         // this is totally gridbag
         setLayout(new GridBagLayout());
@@ -53,10 +48,16 @@ class ControlPanel extends JPanel {
         gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.ipady = 10;
-        gbc.anchor = GridBagConstraints.LINE_END;
-
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        List.of(armStart, modeSelektor, pps, stats).forEach(item -> add(item, gbc));
+
+        add(mkArmStart(laserController), gbc);
+        add(mkModeSelektor(dc, laserController), gbc);
+        add(mkPpsSlider(config, laserController), gbc);
+        add(mkStatPanel(laserController), gbc);
+
+        // fill remaining vertical space
+        gbc.weighty = 1;
+        add(Box.createVerticalBox(), gbc);
     }
 
     private static Selector mkModeSelektor(DisplayController dc, LaserController lc) {

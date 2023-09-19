@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -33,34 +32,29 @@ public class VectorBratFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(5, 5));
 
-        JPanel rootPanel = new JPanel(new BorderLayout(), true);
-        rootPanel.setMinimumSize(new Dimension(200, 100));
-
         JSplitPane split = new JSplitPane();
+        split.setMinimumSize(new Dimension(200, 100));
         split.setContinuousLayout(true);
         split.setDividerLocation(0.4);
-        rootPanel.add(split, BorderLayout.CENTER);
 
-        JPanel enginePanel = new JPanel();
-        enginePanel.setLayout(new BorderLayout());
 
+        // big panel with primary display
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(displayPanel, BorderLayout.CENTER);
 
-        split.setLeftComponent(enginePanel);
         split.setRightComponent(mainPanel);
         split.setOneTouchExpandable(true);
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        enginePanel.add(scrollPane, BorderLayout.NORTH);
-        enginePanel.add(Box.createVerticalBox(), BorderLayout.CENTER);
-
+        // side panel with configuration/controls
         ControlPanel controlPanel = new ControlPanel(config, controllers);
-        scrollPane.setViewportView(controlPanel);
+        controlPanel.setMaximumSize(null);
 
-        setContentPane(rootPanel);
+        JScrollPane scrollPane = new JScrollPane(controlPanel);
+        split.setLeftComponent(scrollPane);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        setContentPane(split);
     }
 
     public void start() {
