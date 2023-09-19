@@ -38,8 +38,6 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
     private final Config config;
     private BeamTuning beamTuning;
     private volatile boolean running;
-    private volatile boolean invertX = false;
-    private volatile boolean invertY = false;
 
     /**
      * Controls the thread that continually updates the model.
@@ -91,8 +89,8 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
             // calculate scan rate
 
             pathPlanner = new Interpolator(config.getInterpolation(), config.getBeamTuning());
-            float xScale = this.invertX ? -1f : 1f;
-            float yScale = this.invertY ? -1f : 1f;
+            float xScale = this.getInvertX() ? -1f : 1f;
+            float yScale = this.getInvertY() ? -1f : 1f;
             long startTime = System.nanoTime();
             pathPlanner.plan(model.scale(xScale, yScale));
             setPathPlanTime(System.nanoTime() - startTime);
@@ -273,21 +271,21 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
 
     @Override
     public boolean getInvertX() {
-        return this.invertX;
+        return this.config.getInvertX();
     }
 
     @Override
     public void setInvertX(boolean inverted) {
-        this.invertX = inverted;
+        this.config.setInvertX(inverted);
     }
 
     @Override
     public boolean getInvertY() {
-        return this.invertY;
+        return this.config.getInvertY();
     }
 
     @Override
     public void setInvertY(boolean inverted) {
-        this.invertY = inverted;
+        this.config.setInvertY(inverted);
     }
 }

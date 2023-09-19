@@ -6,6 +6,8 @@ import java.util.List;
 import com.chromosundrift.vectorbrat.geom.Interpolation;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
+import com.chromosundrift.vectorbrat.physics.BeamPhysics;
+import com.chromosundrift.vectorbrat.physics.LinearBeamPhysics;
 
 
 /**
@@ -85,6 +87,8 @@ public final class Config {
     private static final float DEFAULT_POINTS_PER_UNIT_OFFSET = 9f;
 
     private static final Interpolation DEFAULT_INTERPOLATION = Interpolation.QUINTIC;
+    public static final BeamPhysics DEFAULT_BEAM_PHYSICS = new LinearBeamPhysics(1f, 1f);
+
     private final Channel channelX;
     private final Channel channelY;
     private final Channel channelR;
@@ -98,6 +102,10 @@ public final class Config {
     private Interpolation interpolation = DEFAULT_INTERPOLATION;
     private final LaserSpec laserSpec;
     private float lineWidth;
+    private BeamPhysics beamPhysics;
+
+    private boolean invertX = false;
+    private boolean invertY = true;
 
     public Config(String title, String tinyTitle) {
         this.title = title;
@@ -116,6 +124,7 @@ public final class Config {
                 DEFAULT_VERTEX_POINTS,
                 DEFAULT_BLACK_POINTS,
                 DEFAULT_POINTS_PER_UNIT_OFFSET);
+        this.beamPhysics = DEFAULT_BEAM_PHYSICS;
         this.laserSpec = LaserSpec.laserWorld1600Pro();
     }
 
@@ -205,6 +214,30 @@ public final class Config {
 
     public void setBeamTuning(BeamTuning tuning) {
         this.beamTuning = tuning;
+    }
+
+    public BeamPhysics getBeamPhysics() {
+        return beamPhysics;
+    }
+
+    public void setBeamPhysics(BeamPhysics beamPhysics) {
+        this.beamPhysics = beamPhysics;
+    }
+
+    public boolean getInvertX() {
+        return invertX;
+    }
+
+    public void setInvertX(boolean invertX) {
+        this.invertX = invertX;
+    }
+
+    public boolean getInvertY() {
+        return invertY;
+    }
+
+    public void setInvertY(boolean invertY) {
+        this.invertY = invertY;
     }
 
     /**
