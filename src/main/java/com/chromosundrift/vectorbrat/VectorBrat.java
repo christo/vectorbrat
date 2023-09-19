@@ -5,17 +5,13 @@ import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.laser.LaserDisplay;
 import com.chromosundrift.vectorbrat.physics.BulletClock;
 import com.chromosundrift.vectorbrat.physics.LaserSimulator;
-import com.chromosundrift.vectorbrat.physics.LinearBeamPhysics;
 import com.chromosundrift.vectorbrat.swing.DisplayController;
 import com.chromosundrift.vectorbrat.swing.DisplayPanel;
+import com.chromosundrift.vectorbrat.swing.UiUtil;
 import com.chromosundrift.vectorbrat.swing.VectorBratFrame;
-import io.materialtheme.darkstackoverflow.DarkStackOverflowTheme;
-import mdlaf.MaterialLookAndFeel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -39,6 +35,7 @@ public class VectorBrat {
         setSystemLibraryPath();
         Util.bridgeJulToSlf4j();
         try {
+            UiUtil.setUiGlobals();
             VectorBrat vectorBrat = new VectorBrat();
             vectorBrat.dumpAnimators();
             vectorBrat.start();
@@ -47,27 +44,12 @@ public class VectorBrat {
         }
     }
 
-    private static void setUiGlobals() throws VectorBratException {
-        try {
-            logger.info("setting look and feel");
-            System.setProperty("sun.java2d.uiScale", "2");
-            UIManager.setLookAndFeel(new MaterialLookAndFeel(new DarkStackOverflowTheme()));
-        } catch (UnsupportedLookAndFeelException e) {
-            throw new VectorBratException(e);
-        }
-    }
-
     public VectorBrat() throws VectorBratException {
         logger.info("initialising VectorBrat");
         final Config config = new Config();
-
-        setUiGlobals();
-
         laser = new LaserDisplay(config);
-        // TODO get beam physics from config and modify in control panel
-        LinearBeamPhysics physics = new LinearBeamPhysics(1f, 1f);
         final BulletClock clock = new BulletClock(1.0f);
-        simulator = new LaserSimulator(config.getLaserSpec(), laser.getTuning(), physics, clock);
+        simulator = new LaserSimulator(config.getLaserSpec(), laser.getTuning(), config.getBeamPhysics(), clock);
         DisplayController displayController = new DisplayController(DisplayController.Mode.DISPLAY);
         displayPanel = new DisplayPanel(config, displayController, laser, simulator);
         displayController.setRepaintDisplay(displayPanel::repaint);
@@ -81,7 +63,7 @@ public class VectorBrat {
         logger.info("starting VectorBrat");
         setModel(Model.EMPTY);
         frame.start();
-        appMap.setAnimator("fire");
+        appMap.setAnimator(Asteroids.NAME);
 
         motion.submit(appMap);
         // set initial sample rate, may need to be updated
