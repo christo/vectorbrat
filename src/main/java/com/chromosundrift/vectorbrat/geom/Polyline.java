@@ -100,7 +100,6 @@ public final class Polyline extends Pointless implements Geom {
 
 
     Point[] _points() {
-        // WART: this makes us mutable!
         return this._points;
     }
 
