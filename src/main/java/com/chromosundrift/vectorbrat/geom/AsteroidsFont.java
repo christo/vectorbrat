@@ -415,7 +415,6 @@ public class AsteroidsFont implements Typeface {
 
     /**
      * Returns a gap in ems, currently a constant gap.
-     * TODO support proportional spacing
      */
     @Override
     public float gap(char c1, char c2) {
