@@ -123,11 +123,16 @@ efforts must stop somewhere.
 
 * virtual raster: render horizontal stripes like old IBM logo
 * joy division mountains - made from sound input
-* star wars text
+* star wars text scroller
+* arbitrary text scroller
 * 3d rotations with hidden line treatment (e.g. blue making object translucent)
 * soft-body physics demos, box 2d demos
 * stripes with perturbations
 * starfield
+* music visualisation
+* iphone control app?
+* game controller inputs?
+* post-processing video to produce registered vectorised derivatives (e.g. edge detection, non-photoreal renderers)
 
 ## Content Ideas
 
