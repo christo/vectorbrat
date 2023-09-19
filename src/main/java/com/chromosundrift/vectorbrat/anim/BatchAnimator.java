@@ -29,7 +29,7 @@ public class BatchAnimator<T> implements ModelAnimator {
     public void start() {
         items = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            items.add(updater.create());
+            items.add(updater.get());
         }
     }
 

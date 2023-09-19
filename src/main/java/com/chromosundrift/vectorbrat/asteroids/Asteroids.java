@@ -18,7 +18,6 @@ import com.chromosundrift.vectorbrat.geom.Point;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.geom.TextEngine;
 import com.chromosundrift.vectorbrat.geom.Updater;
-import com.chromosundrift.vectorbrat.physics.SystemClock;
 
 public final class Asteroids extends AbstractAnimator {
     public static final float MIN_X = -1.0f;
@@ -91,29 +90,24 @@ public final class Asteroids extends AbstractAnimator {
         private final Clock clock;
         private final Rgb colour;
 
-        public ParticleUpdater(Rgb colour) {
-            this(SystemClock.INSTANCE, colour);
-        }
-
         public ParticleUpdater(Clock clock, Rgb colour) {
             this.clock = clock;
             this.colour = colour;
         }
 
         @Override
-        public Particle create() {
+        public Particle get() {
             return new Particle(randomX(), randomX(), randomVel(), randomVel(), clock.getNs());
         }
 
         @Override
-        public Model update(Particle item, long nsTime) {
-            item.update(nsTime);
-            return new Point(item.x, item.y, colour).toModel();
+        public Model update(Particle p, long nsTime) {
+            p.update(nsTime);
+            return new Point(p.x, p.y, colour).toModel();
         }
     }
 
-    private static final class Particle {
-        // TODO generalise this for arbitrary Geom
+    static final class Particle {
         public Particle(float x, float y, float dx, float dy, long lastNanos) {
             this.x = x;
             this.y = y;
@@ -124,10 +118,16 @@ public final class Asteroids extends AbstractAnimator {
 
         private float x;
         private float y;
-        private final float dx;
-        private final float dy;
+        private float dx;
+        private float dy;
         private long nsPrev;
 
+        /**
+         * Update location based on linear extrapolation of current velocity
+         * and previous update time.
+         *
+         * @param nsTime current time in nanoseconds.
+         */
         public void update(long nsTime) {
             if (nsPrev >= 0) {
                 // calculate the number of frames elapsed
@@ -152,13 +152,15 @@ public final class Asteroids extends AbstractAnimator {
             }
             nsPrev = nsTime;
         }
+
+
     }
 
 
     private class AsteroidUpdater implements Updater<Asteroid> {
 
         @Override
-        public Asteroid create() {
+        public Asteroid get() {
             return new Asteroid(Asteroid.Size.LARGE, random);
         }
 
