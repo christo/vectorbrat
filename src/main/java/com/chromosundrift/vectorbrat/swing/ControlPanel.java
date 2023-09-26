@@ -65,8 +65,7 @@ class ControlPanel extends JPanel {
                 .map(m -> new Selector.Selection(m.getUiLabel(), () -> dc.setMode(m)))
                 .toList();
 
-        // TODO make sure turning debug mode on does not start the laser and make path planning run without it
-        Selector modeSelektor = new Selector("mode", modes);
+        Selector modeSelektor = new Selector(modes);
         modeSelektor.setBorder(new EmptyBorder(6, 0, 7, 0));
         return modeSelektor;
     }
