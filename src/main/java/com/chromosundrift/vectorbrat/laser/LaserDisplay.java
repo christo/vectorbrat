@@ -1,5 +1,6 @@
 package com.chromosundrift.vectorbrat.laser;
 
+import com.chromosundrift.vectorbrat.system.PeekableLazySupplier;
 import com.google.common.base.Suppliers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +30,15 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
 
     private static final Logger logger = LoggerFactory.getLogger(LaserDisplay.class);
     private static final long MS_LISTENER_UPDATE = 100;
-    private static final int MS_POWER_NAP = 100;
+    private static final int MS_POWER_NAP = 300;
 
     private final DoubleBufferedVectorDisplay<BeamTuning> vectorDisplay;
-    private final Supplier<JackLaserDriver> laserDriver;
+    private final PeekableLazySupplier<JackLaserDriver> laserDriver;
     private final ThreadFactory threadFactory;
+
+    /**
+     * Listeners registered to receive updates.
+     */
     private final Set<Consumer<LaserController>> updateListeners;
     private final Config config;
     private BeamTuning beamTuning;
@@ -43,19 +48,24 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
      * Controls the thread that continually updates the model.
      */
     private ExecutorService exec;
+
     /**
      * Tracks whether the model changed and a new path plan must be generated.
      */
     private volatile boolean modelDirty;
+
     private long lastPathPlanTime;
     private Interpolator pathPlanner;
     private long msNextListenersUpdate = 0L;
 
     public LaserDisplay(final Config config) {
         logger.info("initialising LaserDisplay");
+        // beam tuning can be modified at runtime, get initial beam tuning from config
         this.beamTuning = config.getBeamTuning();
         this.vectorDisplay = new DoubleBufferedVectorDisplay<>(true, beamTuning);
-        this.laserDriver = Suppliers.memoize(() -> {
+
+        // only once get is called, driver is instantiated
+        this.laserDriver = new PeekableLazySupplier<>(() -> {
             try {
                 logger.info("Lazily creating LaserDriver (may throw)");
                 return new JackLaserDriver(config);
@@ -83,18 +93,18 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
      * @return null
      */
     private Void render(Model model) {
-
+        // TODO maybe we want to rerender models with previous path if model not dirty?
         if (modelDirty && !model.isEmpty()) {
-
-            // calculate scan rate
-
             pathPlanner = new Interpolator(config.getInterpolation(), config.getBeamTuning());
             float xScale = this.getInvertX() ? -1f : 1f;
             float yScale = this.getInvertY() ? -1f : 1f;
+            // calculate scan rate
             long startTime = System.nanoTime();
             pathPlanner.plan(model.scale(xScale, yScale));
             setPathPlanTime(System.nanoTime() - startTime);
-            laserDriver.get().makePath(pathPlanner);
+            if (laserDriver.peek() && laserDriver.get().isOn()) {
+                laserDriver.get().makePath(pathPlanner);
+            }
             modelDirty = false;
         }
 
@@ -102,25 +112,16 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
     }
 
     /**
-     * Renders continually at the configured rate, unless driver is "off", in which case, we do lots of nothing. Runs
+     * Renders continually at the configured rate, driver may not be connected, in which case, we do lots of nothing. Runs
      * in the current thread.
      */
     private void run() throws VectorBratException {
         logger.info("running laser display");
-        laserDriver.get().start();
+
         running = true;
         tellListeners();
         while (running) {
-            if (laserDriver.get().isOn()) {
-                vectorDisplay.withLockAndFlip(this::render);
-            } else {
-                try {
-                    //noinspection BusyWait
-                    Thread.sleep(MS_POWER_NAP);
-                } catch (InterruptedException ignored) {
-
-                }
-            }
+            vectorDisplay.withLockAndFlip(this::render);
         }
     }
 
@@ -153,24 +154,39 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
     }
 
     /**
-     * Starts in its own thread. Call stop to shutdown.
+     * Causes laser driver to be initialised.
      */
-    public void start() {
-        if (exec != null && !exec.isShutdown()) {
-            logger.warn("start requested but already running");
-        } else {
+    public void connect() {
+        try {
+            // this will trigger instntiation first time
+            // TODO since we explicitly connect we should get rid of fancy lazy init?
+            laserDriver.get().start();
+        } catch (VectorBratException e) {
+            logger.error("cannot start LaserDriver", e);
+        }
+        // make sure we are running
+        if (exec == null || exec.isShutdown()) {
             logger.info("starting laser display");
 
-            exec = Executors.newSingleThreadExecutor(threadFactory);
-            exec.submit(() -> {
-                try {
-                    run();
-                } catch (VectorBratException e) {
-                    logger.error("laser display died", e);
-                    stop();
-                }
-            });
+            startup();
         }
+    }
+
+    /**
+     * Starts running in our own thread, continually planning the path from model updates.
+     * Does not start laser driver, for that call connect().
+     */
+    public void startup() {
+        logger.info("startup() called");
+        exec = Executors.newSingleThreadExecutor(threadFactory);
+        exec.submit(() -> {
+            try {
+                run();
+            } catch (VectorBratException e) {
+                logger.error("laser display died", e);
+                stop();
+            }
+        });
     }
 
     /**
@@ -180,7 +196,7 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
      */
     @Override
     public boolean getArmed() {
-        return this.running && this.laserDriver.get().isOn();
+        return running && laserDriver.peek() && laserDriver.get().isOn();
     }
 
     /**
@@ -205,7 +221,7 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
 
     @Override
     public Optional<Float> getSampleRate() {
-        if (running) {
+        if (running && laserDriver.peek()) {
             return Optional.of(laserDriver.get().getSampleRate());
         } else {
             return Optional.empty();
@@ -215,7 +231,8 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
 
     @Override
     public Optional<Integer> getBufferSize() {
-        if (running) {
+        // TODO verify we need the laser driver to get a buffer size
+        if (running && laserDriver.peek()) {
             int bufferSize = laserDriver.get().getBufferSize();
             return Optional.of(bufferSize);
         } else {

@@ -27,8 +27,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.PATH_PLAN;
 import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DISPLAY;
+import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.PATH_PLAN;
 import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.SIMULATOR;
 
 class ControlPanel extends JPanel {
@@ -178,17 +178,18 @@ class ControlPanel extends JPanel {
         armPanel.add(armed, BorderLayout.WEST);
         armPanel.add(safe, BorderLayout.EAST);
 
-        JButton startButton = new JButton("Start");
-        startButton.addActionListener(e -> {
+        JButton connectButton = new JButton("Connect");
+        connectButton.addActionListener(e -> {
             if (!lc.isRunning()) {
-                startButton.setEnabled(false);
-                startButton.setText("Starting...");
-                lc.start();
+                // only respond if not already running
+                connectButton.setEnabled(false);
+                connectButton.setText("Connecting...");
+                lc.connect();
             }
         });
         JPanel buttonPanel = new JPanel(new BorderLayout());
         buttonPanel.setBorder(new EmptyBorder(0, 5, 5, 5));
-        buttonPanel.add(startButton, BorderLayout.EAST);
+        buttonPanel.add(connectButton, BorderLayout.EAST);
         armPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         JCheckBox invertX = new JCheckBox("Invert X");
@@ -213,8 +214,8 @@ class ControlPanel extends JPanel {
             boolean running = lc.isRunning();
 
             // start button needs to be disabled if running
-            startButton.setEnabled(!running);
-            startButton.setText(running ? "Running" : "Start");
+            connectButton.setEnabled(!running);
+            connectButton.setText(running ? "Connected" : "Connect");
             // only enable the arm/safe toggle if the LaserController is running
             armed.setEnabled(running);
             safe.setEnabled(running);

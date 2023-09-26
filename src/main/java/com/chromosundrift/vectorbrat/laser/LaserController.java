@@ -27,9 +27,9 @@ public interface LaserController {
     void setArmed(boolean armed);
 
     /**
-     * Starts the LaserController and attempts to connect the driver - this does not arm the laser.
+     * Connects the LaserController through the LaserDriver - this does not arm the laser.
      */
-    void start();
+    void connect();
 
     /**
      * Returns true only if the laser subsystem is running (not the same as if it is armed).
