@@ -187,8 +187,8 @@ class ControlPanel extends JPanel {
 
         JButton connectButton = new JButton("Connect");
         connectButton.addActionListener(e -> {
-            if (!lc.isRunning()) {
-                // only respond if not already running
+            if (!lc.isConnected()) {
+                // only respond if not already connected
                 connectButton.setEnabled(false);
                 connectButton.setText("Connecting...");
                 lc.connect();
