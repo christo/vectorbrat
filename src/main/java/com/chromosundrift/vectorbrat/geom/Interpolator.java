@@ -286,4 +286,9 @@ public final class Interpolator implements Pather {
     public int size() {
         return xs.size();
     }
+
+    public boolean isEmpty() {
+        // each buffer is the same size
+        return getXs().isEmpty();
+    }
 }
