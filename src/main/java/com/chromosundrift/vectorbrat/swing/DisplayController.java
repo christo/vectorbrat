@@ -4,6 +4,8 @@ package com.chromosundrift.vectorbrat.swing;
  * Model for UI options.
  */
 public class DisplayController {
+
+
     private Mode mode;
     private Runnable repaintDisplay;
 
@@ -28,7 +30,7 @@ public class DisplayController {
     }
 
     public enum Mode {
-        DEBUG("Path Plan"), DISPLAY("Vector Display"), SIMULATOR("Simulator");
+        PATH_PLAN("Path Plan"), DISPLAY("Vector Display"), SIMULATOR("Simulator");
 
         private final String uiLabel;
 

@@ -113,7 +113,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
         int imWidth = Math.max(s.width, MIN_WIDTH);
         int imHeight = Math.max(s.height, MIN_HEIGHT);
 
-        // future: use physical screen resolution to calculate scaling factor for the image
         BufferedImage im = getImage(imWidth, imHeight);
         final Graphics2D g2 = im.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -126,11 +125,9 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
             drawBranding(im, g2);
         } else {
             switch (displayController.getMode()) {
-                case DEBUG -> drawPathPlan(model, im, g2);
+                case PATH_PLAN -> drawPathPlan(model, im, g2);
                 case DISPLAY -> drawModel(model, im, g2);
-                case SIMULATOR -> {
-                    drawSimulator(model, im, g2);
-                }
+                case SIMULATOR -> drawSimulator(im, g2);
             }
         }
 
@@ -140,18 +137,17 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
 
     private static BufferedImage getImage(int imWidth, int imHeight) {
         if (im == null || imWidth != im.getWidth() || imHeight != im.getHeight()) {
+            // future: use physical screen resolution to calculate scaling factor for the image
             im = new BufferedImage(imWidth * 2, imHeight * 2, BufferedImage.TYPE_INT_ARGB);
         }
         return im;
     }
 
-    private void drawSimulator(Model model, BufferedImage im, Graphics2D g2) {
-        // what do we need the model for here? See how drawPathPlan uses it only for stats
+    private void drawSimulator(BufferedImage im, Graphics2D g2) {
         Interpolator p = getPathPlan();
-        if (p != null && p.getXs().size() > 0) {
+        if (p != null && !p.isEmpty()) {
             simulatorRenderer.draw(im, g2);
         }
-
     }
 
     private Color toColor(Rgb rgb) {
