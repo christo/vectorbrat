@@ -82,6 +82,7 @@ class ControlPanel extends JPanel {
         final StatItem pathPlanTime = new StatItem("path plan (μs)");
         final StatItem sampleRate = new StatItem("sample rate");
         final StatItem bufferSize = new StatItem("buffer size");
+
         final StatItem vertexPoints = new StatItem("vertex points");
         final StatItem blackPoints = new StatItem("black points");
         final StatItem pointsPerUnit = new StatItem("points per unit");
@@ -106,15 +107,16 @@ class ControlPanel extends JPanel {
 
 
         List<StatItem> details = List.of(
-                new StatItem("Make", Config.LASER_MAKE),
-                new StatItem("Model", Config.LASER_MODEL),
-                pathPlanTime,
-                sampleRate,
-                bufferSize,
                 vertexPoints,
                 blackPoints,
                 pointsPerUnit,
-                minBrightness
+                pointsPerPointOffset,
+                minBrightness,
+                // TODO add beam tuning here
+                pathPlanTime,
+                sampleRate,
+                bufferSize,
+                new StatItem(Config.LASER_MAKE, Config.LASER_MODEL)
         );
 
         JPanel stats = new JPanel(new GridLayout(details.size(), 1, 5, 5));
