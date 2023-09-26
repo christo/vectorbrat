@@ -78,23 +78,21 @@ class ControlPanel extends JPanel {
      * @return a JPanel containing all the live stats.
      */
     private static JPanel mkStatPanel(LaserController laserController) {
-        final StatItem pathPlanTime = new StatItem("path plan (μs)");
-        final StatItem sampleRate = new StatItem("sample rate");
-        final StatItem bufferSize = new StatItem("buffer size");
 
-        final StatItem vertexPoints = new StatItem("vertex points");
-        final StatItem blackPoints = new StatItem("black points");
-        final StatItem pointsPerUnit = new StatItem("points per unit");
-        final StatItem pointsPerPoint = new StatItem("points per point");
-        final StatItem pointsPerPointOffset = new StatItem("offset");
-        final StatItem minBrightness = new StatItem("min brightness");
+        final SliderStat vertexPoints = new SliderStat("vertex points");
+        final LabelStat blackPoints = new LabelStat("black points");
+        final LabelStat pointsPerUnit = new LabelStat("points per unit");
+        final LabelStat pointsPerPoint = new LabelStat("points per point");
+        final LabelStat pointsPerPointOffset = new LabelStat("offset");
+        final LabelStat minBrightness = new LabelStat("min brightness");
 
+        final LabelStat pathPlanTime = new LabelStat("path plan (μs)");
+        final LabelStat sampleRate = new LabelStat("sample rate");
+        final LabelStat bufferSize = new LabelStat("buffer size");
 
         // update the stats when they change
+        // TODO careful with listener updates for SliderStat items to prevent infinite loop
         laserController.addUpdateListener(lc -> {
-            pathPlanTime.setValue(lc.getPathPlanTime() / 1000); // convert to microseconds for UI
-            lc.getSampleRate().ifPresent(sampleRate::setValue);
-            lc.getBufferSize().ifPresent(bufferSize::setValue);
             BeamTuning tuning = laserController.getTuning();
             vertexPoints.setValue(tuning.getVertexPoints());
             blackPoints.setValue(tuning.getBlackPoints());
@@ -102,20 +100,24 @@ class ControlPanel extends JPanel {
             pointsPerPoint.setValue(tuning.getPointsPerPoint());
             pointsPerPointOffset.setValue(tuning.getPointsPerUnitOffset());
             minBrightness.setValue(tuning.getMinimumLaserBrightness());
+
+            pathPlanTime.setValue(lc.getPathPlanTime() / 1000); // convert to microseconds for UI
+            lc.getSampleRate().ifPresent(sampleRate::setValue);
+            lc.getBufferSize().ifPresent(bufferSize::setValue);
         });
 
 
-        List<StatItem> details = List.of(
+        List<JPanel> details = List.of(
                 vertexPoints,
                 blackPoints,
                 pointsPerUnit,
                 pointsPerPointOffset,
                 minBrightness,
-                // TODO add beam tuning here
+                // TODO add interpolator chooser here
                 pathPlanTime,
                 sampleRate,
                 bufferSize,
-                new StatItem(Config.LASER_MAKE, Config.LASER_MODEL)
+                new LabelStat(Config.LASER_MAKE, Config.LASER_MODEL)
         );
 
         JPanel stats = new JPanel(new GridLayout(details.size(), 1, 5, 5));
@@ -125,6 +127,7 @@ class ControlPanel extends JPanel {
 
     private static JPanel mkPpsSlider(Config config, LaserController laserController) {
         // future: dynamically make scale based on LaserSpec
+        // future: button: reset to default
         Hashtable<Integer, JLabel> sliderLabels = new Hashtable<>();
         // hard-coded minimum value
         sliderLabels.put(Config.MIN_PPS, new JLabel(Integer.toString(Config.MIN_PPS)));
@@ -150,7 +153,7 @@ class ControlPanel extends JPanel {
             JSlider slider = (JSlider) e.getSource();
             int value = slider.getValue();
             psl.setText(value + units);
-
+            laserController.getTuning().setPps(value); // TODO sanity check
         });
 
         final JPanel pps = new JPanel(new BorderLayout());
