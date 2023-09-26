@@ -54,6 +54,8 @@ See [GitHub issues](https://github.com/christo/vectorbrat/issues) for outstandin
 
 ## Game Ideas
 
+Text-based games are unrealistic with the lasers I've tried. They may be feasible on CROs.
+
 * [asteroids](asteroids.md)
 * pong
 * gravity wars
@@ -64,7 +66,6 @@ See [GitHub issues](https://github.com/christo/vectorbrat/issues) for outstandin
 * gyruss
 * night driving
 * missile command
-* Zork (text engine)
 
 ## App Ideas
 
