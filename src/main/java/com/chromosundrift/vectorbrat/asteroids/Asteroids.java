@@ -25,7 +25,7 @@ public final class Asteroids extends AbstractAnimator {
     public static final float MIN_Y = -1.0f;
     public static final float MAX_Y = 1.0f;
     public static final Rgb COL_ASTEROID = Rgb.ORANGE;
-    public static final int NUM_ASTEROIDS = 5;
+    public static final int NUM_ASTEROIDS = 4;
     public static final String NAME = "ASTEROIDS";
 
     private static final int TARGET_FPS = 30;
