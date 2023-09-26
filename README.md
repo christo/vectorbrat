@@ -18,7 +18,10 @@ what's the big deal anyway, start with [background info](background.md).
 During this alpha stage, the audio device is configured in `jackstart` and the 
 operating system with its audio driver specifics are assumed to be `macos`. The 
 goal is to make this cross-platform. If you get it working on Linux or Windows,
-please let me know and/or make a pull-request with the necessary changes.
+please let me know and/or make a pull-request with the necessary changes. These
+should only affect how jack is started. If it's already running, communication
+with the jack server should be cross-platform. The audio device and channels are
+defined in the `com.chromosundrift.vectorbrat.Config` class.
 
 ## TODO
 
