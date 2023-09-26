@@ -169,7 +169,6 @@ public final class Polyline extends Pointless implements Geom {
     }
 
     public Polyline offset(float dx, float dy) {
-        // this array shit is bugging me
         Point[] points = new Point[this._points.length];
         for (int i = 0; i < this._points.length; i++) {
             points[i] = this._points[i].offset(dx, dy);
