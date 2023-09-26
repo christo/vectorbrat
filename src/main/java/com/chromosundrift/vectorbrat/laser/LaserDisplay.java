@@ -287,6 +287,11 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
     }
 
     @Override
+    public boolean isConnected() {
+        return this.laserDriver.peek();
+    }
+
+    @Override
     public boolean getInvertX() {
         return this.config.getInvertX();
     }

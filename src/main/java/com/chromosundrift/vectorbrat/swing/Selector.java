@@ -22,7 +22,7 @@ class Selector extends JPanel {
      */
     @SuppressWarnings("unchecked")
     public Selector(List<Selection> choices) {
-        super(new GridLayout(2, 1, 0, 0), true);
+        super(new BorderLayout(), true);
         combo = new JComboBox<>();
         choices.forEach(combo::addItem);
         combo.setAlignmentX(Component.RIGHT_ALIGNMENT);

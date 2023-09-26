@@ -37,6 +37,8 @@ public interface LaserController {
      */
     boolean isRunning();
 
+    boolean isConnected();
+
     /**
      * Gets the current sample rate in Hz if we are running. Negative number means unknown / not applicable.
      *

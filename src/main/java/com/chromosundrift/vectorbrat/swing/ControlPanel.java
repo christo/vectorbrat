@@ -7,7 +7,9 @@ import com.chromosundrift.vectorbrat.laser.LaserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -66,7 +68,7 @@ class ControlPanel extends JPanel {
                 .toList();
 
         Selector modeSelektor = new Selector(modes);
-        modeSelektor.setBorder(new EmptyBorder(6, 0, 7, 0));
+        modeSelektor.setBorder(new EmptyBorder(5, 0, 7, 0));
         return modeSelektor;
     }
 
@@ -79,11 +81,14 @@ class ControlPanel extends JPanel {
      */
     private static JPanel mkStatPanel(LaserController laserController) {
 
-        final SliderStat vertexPoints = new SliderStat("vertex points");
-        final LabelStat blackPoints = new LabelStat("black points");
-        final LabelStat pointsPerUnit = new LabelStat("points per unit");
-        final LabelStat pointsPerPoint = new LabelStat("points per point");
-        final LabelStat pointsPerPointOffset = new LabelStat("offset");
+        BeamTuning tuning = laserController.getTuning();
+        final SpinnerStat vertexPoints = new SpinnerStat("vertex points", 1, tuning::setVertexPoints);
+        final SpinnerStat blackPoints = new SpinnerStat("black points", 0, tuning::setBlackPoints);
+        final SpinnerStat pointsPerPoint = new SpinnerStat("points per point", 1, tuning::setPointsPerPoint);
+        final SpinnerStat pointsPerUnit = new SpinnerStat("points per unit", 0, tuning::setPointsPerUnit);
+        final SpinnerStat pointsPerPointOffset = new SpinnerStat("offset", 0, tuning::setPointsPerUnitOffset);
+
+        // TODO make min brightness settable in BeamTuning
         final LabelStat minBrightness = new LabelStat("min brightness");
 
         final LabelStat pathPlanTime = new LabelStat("path plan (μs)");
@@ -91,9 +96,7 @@ class ControlPanel extends JPanel {
         final LabelStat bufferSize = new LabelStat("buffer size");
 
         // update the stats when they change
-        // TODO careful with listener updates for SliderStat items to prevent infinite loop
         laserController.addUpdateListener(lc -> {
-            BeamTuning tuning = laserController.getTuning();
             vertexPoints.setValue(tuning.getVertexPoints());
             blackPoints.setValue(tuning.getBlackPoints());
             pointsPerUnit.setValue(tuning.getPointsPerUnit());
@@ -120,7 +123,8 @@ class ControlPanel extends JPanel {
                 new LabelStat(Config.LASER_MAKE, Config.LASER_MODEL)
         );
 
-        JPanel stats = new JPanel(new GridLayout(details.size(), 1, 5, 5));
+        JPanel stats = new JPanel();
+        stats.setLayout(new BoxLayout(stats, BoxLayout.Y_AXIS));
         details.forEach(stats::add);
         return stats;
     }
@@ -159,7 +163,6 @@ class ControlPanel extends JPanel {
         final JPanel pps = new JPanel(new BorderLayout());
         pps.add(psl, BorderLayout.NORTH);
         pps.add(ppsControl, BorderLayout.CENTER);
-
         return pps;
     }
 
@@ -216,13 +219,14 @@ class ControlPanel extends JPanel {
         buttonPanel.add(invertPanel, BorderLayout.SOUTH);
         lc.addUpdateListener(laserController -> {
             boolean running = lc.isRunning();
+            boolean connected = lc.isConnected();
 
             // start button needs to be disabled if running
-            connectButton.setEnabled(!running);
-            connectButton.setText(running ? "Connected" : "Connect");
+            connectButton.setEnabled(!connected);
+            connectButton.setText(connected ? "Connected" : "Connect");
             // only enable the arm/safe toggle if the LaserController is running
-            armed.setEnabled(running);
-            safe.setEnabled(running);
+            armed.setEnabled(connected);
+            safe.setEnabled(connected);
         });
 
         armed.addActionListener(e -> {

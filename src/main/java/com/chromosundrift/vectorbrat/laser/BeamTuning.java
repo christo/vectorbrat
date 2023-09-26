@@ -89,6 +89,8 @@ public class BeamTuning {
         return 0.4f;
     }
 
+
+
     /**
      * Based on points per second, give number of nanoseconds per point.
      * @return time per point in ns.
