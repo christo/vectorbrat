@@ -27,7 +27,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DEBUG;
+import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.PATH_PLAN;
 import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.DISPLAY;
 import static com.chromosundrift.vectorbrat.swing.DisplayController.Mode.SIMULATOR;
 
@@ -61,7 +61,7 @@ class ControlPanel extends JPanel {
     }
 
     private static Selector mkModeSelektor(DisplayController dc, LaserController lc) {
-        List<Selector.Selection> modes = Stream.of(DISPLAY, DEBUG, SIMULATOR)
+        List<Selector.Selection> modes = Stream.of(DISPLAY, PATH_PLAN, SIMULATOR)
                 .map(m -> new Selector.Selection(m.getUiLabel(), () -> dc.setMode(m)))
                 .toList();
 
@@ -92,7 +92,7 @@ class ControlPanel extends JPanel {
 
         // update the stats when they change
         laserController.addUpdateListener(lc -> {
-            pathPlanTime.setValue(lc.getPathPlanTime() / 1000); // convert to microseonds for UI
+            pathPlanTime.setValue(lc.getPathPlanTime() / 1000); // convert to microseconds for UI
             lc.getSampleRate().ifPresent(sampleRate::setValue);
             lc.getBufferSize().ifPresent(bufferSize::setValue);
             BeamTuning tuning = laserController.getTuning();
