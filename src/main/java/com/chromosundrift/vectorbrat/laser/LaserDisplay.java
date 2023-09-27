@@ -159,7 +159,6 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
     public void connect() {
         try {
             // this will trigger instntiation first time
-            // TODO since we explicitly connect we should get rid of fancy lazy init?
             laserDriver.get().start();
         } catch (VectorBratException e) {
             logger.error("cannot start LaserDriver", e);

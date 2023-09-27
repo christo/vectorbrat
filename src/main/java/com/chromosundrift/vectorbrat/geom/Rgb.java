@@ -20,7 +20,6 @@ public record Rgb(float red, float green, float blue) {
     public static final Rgb CYAN = new Rgb(0f, 1f, 1f);
     public static final Rgb MAGENTA = new Rgb(1f, 0f, 1f);
     public static final Rgb YELLOW = new Rgb(1f, 1f, 0f);
-    // TODO verify linear components are gamma corrected for colour space in laser and UI
     public static final Rgb GREY = new Rgb(0.5f, 0.5f, 0.5f);
     public static final Rgb LIGHT_GREY = new Rgb(0.75f, 0.75f, 0.75f);
     public static final Rgb DARK_GREY = new Rgb(0.25f, 0.25f, 0.25f);

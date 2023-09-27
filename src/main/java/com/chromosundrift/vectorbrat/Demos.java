@@ -71,7 +71,7 @@ public class Demos {
     }
 
     private static ModelAnimator mkFire(LaserSpec laserSpec) {
-        // TODO throw away this crazy bad way to do it and reimplement with Updater
+        // TODO issue #3 : throw away this crazy bad way to do it and reimplement with Updater
         Random r = new Random();
         final Model flame = new Diamond(0.03f, 0.04f, Rgb.WHITE).toModel().offset(0f, 0.7f);
         final Supplier<Mover<Model>> ignition = () -> new Mover<>(flame.deepClone(), new Vec2(0.0, -0.3));

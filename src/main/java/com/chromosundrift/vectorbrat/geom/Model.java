@@ -14,7 +14,6 @@ import static com.chromosundrift.vectorbrat.Config.SAMPLE_RANGE;
 
 /**
  * Immutable vector display model.
- * TODO WIP replace polylines with lines, remove all mutability and lock
  */
 public class Model implements Geom {
 
@@ -169,7 +168,6 @@ public class Model implements Geom {
 
     /**
      * Crops the model to the range.
-     * // TODO WIP implement line cropping at boundary intersection
      *
      * @return cropped Model
      */
@@ -198,7 +196,6 @@ public class Model implements Geom {
             }
         });
 
-        // TODO change model from Polylines to Lines
         return new Model(name, newLines.stream().map(Polyline::fromLine).toList(), inPoints);
     }
 
