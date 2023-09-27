@@ -26,9 +26,31 @@ public interface Geom {
 
     Stream<Rgb> colours();
 
+    /**
+     * Is some part of the Geom inside the normal bounds?
+     *
+     * @return iff some part is in bounds.
+     */
     boolean inBounds();
 
+    /**
+     * Is any part of this is withiin the bounds defined by the given ranges?
+     *
+     * @param minX minimum x
+     * @param minY minimum y
+     * @param maxX maximum x
+     * @param maxY maximum y
+     * @return true iff any part of this is in bounds.
+     */
     boolean inBounds(float minX, float minY, float maxX, float maxY);
+
+    /**
+     * Is any part of this in the given bounds?
+     *
+     * @param bounds the bounds.
+     * @return true iff some part is in bounds.
+     */
+    boolean inBounds(Box bounds);
 
     /**
      * Get the isolated points in the model.

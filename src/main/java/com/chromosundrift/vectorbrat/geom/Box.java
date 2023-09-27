@@ -134,6 +134,11 @@ public final class Box extends Pointless implements Geom {
     }
 
     @Override
+    public boolean inBounds(Box bounds) {
+        return inBounds(bounds.minMin.x(), bounds.minMin.y(), bounds.maxMax.x(), bounds.maxMax.y());
+    }
+
+    @Override
     public Model toModel() {
         Polyline pl = Polyline.closed("box", minMin.getColor(), minMin, minMax, maxMax, maxMin);
         return new Model("box", List.of(pl));

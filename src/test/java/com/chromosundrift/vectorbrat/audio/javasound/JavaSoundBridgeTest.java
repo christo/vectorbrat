@@ -20,7 +20,6 @@ import static java.lang.String.join;
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.audio.MissingAudioDevice;
-import org.junit.platform.suite.api.Suite;
 
 /**
  * Requires audio devices connected and jackd running.

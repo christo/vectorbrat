@@ -71,4 +71,10 @@ public final class Diamond extends Pointless implements Geom {
     public boolean inBounds(float minX, float minY, float maxX, float maxY) {
         return lines.inBounds(minX, minY, maxX, maxY);
     }
+
+    @Override
+    public boolean inBounds(Box bounds) {
+        return inBounds(bounds.minMin.x(), bounds.minMin.y(), bounds.maxMax.x(), bounds.maxMax.y());
+    }
+
 }

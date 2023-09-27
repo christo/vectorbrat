@@ -233,6 +233,11 @@ public final class Polyline extends Pointless implements Geom {
     }
 
     @Override
+    public boolean inBounds(Box bounds) {
+        return inBounds(bounds.minMin.x(), bounds.minMin.y(), bounds.maxMax.x(), bounds.maxMax.y());
+    }
+
+    @Override
     public Model toModel() {
         return null;
     }

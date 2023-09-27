@@ -19,6 +19,16 @@ public class Model implements Geom {
 
     private static final boolean DEBUG = false;
 
+    public static final Point CORNER_TOP_LEFT = new Point(-1f, -1f);
+    public static final Point CORNER_TOP_RIGHT = new Point(1f, -1f);
+    public static final Point CORNER_BOT_LEFT = new Point(-1f, 1f);
+    public static final Point CORNER_BOT_RIGHT = new Point(1f, 1f);
+    private static final Line BOUNDS_TOP = new Line(CORNER_TOP_LEFT, CORNER_TOP_RIGHT);
+    private static final Line BOUNDS_BOT = new Line(CORNER_BOT_LEFT, CORNER_BOT_RIGHT);
+    private static final Line BOUNDS_LEFT = new Line(CORNER_TOP_LEFT, CORNER_BOT_LEFT);
+    private static final Line BOUNDS_RIGHT = new Line(CORNER_TOP_RIGHT, CORNER_BOT_RIGHT);
+    private static final Box BOUNDS = new Box(CORNER_TOP_LEFT, CORNER_BOT_RIGHT);
+
     public static Model EMPTY = new Model("");
 
     private final List<Polyline> polylines;
@@ -166,36 +176,81 @@ public class Model implements Geom {
     }
 
     /**
-     * Crops the model to the range.
+     * Crops the model at the boundary of the given box.
      *
-     * @return cropped Model
+     * @param bounds the containing box.
+     * @return the cropped model.
      */
-    public Model crop() {
+    public Model crop(Box bounds) {
         List<Point> inPoints = points.stream().filter(Point::inBounds).toList();
         List<Line> newLines = new ArrayList<>();
 
-        // implement crop and cut for Model https://github.com/christo/vectorbrat/issues/33
+        // TODO test this https://github.com/christo/vectorbrat/issues/33
 
         lines().forEach(line -> {
             // check the line for intersections with the bounds
-            if (!line.from().inBounds() && !line.to().inBounds()) {
+            Point pFrom = line.from();
+            Point pTo = line.to();
+            if (!pFrom.inBounds() && !pTo.inBounds()) {
                 // both ends of line are out of bounds
                 // it's possible the line has a segment that is in bounds
-                // TODO find intersection points with bounds
-            } else if (!line.from().inBounds()) {
+                List<Point> newPoints = boundsIntersect2(line);
+                if (newPoints.size() == 2) {
+                    newLines.add(new Line(newPoints.get(0), newPoints.get(1)));
+                }
+            } else if (!pFrom.inBounds()) {
                 // only from is out of bounds
-                // TODO construct new line from "from" to  intersection with bounds
-            } else if (!line.to().inBounds()) {
+                Point newFrom = boundsIntersect1(line).orElseThrow();
+                newLines.add(new Line(newFrom, pTo));
+            } else if (!pTo.inBounds()) {
                 // only to is out of bounds
-                // TODO construct new line from "to" to intersection with bounds
+                Point newTo = boundsIntersect1(line).orElseThrow();
+                newLines.add(new Line(pFrom, newTo));
             } else {
                 // both end points are in bounds, therefore whole line is in bounds
-                // this won't always be true for other cut intersection shapes
                 newLines.add(line);
             }
         });
 
         return new Model(name, newLines.stream().map(Polyline::fromLine).toList(), inPoints);
+    }
+
+    /**
+     * Crops the model to the range.
+     *
+     * @return cropped Model
+     */
+    public Model crop() {
+        return crop(Model.BOUNDS);
+    }
+
+    private static List<Point> boundsIntersect2(Line line) {
+        List<Point> l = new ArrayList<>();
+        line.npIntersect(Model.BOUNDS_TOP).ifPresent(l::add);
+        line.npIntersect(Model.BOUNDS_RIGHT).ifPresent(l::add);
+        line.npIntersect(Model.BOUNDS_BOT).ifPresent(l::add);
+        line.npIntersect(Model.BOUNDS_LEFT).ifPresent(l::add);
+        return l;
+    }
+
+    /**
+     * Returns
+     *
+     * @param line
+     * @return
+     */
+    private static Optional<Point> boundsIntersect1(Line line) {
+        Optional<Point> hit = line.npIntersect(Model.BOUNDS_TOP);
+        if (hit.isEmpty()) {
+            hit = line.npIntersect(Model.BOUNDS_RIGHT);
+        }
+        if (hit.isEmpty()) {
+            hit = line.npIntersect(Model.BOUNDS_BOT);
+        }
+        if (hit.isEmpty()) {
+            hit = line.npIntersect(Model.BOUNDS_LEFT);
+        }
+        return hit;
     }
 
     public int countLines() {
@@ -228,6 +283,11 @@ public class Model implements Geom {
     public boolean inBounds(float minX, float minY, float maxX, float maxY) {
         return isoPoints().anyMatch(p -> p.inBounds(minX, minY, maxX, maxY))
                 || lines().anyMatch(line -> line.inBounds(minX, minY, maxX, maxY));
+    }
+
+    @Override
+    public boolean inBounds(Box bounds) {
+        return inBounds(bounds.minMin.x(), bounds.minMin.y(), bounds.maxMax.x(), bounds.maxMax.y());
     }
 
     @Override

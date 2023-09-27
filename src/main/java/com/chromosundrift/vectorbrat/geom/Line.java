@@ -13,7 +13,36 @@ public final class Line extends Pointless implements Geom {
     private final Point from;
     private final Point to;
 
-    // TODO intersectX(float) intersectY(float) - useful special cases that give an Optional<Point>
+    /**
+     * Non-parallel intersection. Calculate the intersection point of this line with the other line or empty
+     * if they are parallel. If the lines are colinear and overlap, mathematically there are infinite intersection
+     * points. In this case empty is also returned!
+     *
+     * @param other the other line.
+     * @return maybe the intersection point.
+     */
+    public Optional<Point> npIntersect(Line other) {
+        // intersection point using first degree bezier parameters
+        // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
+        float x1 = this.from.x();
+        float y1 = this.from.y();
+        float x2 = this.to.x();
+        float y2 = this.to.y();
+        float x3 = other.from.x();
+        float y3 = other.from.y();
+        float x4 = other.to.x();
+        float y4 = other.to.y();
+        // denominator
+        float td = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (td == 0) {
+            return Optional.empty();
+        } else {
+            // numerator
+            float tn = (x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4);
+            float t = tn / td;
+            return Optional.of(new Point((x1 + t * (x2 - x1)), (y1 + t * (y2 - y1))));
+        }
+    }
 
     /**
      * @param from start point.
@@ -117,6 +146,11 @@ public final class Line extends Pointless implements Geom {
     @Override
     public boolean inBounds(float minX, float minY, float maxX, float maxY) {
         return from.inBounds(minX, minY, maxX, maxY);
+    }
+
+    @Override
+    public boolean inBounds(Box bounds) {
+        return inBounds(bounds.minMin.x(), bounds.minMin.y(), bounds.maxMax.x(), bounds.maxMax.y());
     }
 
     @Override

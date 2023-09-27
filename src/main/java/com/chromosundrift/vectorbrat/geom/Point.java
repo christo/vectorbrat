@@ -215,6 +215,11 @@ public final class Point implements Geom {
     }
 
     @Override
+    public boolean inBounds(Box bounds) {
+        return inBounds(bounds.minMin.x, bounds.minMin.y, bounds.maxMax.x, bounds.maxMax.y);
+    }
+
+    @Override
     public boolean inBounds(float minX, float minY, float maxX, float maxY) {
         return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
