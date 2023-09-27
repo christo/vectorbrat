@@ -7,6 +7,7 @@ import java.util.stream.Stream;
  * Base class that partly implements Geom with no isolated points.
  */
 abstract public class Pointless implements Geom {
+
     /**
      * Has no isopoints.
      *
