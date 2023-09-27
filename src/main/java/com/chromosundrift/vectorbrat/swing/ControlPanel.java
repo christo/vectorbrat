@@ -179,7 +179,7 @@ class ControlPanel extends JPanel {
             JSlider slider = (JSlider) e.getSource();
             int value = slider.getValue();
             psl.setText(value + units);
-            laserController.getTuning().setPps(value); // TODO sanity check
+            laserController.getTuning().setPps(value);
         });
 
         final JPanel pps = new JPanel(new BorderLayout());
