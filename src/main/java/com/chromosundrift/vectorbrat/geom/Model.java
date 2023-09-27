@@ -108,7 +108,6 @@ public class Model implements Geom {
     }
 
     public Model merge(Model other) {
-        // TODO check the defensive copies are complete here
         List<Polyline> allPolylines = new ArrayList<>(this.polylines);
         allPolylines.addAll(other.polylines);
         List<Point> allPoints = new ArrayList<>(this.points);
