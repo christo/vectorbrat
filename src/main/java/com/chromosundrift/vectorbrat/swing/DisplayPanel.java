@@ -104,6 +104,14 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
         return new Font("HelveticaNeue", Font.PLAIN, size);
     }
 
+    private static BufferedImage getImage(int imWidth, int imHeight) {
+        if (im == null || imWidth != im.getWidth() || imHeight != im.getHeight()) {
+            // future: use physical screen resolution to calculate scaling factor for the image
+            im = new BufferedImage(imWidth * 2, imHeight * 2, BufferedImage.TYPE_INT_ARGB);
+        }
+        return im;
+    }
+
     /**
      * Not threadsafe, must only be called with model lock.
      */
@@ -133,14 +141,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
 
         g.drawImage(im, 0, 0, imWidth, imHeight, Color.BLACK, null);
         g2.dispose();
-    }
-
-    private static BufferedImage getImage(int imWidth, int imHeight) {
-        if (im == null || imWidth != im.getWidth() || imHeight != im.getHeight()) {
-            // future: use physical screen resolution to calculate scaling factor for the image
-            im = new BufferedImage(imWidth * 2, imHeight * 2, BufferedImage.TYPE_INT_ARGB);
-        }
-        return im;
     }
 
     private void drawSimulator(BufferedImage im, Graphics2D g2) {

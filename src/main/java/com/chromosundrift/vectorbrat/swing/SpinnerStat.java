@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  */
 public class SpinnerStat extends JPanel implements Stat {
     private final int min;
-    private JSpinner control;
+    private final JSpinner control;
 
     public SpinnerStat(String label, int min, Consumer<Integer> updater) {
         super(new BorderLayout(), true);

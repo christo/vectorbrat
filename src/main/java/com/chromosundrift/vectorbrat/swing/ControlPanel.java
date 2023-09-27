@@ -63,28 +63,6 @@ class ControlPanel extends JPanel {
         add(Box.createVerticalBox(), gbc);
     }
 
-    private Selector mkAppSelektor(AppMap appMap) {
-        List<Selector.Selection> apps = appMap.getAnimators().stream()
-                .map(name -> new Selector.Selection(name, () -> {
-                    final String previous = appMap.getAnimator();
-                    try {
-                        appMap.setAnimator(name);
-                    } catch (VectorBratException e) {
-                        logger.error("failed setting app to {}, returning to {}", name, previous);
-                        try {
-                            appMap.setAnimator(previous);
-                        } catch (VectorBratException ex) {
-                            logger.error("failed to restore previous animator: {}", previous);
-                            throw new RuntimeException(ex);
-                        }
-                    }
-                }))
-                .sorted(Selector.Selection.BY_LABEL)
-                .toList();
-
-        return new Selector("apps", apps, appMap.getAnimator());
-    }
-
     private static Selector mkModeSelektor(DisplayController dc, LaserController lc) {
         List<Selector.Selection> modes = Stream.of(DISPLAY, PATH_PLAN, SIMULATOR)
                 .map(m -> new Selector.Selection(m.getUiLabel(), () -> dc.setMode(m)))
@@ -186,6 +164,28 @@ class ControlPanel extends JPanel {
         pps.add(psl, BorderLayout.NORTH);
         pps.add(ppsControl, BorderLayout.CENTER);
         return pps;
+    }
+
+    private Selector mkAppSelektor(AppMap appMap) {
+        List<Selector.Selection> apps = appMap.getAnimators().stream()
+                .map(name -> new Selector.Selection(name, () -> {
+                    final String previous = appMap.getAnimator();
+                    try {
+                        appMap.setAnimator(name);
+                    } catch (VectorBratException e) {
+                        logger.error("failed setting app to {}, returning to {}", name, previous);
+                        try {
+                            appMap.setAnimator(previous);
+                        } catch (VectorBratException ex) {
+                            logger.error("failed to restore previous animator: {}", previous);
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                }))
+                .sorted(Selector.Selection.BY_LABEL)
+                .toList();
+
+        return new Selector("apps", apps, appMap.getAnimator());
     }
 
     private JPanel mkArmStart(final LaserController lc) {

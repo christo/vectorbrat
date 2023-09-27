@@ -43,7 +43,7 @@ public class SliderStat extends JPanel implements Stat {
     @Override
     public void setValue(float v) {
         this.value.setText(Float.toString(v));
-        this.slider.setValue((int) (v*100));
+        this.slider.setValue((int) (v * 100));
     }
 
     @Override

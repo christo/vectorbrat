@@ -24,8 +24,8 @@ class SimulatorRenderer {
     private static final Logger logger = LoggerFactory.getLogger(SimulatorRenderer.class);
 
     private final LaserSimulator laserSimulator;
-    private float sampleRate;
     private final Stroke beamStroke;
+    private float sampleRate;
 
     SimulatorRenderer(LaserSimulator laserSimulator) {
         this.laserSimulator = laserSimulator;
