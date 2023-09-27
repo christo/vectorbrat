@@ -1,10 +1,10 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import com.chromosundrift.vectorbrat.laser.BeamTuning;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.chromosundrift.vectorbrat.laser.BeamTuning;
 
 /**
  * Interpolating Pather. Holds the trace path for rendering shapes for renderers with physical acceleration limits.
@@ -45,7 +45,7 @@ public final class Interpolator implements Pather {
      * Constructor configured by interpolation and beam tuning.
      *
      * @param interpolation easing function.
-     * @param beamTuning parameters for adjusting geometric fidelity.
+     * @param beamTuning    parameters for adjusting geometric fidelity.
      */
     public Interpolator(Interpolation interpolation, BeamTuning beamTuning) {
         this.interpolation = interpolation;

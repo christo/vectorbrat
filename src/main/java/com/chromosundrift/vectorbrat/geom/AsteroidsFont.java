@@ -1,5 +1,7 @@
 package com.chromosundrift.vectorbrat.geom;
 
+import com.chromosundrift.vectorbrat.Config;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,8 +9,6 @@ import java.util.Map;
 
 import static com.chromosundrift.vectorbrat.Config.SAMPLE_MAX;
 import static com.chromosundrift.vectorbrat.Config.SAMPLE_MIN;
-
-import com.chromosundrift.vectorbrat.Config;
 
 public class AsteroidsFont implements Typeface {
 

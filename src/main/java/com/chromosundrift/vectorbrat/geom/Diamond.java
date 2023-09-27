@@ -11,12 +11,12 @@ public final class Diamond extends Pointless implements Geom {
 
     private final Polyline lines;
     private final Box bounds;
-    private Model model;
+    private final Model model;
 
     /**
      * Constructs a diamond shape with the given width and height centred at 0,0
      *
-     * @param width width in normalised units
+     * @param width  width in normalised units
      * @param height height in normalised units
      */
     public Diamond(float width, float height, Rgb colour) {
@@ -28,10 +28,10 @@ public final class Diamond extends Pointless implements Geom {
         //   \/
 
         this.lines = Polyline.closed("diamond", colour,
-                new Point(0, height/-2),
-                new Point(width/2, 0),
+                new Point(0, height / -2),
+                new Point(width / 2, 0),
                 new Point(0, height / 2),
-                new Point(width/-2, 0)
+                new Point(width / -2, 0)
         );
         this.model = new Model("diamond", List.of(this.lines));
     }

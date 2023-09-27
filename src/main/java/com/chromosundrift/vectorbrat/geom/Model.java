@@ -17,8 +17,6 @@ import static com.chromosundrift.vectorbrat.Config.SAMPLE_RANGE;
  */
 public class Model implements Geom {
 
-    private static final boolean DEBUG = false;
-
     public static final Point CORNER_TOP_LEFT = new Point(-1f, -1f);
     public static final Point CORNER_TOP_RIGHT = new Point(1f, -1f);
     public static final Point CORNER_BOT_LEFT = new Point(-1f, 1f);
@@ -39,13 +37,6 @@ public class Model implements Geom {
         this(name, Collections.emptyList());
     }
 
-    /**
-     * Make an identical deep copy.
-     */
-    public Model deepClone() {
-        return new Model(this.name, this.polylines, this.points);
-    }
-
     public Model(String name, List<Polyline> polylines) {
         this(name, polylines, Collections.emptyList());
     }
@@ -54,6 +45,43 @@ public class Model implements Geom {
         this.polylines = Collections.unmodifiableList(polylines);
         this.points = Collections.unmodifiableList(points);
         this.name = name;
+    }
+
+    /**
+     * Get the zero, one or two points of intersection of the line with bounds. Does
+     * not find colinear intersections.
+     */
+    private static List<Point> boundsIntersect2(Line line) {
+        List<Point> l = new ArrayList<>();
+        line.npIntersect(Model.BOUNDS_TOP).ifPresent(l::add);
+        line.npIntersect(Model.BOUNDS_RIGHT).ifPresent(l::add);
+        line.npIntersect(Model.BOUNDS_BOT).ifPresent(l::add);
+        line.npIntersect(Model.BOUNDS_LEFT).ifPresent(l::add);
+        return l;
+    }
+
+    /**
+     * Returns single non-colinear intersection of line with bounds.
+     */
+    private static Optional<Point> boundsIntersect1(Line line) {
+        Optional<Point> hit = line.npIntersect(Model.BOUNDS_TOP);
+        if (hit.isEmpty()) {
+            hit = line.npIntersect(Model.BOUNDS_RIGHT);
+        }
+        if (hit.isEmpty()) {
+            hit = line.npIntersect(Model.BOUNDS_BOT);
+        }
+        if (hit.isEmpty()) {
+            hit = line.npIntersect(Model.BOUNDS_LEFT);
+        }
+        return hit;
+    }
+
+    /**
+     * Make an identical deep copy.
+     */
+    public Model deepClone() {
+        return new Model(this.name, this.polylines, this.points);
     }
 
     /**
@@ -209,36 +237,6 @@ public class Model implements Geom {
      */
     public Model crop() {
         return crop(Model.BOUNDS);
-    }
-
-    /**
-     * Get the zero, one or two points of intersection of the line with bounds. Does
-     * not find colinear intersections.
-     */
-    private static List<Point> boundsIntersect2(Line line) {
-        List<Point> l = new ArrayList<>();
-        line.npIntersect(Model.BOUNDS_TOP).ifPresent(l::add);
-        line.npIntersect(Model.BOUNDS_RIGHT).ifPresent(l::add);
-        line.npIntersect(Model.BOUNDS_BOT).ifPresent(l::add);
-        line.npIntersect(Model.BOUNDS_LEFT).ifPresent(l::add);
-        return l;
-    }
-
-    /**
-     * Returns single non-colinear intersection of line with bounds.
-     */
-    private static Optional<Point> boundsIntersect1(Line line) {
-        Optional<Point> hit = line.npIntersect(Model.BOUNDS_TOP);
-        if (hit.isEmpty()) {
-            hit = line.npIntersect(Model.BOUNDS_RIGHT);
-        }
-        if (hit.isEmpty()) {
-            hit = line.npIntersect(Model.BOUNDS_BOT);
-        }
-        if (hit.isEmpty()) {
-            hit = line.npIntersect(Model.BOUNDS_LEFT);
-        }
-        return hit;
     }
 
     public int countLines() {

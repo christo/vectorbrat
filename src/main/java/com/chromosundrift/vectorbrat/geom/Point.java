@@ -1,6 +1,10 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -233,18 +237,6 @@ public final class Point implements Geom {
         return new Point(x, y, mode.apply(color));
     }
 
-    static class PointFactory {
-        private final Rgb color;
-
-        public PointFactory(Rgb color) {
-            this.color = color;
-        }
-
-        Point p(float x, float y) {
-            return new Point(x, y, color);
-        }
-    }
-
     @Override
     public Stream<Point> isoPoints() {
         return Stream.of(this);
@@ -258,5 +250,17 @@ public final class Point implements Geom {
     @Override
     public Optional<Box> bounds() {
         return Optional.of(new Box(this, this));
+    }
+
+    static class PointFactory {
+        private final Rgb color;
+
+        public PointFactory(Rgb color) {
+            this.color = color;
+        }
+
+        Point p(float x, float y) {
+            return new Point(x, y, color);
+        }
     }
 }

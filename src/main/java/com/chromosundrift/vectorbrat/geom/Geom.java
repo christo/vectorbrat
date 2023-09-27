@@ -61,5 +61,5 @@ public interface Geom {
 
     Optional<Box> bounds();
 
-    public Model toModel();
+    Model toModel();
 }

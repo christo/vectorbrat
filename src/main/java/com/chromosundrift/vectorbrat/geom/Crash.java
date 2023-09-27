@@ -1,10 +1,10 @@
 package com.chromosundrift.vectorbrat.geom;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import com.chromosundrift.vectorbrat.Util;
 import com.chromosundrift.vectorbrat.anim.StaticAnimator;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Animation that renders an exception message.

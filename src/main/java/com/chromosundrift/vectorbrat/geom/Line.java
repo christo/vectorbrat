@@ -14,6 +14,15 @@ public final class Line extends Pointless implements Geom {
     private final Point to;
 
     /**
+     * @param from start point.
+     * @param to   end point.
+     */
+    public Line(Point from, Point to) {
+        this.from = from;
+        this.to = to;
+    }
+
+    /**
      * Non-parallel intersection. Calculate the intersection point of this line with the other line or empty
      * if they are parallel. If the lines are colinear and overlap, mathematically there are infinite intersection
      * points. In this case empty is also returned!
@@ -42,15 +51,6 @@ public final class Line extends Pointless implements Geom {
             float t = tn / td;
             return Optional.of(new Point((x1 + t * (x2 - x1)), (y1 + t * (y2 - y1))));
         }
-    }
-
-    /**
-     * @param from start point.
-     * @param to   end point.
-     */
-    public Line(Point from, Point to) {
-        this.from = from;
-        this.to = to;
     }
 
     /**
