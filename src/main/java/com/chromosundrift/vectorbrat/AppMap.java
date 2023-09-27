@@ -1,19 +1,17 @@
 package com.chromosundrift.vectorbrat;
 
+import com.chromosundrift.vectorbrat.anim.ModelAnimator;
+import com.chromosundrift.vectorbrat.anim.StaticAnimator;
+import com.chromosundrift.vectorbrat.geom.Crash;
+import com.chromosundrift.vectorbrat.geom.Model;
+import com.chromosundrift.vectorbrat.physics.Clock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
-
-import com.chromosundrift.vectorbrat.geom.Crash;
-import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.anim.ModelAnimator;
-import com.chromosundrift.vectorbrat.anim.StaticAnimator;
-import com.chromosundrift.vectorbrat.physics.Clock;
 
 /**
  * Holds a number of {@link ModelAnimator ModelAnimators} of which one is active at a time. Exceptions are handled and
@@ -80,7 +78,7 @@ public class AppMap implements Runnable, AppController {
             if (newAnimator != null) {
                 // shut down old animator
                 if (animator != null) {
-                    logger.info("shutting down %s".formatted(animator));
+                    logger.info("shutting down {}", animator);
                     ModelAnimator oldAnimator = animators.get(animator);
                     try {
                         oldAnimator.stop();
@@ -91,16 +89,25 @@ public class AppMap implements Runnable, AppController {
                 // start new animator
                 try {
                     animator = name;
-                    logger.info("starting animator %s".formatted(animator));
+                    logger.info("starting animator {}", animator);
                     newAnimator.start();
                 } catch (Exception e) {
                     logger.warn("exception starting %s".formatted(animator), e);
                     throw new VectorBratException(e);
                 }
             } else {
-                logger.warn("ignoring unknown animator: %s".formatted(name));
+                logger.warn("ignoring unknown animator: {}", name);
             }
         }
+    }
+
+    /**
+     * Gets the name of the current animator.
+     *
+     * @return the name.
+     */
+    public String getAnimator() {
+        return animator;
     }
 
 

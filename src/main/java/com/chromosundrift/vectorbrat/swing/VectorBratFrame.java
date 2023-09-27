@@ -1,6 +1,7 @@
 package com.chromosundrift.vectorbrat.swing;
 
 
+import com.chromosundrift.vectorbrat.AppMap;
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.Controllers;
 import org.slf4j.Logger;
@@ -21,7 +22,8 @@ public class VectorBratFrame extends JFrame {
 
     private static final Logger logger = LoggerFactory.getLogger(VectorBratFrame.class);
 
-    public VectorBratFrame(Config config, DisplayPanel displayPanel, Controllers controllers) {
+    public VectorBratFrame(Config config, DisplayPanel displayPanel, Controllers controllers, AppMap appMap) {
+
         logger.info("initialising VectorBratFrame");
         this.setTitle(config.getTitle());
         setBackground(Color.BLACK);
@@ -47,7 +49,7 @@ public class VectorBratFrame extends JFrame {
         split.setOneTouchExpandable(true);
 
         // side panel with configuration/controls
-        ControlPanel controlPanel = new ControlPanel(config, controllers);
+        ControlPanel controlPanel = new ControlPanel(config, controllers, appMap);
         controlPanel.setMaximumSize(null);
 
         JScrollPane scrollPane = new JScrollPane(controlPanel);

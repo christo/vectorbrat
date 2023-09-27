@@ -1,13 +1,14 @@
 package com.chromosundrift.vectorbrat.swing;
 
+import com.chromosundrift.vectorbrat.AppMap;
 import com.chromosundrift.vectorbrat.Config;
 import com.chromosundrift.vectorbrat.Controllers;
+import com.chromosundrift.vectorbrat.VectorBratException;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 import com.chromosundrift.vectorbrat.laser.LaserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -24,7 +25,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Stream;
@@ -37,7 +37,7 @@ class ControlPanel extends JPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(ControlPanel.class);
 
-    public ControlPanel(final Config config, final Controllers controllers) {
+    public ControlPanel(final Config config, final Controllers controllers, AppMap appMap) {
         logger.info("initialising ControlPanel");
         LaserController laserController = controllers.laserController();
         final DisplayController dc = controllers.displayController();
@@ -54,12 +54,35 @@ class ControlPanel extends JPanel {
 
         add(mkArmStart(laserController), gbc);
         add(mkModeSelektor(dc, laserController), gbc);
+        add(mkAppSelektor(appMap), gbc);
         add(mkPpsSlider(config, laserController), gbc);
         add(mkStatPanel(laserController), gbc);
 
         // fill remaining vertical space
         gbc.weighty = 1;
         add(Box.createVerticalBox(), gbc);
+    }
+
+    private Selector mkAppSelektor(AppMap appMap) {
+        List<Selector.Selection> apps = appMap.getAnimators().stream()
+                .map(name -> new Selector.Selection(name, () -> {
+                    final String previous = appMap.getAnimator();
+                    try {
+                        appMap.setAnimator(name);
+                    } catch (VectorBratException e) {
+                        logger.error("failed setting app to {}, returning to {}", name, previous);
+                        try {
+                            appMap.setAnimator(previous);
+                        } catch (VectorBratException ex) {
+                            logger.error("failed to restore previous animator: {}", previous);
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                }))
+                .sorted(Selector.Selection.BY_LABEL)
+                .toList();
+
+        return new Selector("apps", apps, appMap.getAnimator());
     }
 
     private static Selector mkModeSelektor(DisplayController dc, LaserController lc) {
@@ -71,7 +94,6 @@ class ControlPanel extends JPanel {
         modeSelektor.setBorder(new EmptyBorder(5, 0, 7, 0));
         return modeSelektor;
     }
-
 
     /**
      * Create the many stats with their labels, values and update listeners.

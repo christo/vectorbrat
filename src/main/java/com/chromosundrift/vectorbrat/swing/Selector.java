@@ -7,8 +7,13 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.LayoutManager;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static java.lang.String.format;
+import static java.util.Comparator.comparing;
 
 /**
  * UI selection from a list.
@@ -54,9 +59,19 @@ class Selector extends JPanel {
                 selectedItem.onSelect.run();
             }
         });
+
+    }
+
+    public Selector(String text, List<Selection> choices, String selected) {
+        this(text, choices);
+        Stream<Selection> stream = choices.stream();
+        Optional<Selection> sel = stream.filter(s -> s.label.equals(selected)).findFirst();
+        combo.setSelectedItem(sel.orElseThrow());
     }
 
     public record Selection(@Nonnull String label, @Nonnull Runnable onSelect) {
+
+        public static final Comparator<Selection> BY_LABEL = comparing(o -> o.label);
 
         @Override
         public String toString() {
