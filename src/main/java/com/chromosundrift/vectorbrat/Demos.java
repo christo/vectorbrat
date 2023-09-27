@@ -107,6 +107,6 @@ public class Demos {
     }
 
     private static BungeeAnimator mkBungeeText(String text) {
-        return new BungeeAnimator(mkTextModel(text), 100, 0.6f, 0.8f);
+        return new BungeeAnimator(mkTextModel(text), 1500, 0.6f, 0.8f);
     }
 }
