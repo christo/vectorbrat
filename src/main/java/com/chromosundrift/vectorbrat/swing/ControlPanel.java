@@ -54,7 +54,7 @@ class ControlPanel extends JPanel {
 
         add(mkArmStart(laserController), gbc);
         add(mkModeSelektor(dc, laserController), gbc);
-        add(mkAppSelektor(appMap), gbc);
+        add(mkAppSelector(appMap), gbc);
         add(mkPpsSlider(config, laserController), gbc);
         add(mkStatPanel(laserController), gbc);
 
@@ -166,7 +166,7 @@ class ControlPanel extends JPanel {
         return pps;
     }
 
-    private Selector mkAppSelektor(AppMap appMap) {
+    private Selector mkAppSelector(AppMap appMap) {
         List<Selector.Selection> apps = appMap.getAnimators().stream()
                 .map(name -> new Selector.Selection(name, () -> {
                     final String previous = appMap.getAnimator();
