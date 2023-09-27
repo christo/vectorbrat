@@ -9,6 +9,7 @@ import com.chromosundrift.vectorbrat.asteroids.Asteroid;
 import com.chromosundrift.vectorbrat.asteroids.Asteroids;
 import com.chromosundrift.vectorbrat.data.Maths;
 import com.chromosundrift.vectorbrat.geom.AsteroidsFont;
+import com.chromosundrift.vectorbrat.geom.Box;
 import com.chromosundrift.vectorbrat.geom.Diamond;
 import com.chromosundrift.vectorbrat.geom.Model;
 import com.chromosundrift.vectorbrat.geom.Pattern;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -69,7 +71,7 @@ public class Demos {
     }
 
     private static ModelAnimator mkFire(LaserSpec laserSpec) {
-        // bad way to do it
+        // TODO throw away this crazy bad way to do it and reimplement with Updater
         Random r = new Random();
         final Model flame = new Diamond(0.03f, 0.04f, Rgb.WHITE).toModel().offset(0f, 0.7f);
         final Supplier<Mover<Model>> ignition = () -> new Mover<>(flame.deepClone(), new Vec2(0.0, -0.3));
@@ -101,7 +103,9 @@ public class Demos {
 
         Predicate<Mover<Model>> heatDeath = modelMover -> {
             Model model = modelMover.object();
-            return !model.bounds().get().inBounds() || model.colours().noneMatch(laserSpec::visible);
+            Optional<Box> bounds = model.bounds();
+            boolean inBounds = bounds.map(Box::inBounds).orElse(false);
+            return !inBounds || model.colours().noneMatch(laserSpec::visible);
         };
         return new ParticleSystem("fire", ignition, Maths.msToNanos(500), 10, flicker, heatDeath);
     }
