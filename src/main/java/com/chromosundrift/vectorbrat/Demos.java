@@ -59,7 +59,7 @@ public class Demos {
     static AppMap mkAppMap(Consumer<Model> modelConsumer, String text, LaserSpec laserSpec) {
         AppMap appMap = new AppMap(modelConsumer, SystemClock.INSTANCE);
         appMap.add(mkBungeeText(text));
-        appMap.add(new BungeeAnimator(mkTextModel("A"), 1500, 0.9f, 0.1f));
+        appMap.add(new BungeeAnimator(mkTextModel("3"), 2500, 0.7f, 0.1f));
         appMap.add(new Asteroids());
 
         appMap.add(Pattern.testPattern1().scale(0.8f, 0.8f));
