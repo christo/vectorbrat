@@ -107,12 +107,6 @@ public class Model implements Geom {
         return points.size();
     }
 
-    public Model scale(float factorX, float factorY) {
-        List<Polyline> polylines = this.polylines.stream().map(polyline -> polyline.scale(factorX, factorY)).collect(Collectors.<Polyline>toList());
-        List<Point> allPoints = isoPoints().map(point -> point.scale(factorX, factorY)).collect(Collectors.toList());
-        return new Model(this.name, polylines, allPoints);
-    }
-
     public Stream<Line> lines() {
         return polylines.stream().flatMap(Polyline::lines);
     }
@@ -123,29 +117,6 @@ public class Model implements Geom {
         List<Point> allPoints = new ArrayList<>(this.points);
         other.isoPoints().forEach(allPoints::add);
         return new Model(name + other.getName(), allPolylines, allPoints);
-    }
-
-    public Model offset(float dx, float dy) {
-        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.offset(dx, dy)).collect(Collectors.<Polyline>toList());
-        List<Point> allPoints = isoPoints().map(p -> p.offset(dx, dy)).collect(Collectors.toList());
-        return new Model(this.name, polylines, allPoints);
-    }
-
-    public Model offset(Vec2 v) {
-        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.offset((float) v.x(), (float) v.y())).collect(Collectors.<Polyline>toList());
-        List<Point> allPoints = isoPoints().map(p -> p.offset((float) v.x(), (float) v.y())).collect(Collectors.toList());
-        return new Model(this.name, polylines, allPoints);
-    }
-
-    public Model coloured(final Rgb c) {
-        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.colored(c)).collect(Collectors.<Polyline>toList());
-        List<Point> allPoints = isoPoints().map(p -> p.colored(c)).collect(Collectors.toList());
-        return new Model(this.name, polylines, allPoints);
-    }
-
-    @Override
-    public Optional<Point> closest(Point other) {
-        return Stream.concat(polylines.stream().flatMap(polyline -> isoPoints()), isoPoints()).min(other.dist2Point());
     }
 
     @Override
@@ -173,6 +144,22 @@ public class Model implements Geom {
         } else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Optional<Point> closest(Point other) {
+        return Stream.concat(polylines.stream().flatMap(polyline -> isoPoints()), isoPoints()).min(other.dist2Point());
+    }
+
+    public Model coloured(final Rgb c) {
+        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.colored(c)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = isoPoints().map(p -> p.colored(c)).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
+    }
+
+    @Override
+    public Stream<Rgb> colours() {
+        return Stream.concat(isoPoints().map(Point::getColor), lines().flatMap(Line::colours));
     }
 
     /**
@@ -224,6 +211,10 @@ public class Model implements Geom {
         return crop(Model.BOUNDS);
     }
 
+    /**
+     * Get the zero, one or two points of intersection of the line with bounds. Does
+     * not find colinear intersections.
+     */
     private static List<Point> boundsIntersect2(Line line) {
         List<Point> l = new ArrayList<>();
         line.npIntersect(Model.BOUNDS_TOP).ifPresent(l::add);
@@ -234,10 +225,7 @@ public class Model implements Geom {
     }
 
     /**
-     * Returns
-     *
-     * @param line
-     * @return
+     * Returns single non-colinear intersection of line with bounds.
      */
     private static Optional<Point> boundsIntersect1(Line line) {
         Optional<Point> hit = line.npIntersect(Model.BOUNDS_TOP);
@@ -270,11 +258,6 @@ public class Model implements Geom {
     }
 
     @Override
-    public Stream<Rgb> colours() {
-        return Stream.concat(isoPoints().map(Point::getColor), lines().flatMap(Line::colours));
-    }
-
-    @Override
     public boolean inBounds() {
         return isoPoints().anyMatch(Point::inBounds) || lines().anyMatch(Line::inBounds);
     }
@@ -288,6 +271,24 @@ public class Model implements Geom {
     @Override
     public boolean inBounds(Box bounds) {
         return inBounds(bounds.minMin.x(), bounds.minMin.y(), bounds.maxMax.x(), bounds.maxMax.y());
+    }
+
+    public Model offset(float dx, float dy) {
+        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.offset(dx, dy)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = isoPoints().map(p -> p.offset(dx, dy)).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
+    }
+
+    public Model offset(Vec2 v) {
+        List<Polyline> polylines = this.polylines.stream().map(pl -> pl.offset((float) v.x(), (float) v.y())).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = isoPoints().map(p -> p.offset((float) v.x(), (float) v.y())).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
+    }
+
+    public Model scale(float factorX, float factorY) {
+        List<Polyline> polylines = this.polylines.stream().map(polyline -> polyline.scale(factorX, factorY)).collect(Collectors.<Polyline>toList());
+        List<Point> allPoints = isoPoints().map(point -> point.scale(factorX, factorY)).collect(Collectors.toList());
+        return new Model(this.name, polylines, allPoints);
     }
 
     @Override
