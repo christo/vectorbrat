@@ -1,7 +1,13 @@
 package com.chromosundrift.vectorbrat.laser;
 
+import com.chromosundrift.vectorbrat.Config;
+import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
+import com.chromosundrift.vectorbrat.VectorBratException;
+import com.chromosundrift.vectorbrat.VectorDisplay;
+import com.chromosundrift.vectorbrat.geom.Interpolator;
+import com.chromosundrift.vectorbrat.geom.Model;
+import com.chromosundrift.vectorbrat.jack.JackLaserDriver;
 import com.chromosundrift.vectorbrat.system.PeekableLazySupplier;
-import com.google.common.base.Suppliers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,15 +18,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import com.chromosundrift.vectorbrat.Config;
-import com.chromosundrift.vectorbrat.DoubleBufferedVectorDisplay;
-import com.chromosundrift.vectorbrat.VectorBratException;
-import com.chromosundrift.vectorbrat.VectorDisplay;
-import com.chromosundrift.vectorbrat.geom.Interpolator;
-import com.chromosundrift.vectorbrat.geom.Model;
-import com.chromosundrift.vectorbrat.jack.JackLaserDriver;
 
 /**
  * Top level VectorDisplay for laser or scope. Delegates path interpolation to {@link Interpolator} and send signal to
@@ -55,7 +52,7 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
     private volatile boolean modelDirty;
 
     private long lastPathPlanTime;
-    private Interpolator pathPlanner;
+    private Interpolator interpolator;
     private long msNextListenersUpdate = 0L;
 
     public LaserDisplay(final Config config) {
@@ -63,7 +60,7 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
         // beam tuning can be modified at runtime, get initial beam tuning from config
         this.beamTuning = config.getBeamTuning();
         this.vectorDisplay = new DoubleBufferedVectorDisplay<>(true, beamTuning);
-
+        this.interpolator = new Interpolator(config.getInterpolation(), beamTuning);
         // only once get is called, driver is instantiated
         this.laserDriver = new PeekableLazySupplier<>(() -> {
             try {
@@ -95,15 +92,15 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
     private Void render(Model model) {
         // TODO maybe we want to rerender models with previous path if model not dirty?
         if (modelDirty && !model.isEmpty()) {
-            pathPlanner = new Interpolator(config.getInterpolation(), config.getBeamTuning());
+            // TODO: PERF: don't construct Interpolator each time, reuse one
             float xScale = this.getInvertX() ? -1f : 1f;
             float yScale = this.getInvertY() ? -1f : 1f;
             // calculate scan rate
             long startTime = System.nanoTime();
-            pathPlanner.plan(model.scale(xScale, yScale));
+            interpolator.plan(model.scale(xScale, yScale));
             setPathPlanTime(System.nanoTime() - startTime);
             if (laserDriver.peek() && laserDriver.get().isOn()) {
-                laserDriver.get().makePath(pathPlanner);
+                laserDriver.get().makePath(interpolator);
             }
             modelDirty = false;
         }
@@ -121,7 +118,7 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
         running = true;
         tellListeners();
         while (running) {
-            vectorDisplay.withLockAndFlip(this::render);
+            vectorDisplay.withLock(this::render);
         }
     }
 
@@ -261,7 +258,7 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
 
     @Override
     public Interpolator getInterpolator() {
-        return this.pathPlanner;
+        return this.interpolator;
     }
 
     @Override

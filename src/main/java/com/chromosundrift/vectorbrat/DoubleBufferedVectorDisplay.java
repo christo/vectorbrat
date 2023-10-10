@@ -6,7 +6,7 @@ import java.util.function.Function;
 import com.chromosundrift.vectorbrat.geom.Model;
 
 /**
- * Threadsafe, double-buffered display. Call {@link DoubleBufferedVectorDisplay#withLockAndFlip(Function)} to render
+ * Threadsafe, double-buffered display. Call {@link DoubleBufferedVectorDisplay#withLock(Function)} to render
  * the current model.
  */
 public final class DoubleBufferedVectorDisplay<T> implements VectorDisplay<T> {
@@ -28,13 +28,12 @@ public final class DoubleBufferedVectorDisplay<T> implements VectorDisplay<T> {
     }
 
     /**
-     * Applies the function to the model using double-buffering and thread safety.
+     * Threadsafe application of function to the model.
      */
-    public void withLockAndFlip(Function<Model, Void> withLockAndFlip) {
+    public void withLock(Function<Model, Void> withLock) {
         try {
             lock.lock();
-            withLockAndFlip.apply(frontModel);
-            flip();
+            withLock.apply(frontModel);
         } finally {
             lock.unlock();
         }

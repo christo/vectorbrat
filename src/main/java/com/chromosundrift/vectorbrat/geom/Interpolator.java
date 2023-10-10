@@ -30,11 +30,11 @@ public final class Interpolator implements Pather {
     private final float blackPoints;
     private final Interpolation interpolation;
 
-    private final ArrayList<Float> xs = new ArrayList<>(INITIAL_CAPACITY);
-    private final ArrayList<Float> ys = new ArrayList<>(INITIAL_CAPACITY);
-    private final ArrayList<Float> rs = new ArrayList<>(INITIAL_CAPACITY);
-    private final ArrayList<Float> gs = new ArrayList<>(INITIAL_CAPACITY);
-    private final ArrayList<Float> bs = new ArrayList<>(INITIAL_CAPACITY);
+    private final ArrayList<Float> xs;
+    private final ArrayList<Float> ys;
+    private final ArrayList<Float> rs;
+    private final ArrayList<Float> gs;
+    private final ArrayList<Float> bs;
 
     /**
      * Base value
@@ -54,6 +54,11 @@ public final class Interpolator implements Pather {
         this.vertexPoints = beamTuning.getVertexPoints();
         this.blackPoints = beamTuning.getBlackPoints();
         this.pointsPerUnitOffset = beamTuning.getPointsPerUnitOffset();
+        xs = new ArrayList<>(INITIAL_CAPACITY);
+        ys = new ArrayList<>(INITIAL_CAPACITY);
+        rs = new ArrayList<>(INITIAL_CAPACITY);
+        gs = new ArrayList<>(INITIAL_CAPACITY);
+        bs = new ArrayList<>(INITIAL_CAPACITY);
     }
 
     /**
@@ -84,6 +89,12 @@ public final class Interpolator implements Pather {
      * @param m the model to plan.
      */
     public void plan(Model m) {
+        // clear buffer
+        xs.clear();
+        ys.clear();
+        rs.clear();
+        gs.clear();
+        bs.clear();
         // use LinkedList for O(1) removal
         List<Line> lines = new LinkedList<>(m.lines().toList());
         List<Point> points = new LinkedList<>(m.isoPoints().toList());

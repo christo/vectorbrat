@@ -116,7 +116,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
      * Not threadsafe, must only be called with model lock.
      */
     private void unsafePaint(final Graphics g, final Model model) {
-        super.paint(g);
         final Dimension s = getSize();
         int imWidth = Math.max(s.width, MIN_WIDTH);
         int imHeight = Math.max(s.height, MIN_HEIGHT);
@@ -219,6 +218,7 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
             final float yInvert = laserController.getInvertY() ? -1f : 1f;
             for (int i = 0; i < s; i++) {
 
+                // TODO the following sometimes throws ArrayIndexOutOfBoundsException but why?
                 int x = (int) (((xs.get(i) * xInvert) / 2 + 0.5) * w);
                 int y = (int) (((ys.get(i) * yInvert) / 2 + 0.5) * h);
 
@@ -292,9 +292,9 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
     }
 
     @Override
-    public void paint(final Graphics g) {
-        // TODO override paintComponent instead so border is not overwritten
-        vectorDisplay.withLockAndFlip(model -> {
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        vectorDisplay.withLock(model -> {
             unsafePaint(g, model);
             return null;
         });
