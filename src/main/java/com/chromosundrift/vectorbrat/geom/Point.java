@@ -215,7 +215,7 @@ public final class Point implements Geom {
 
     @Override
     public boolean inBounds() {
-        return inBounds(SAMPLE_MIN, SAMPLE_MIN, SAMPLE_MAX, SAMPLE_MAX);
+        return inBounds(Model.BOUNDS);
     }
 
     @Override
