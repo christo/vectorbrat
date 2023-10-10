@@ -176,7 +176,8 @@ public class Model implements Geom {
 
     @Override
     public Optional<Point> closest(Point other) {
-        return Stream.concat(polylines.stream().flatMap(polyline -> isoPoints()), isoPoints()).min(other.dist2Point());
+        Function<Polyline, Stream<? extends Point>> pl2p = pl -> pl.lines().flatMap(l -> Stream.of(l.from(), l.to()));
+        return Stream.concat(polylines.stream().flatMap(pl2p), isoPoints()).min(other.dist2Point());
     }
 
     public Model coloured(final Rgb c) {
