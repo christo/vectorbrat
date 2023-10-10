@@ -8,9 +8,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static com.chromosundrift.vectorbrat.Config.SAMPLE_MAX;
-import static com.chromosundrift.vectorbrat.Config.SAMPLE_MIN;
-
 /**
  * Immutable float-precision point.
  */
@@ -41,7 +38,7 @@ public final class Point implements Geom {
      * @param y y coordinate.
      */
     public Point(float x, float y) {
-        this(x, y, 1f, 1f, 1f);
+        this(x, y, Rgb.WHITE);
     }
 
     public Point(float x, float y, Rgb c) {
