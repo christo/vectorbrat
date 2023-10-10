@@ -21,11 +21,11 @@ public class Model implements Geom {
     public static final Point CORNER_TOP_RIGHT = new Point(1f, -1f);
     public static final Point CORNER_BOT_LEFT = new Point(-1f, 1f);
     public static final Point CORNER_BOT_RIGHT = new Point(1f, 1f);
-    private static final Line BOUNDS_TOP = new Line(CORNER_TOP_LEFT, CORNER_TOP_RIGHT);
-    private static final Line BOUNDS_BOT = new Line(CORNER_BOT_LEFT, CORNER_BOT_RIGHT);
-    private static final Line BOUNDS_LEFT = new Line(CORNER_TOP_LEFT, CORNER_BOT_LEFT);
-    private static final Line BOUNDS_RIGHT = new Line(CORNER_TOP_RIGHT, CORNER_BOT_RIGHT);
-    private static final Box BOUNDS = new Box(CORNER_TOP_LEFT, CORNER_BOT_RIGHT);
+    public static final Line BOUNDS_TOP = new Line(CORNER_TOP_LEFT, CORNER_TOP_RIGHT);
+    public static final Line BOUNDS_BOT = new Line(CORNER_BOT_LEFT, CORNER_BOT_RIGHT);
+    public static final Line BOUNDS_LEFT = new Line(CORNER_TOP_LEFT, CORNER_BOT_LEFT);
+    public static final Line BOUNDS_RIGHT = new Line(CORNER_TOP_RIGHT, CORNER_BOT_RIGHT);
+    public static final Box BOUNDS = new Box(CORNER_TOP_LEFT, CORNER_BOT_RIGHT);
 
     public static Model EMPTY = new Model("");
 
