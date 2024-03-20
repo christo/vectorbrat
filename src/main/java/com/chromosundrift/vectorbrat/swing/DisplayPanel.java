@@ -77,8 +77,8 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
         this.tuning = new RasterTuning();
         this.config = config;
         logo = loadImage(config.logoUrl());
-        fontBranding = mkFont(130);
-        fontHud = mkFont(48);
+        fontBranding = UiUtil.mkFont(130);
+        fontHud = UiUtil.mkFont(48);
         strokeLine = new BasicStroke(config.getLineWidth());
         this.laserSimulator = laserSimulator;
         simulatorRenderer = new SimulatorRenderer(this.laserSimulator);
@@ -98,10 +98,6 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
             logger.warn("Unable to load logo from url " + imageUrl, e);
         }
         return Optional.empty();
-    }
-
-    private static Font mkFont(int size) {
-        return new Font("HelveticaNeue", Font.PLAIN, size);
     }
 
     private static BufferedImage getImage(int imWidth, int imHeight) {
@@ -263,32 +259,12 @@ public final class DisplayPanel extends JPanel implements VectorDisplay<RasterTu
                     model.countVertices() + " VERTICES",
                     blackPoints + " BLACK POINTS"
             };
-            hudLines(g2, h, hudStats);
+            UiUtil.hudLines(g2, h, hudStats, HUD_COLOR, fontHud);
         }
     }
 
     private Interpolator getPathPlan() {
         return laserController.getInterpolator();
-    }
-
-    /**
-     * Renders a number of lines of subtle text in the bottom left of the given graphics.
-     *
-     * @param g2    the graphics to use for drawing
-     * @param h     the height of the display area, used to calculate bottom
-     * @param lines the text lines
-     */
-    private void hudLines(Graphics2D g2, int h, String[] lines) {
-        g2.setColor(HUD_COLOR);
-        g2.setFont(fontHud);
-        int lineHeight = 60;
-        int bottomPad = 20;
-        int leftPad = 50;
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i];
-            int y = h - (lines.length - i) * lineHeight - bottomPad;
-            g2.drawString(line, leftPad, y);
-        }
     }
 
     @Override

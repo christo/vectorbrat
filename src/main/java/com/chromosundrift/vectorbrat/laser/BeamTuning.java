@@ -31,6 +31,16 @@ public class BeamTuning {
         return new BeamTuning(pps, 1f, 0f, 1f, 0f, 0f);
     }
 
+    /**
+     * Constructs a BeamTuning.
+     *
+     * @param pps                 points per second, as specified a laser.
+     * @param pointsPerPoint      number of samples spent an isolated points (should be higher for brighter dots).
+     * @param pointsPerUnit       the number of interpolated samples per normalised unit.
+     * @param vertexPoints        the number of samples spent in dwell at geometric vertices.
+     * @param blackPoints         the number of samples spent at points supposed to be black.
+     * @param pointsPerUnitOffset offset number added to points per unit.
+     */
     public BeamTuning(
             int pps,
             float pointsPerPoint,

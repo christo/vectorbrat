@@ -5,6 +5,7 @@ import com.chromosundrift.vectorbrat.physics.LaserSimulator;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -17,10 +18,12 @@ public class SimulatorPanel extends JPanel {
     private final SimulatorRenderer simulatorRenderer;
     private final LaserSimulator simulator;
     private volatile boolean showUpdates;
+    private final Font fontHud;
 
     public SimulatorPanel(LaserSimulator laserSimulator) {
         simulatorRenderer = new SimulatorRenderer(laserSimulator);
         simulator = laserSimulator;
+        fontHud = UiUtil.mkFont(16);
     }
 
     @Override
@@ -40,11 +43,17 @@ public class SimulatorPanel extends JPanel {
         g2.clearRect(0, 0, width, height);
 
         int nPoints = simulatorRenderer.draw(im, g2);
+        String[] lines = new String[]{
+                "sim time (ns): %s".formatted(simulator.getElapsedTime()),
+                "trail points: %s".formatted(nPoints),
+                "trailIndex: %s frontIndex: %s/%s".formatted(simulator.getTrailIndex(), simulator.getFrontIndex(), simulator.getFrontSize()),
+                "samples per point: %s".formatted(simulator.getSamplesPerPoint()),
+                "sample rate Hz: %s".formatted(simulator.getSampleRate())
+        };
         if (showUpdates) {
             g2.setColor(Color.GREEN);
-            g2.drawString("sim time (ns): %s".formatted(simulator.getElapsedTime()), 20, 20);
-            g2.drawString("trail points: %s".formatted(nPoints), 20, 35);
-            g2.drawString("trailIndex: %s frontIndex: %s/%s".formatted(simulator.getTrailIndex(), simulator.getFrontIndex(), simulator.getFrontSize()), 20, 50);
+            UiUtil.hudLines(g2, s.height, lines, Color.GREEN, fontHud);
+
         }
         g.drawImage(im, 0, 0, null);
     }

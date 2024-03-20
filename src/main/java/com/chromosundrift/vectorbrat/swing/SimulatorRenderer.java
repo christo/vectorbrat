@@ -22,6 +22,7 @@ class SimulatorRenderer {
     public static final BasicStroke STROKE_HARD_CODED = new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
     private static final Logger logger = LoggerFactory.getLogger(SimulatorRenderer.class);
+    private static final Stroke DEBUG_POINT_STROKE = new BasicStroke(4f);
 
     private final LaserSimulator laserSimulator;
     private final Stroke beamStroke;
@@ -41,29 +42,39 @@ class SimulatorRenderer {
     int draw(final BufferedImage image, final Graphics2D g2) {
         int width = image.getWidth();
         int height = image.getHeight();
-        g2.setStroke(getBeamStroke(width, height));
-        Stream<Point> trail = laserSimulator.getTrail()
-                // scale out of sample space
-                .map(p -> p.offset(1f, 1f).scale((float) width / 2, (float) height / 2));
-        final AtomicReference<Point> prev = new AtomicReference<>(null);
-        AtomicInteger nPoints = new AtomicInteger(0);
-        trail.forEachOrdered(point -> {
-            nPoints.incrementAndGet();
-            boolean firstPoint = prev.compareAndSet(null, point);
+        Point prev = null;
+        int nPoints = 0;
+        for (Point point : laserSimulator.getTrail().toList()) {
+            int screenX = (int) ((point.x() + 1) * width / 2);
+            int screenY = (int) ((point.y() + 1) * height / 2);
+            nPoints++;
+            boolean firstPoint = prev ==null;
             // if no previous point, use current point for both ends of "line", otherwise use prev
-            Point fromPoint = firstPoint ? point : prev.get();
-            prev.set(point);
+            Point fromPoint = firstPoint ? point : prev;
+            prev = point;
+            int fromScreenX = (int) ((fromPoint.x() + 1) * width / 2);
+            int fromScreenY = (int) ((fromPoint.y() + 1) * height / 2);
             // should colour always be set to from point?
             Color colour = new Color(fromPoint.r(), fromPoint.g(), fromPoint.b());
             g2.setColor(colour);
-            int x1 = (int) fromPoint.x();
-            int y1 = (int) fromPoint.y();
-            int x2 = (int) point.x();
-            int y2 = (int) point.y();
-            g2.drawLine(x1, y1, x2, y2);
-        });
-        prev.set(null);
-        return nPoints.get();
+            g2.setStroke(getBeamStroke(width, height));
+            g2.drawLine(fromScreenX, fromScreenY, screenX, screenY);
+            if (firstPoint) {
+                drawDebugPoint(g2, screenX, screenY, Color.RED);
+            }
+        }
+        int lastScreenX = (int) ((prev.x() + 1) * width / 2);
+        int lastScreenY = (int) ((prev.y() + 1) * height / 2);
+
+        drawDebugPoint(g2, lastScreenX, lastScreenY, Color.GREEN);
+        prev = null;
+        return nPoints;
+    }
+
+    private void drawDebugPoint(Graphics2D g2, int x2, int y2, Color color) {
+        g2.setColor(color);
+        g2.setStroke(DEBUG_POINT_STROKE);
+        g2.drawOval(x2-5, y2-5, 10, 10);
     }
 
     private Stroke getBeamStroke(int width, int height) {

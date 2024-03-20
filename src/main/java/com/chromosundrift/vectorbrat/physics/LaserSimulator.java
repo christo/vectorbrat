@@ -4,6 +4,7 @@ import com.chromosundrift.vectorbrat.data.Maths;
 import com.chromosundrift.vectorbrat.data.SignalBuffer;
 import com.chromosundrift.vectorbrat.geom.Pather;
 import com.chromosundrift.vectorbrat.geom.Point;
+import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 import com.chromosundrift.vectorbrat.laser.LaserDriver;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
@@ -33,9 +34,9 @@ public final class LaserSimulator implements LaserDriver {
     private static final Logger logger = LoggerFactory.getLogger(LaserSimulator.class);
 
     /**
-     * Size of signal buffers in numbers of samples (aka frames).
+     * Size of signal buffers in number of samples.
      */
-    private static final int INITIAL_BUFFER_SIZE = 20000;
+    private static final int INITIAL_BUFFER_SIZE = 100000;
 
     /**
      * Frames per second that make in-eye persistence appear continuous. In other words, what fraction of a second does
@@ -200,14 +201,15 @@ public final class LaserSimulator implements LaserDriver {
                     // depending on the physics, the beamState will be updated for the demand point
 
                     // update the trail history for this sample
-                    trail.set(beamState.xPos, beamState.yPos, 1f, 1f, 1f, trailIndex);
+                    Rgb rgb = beamState.rgb;
+                    trail.set(beamState.xPos, beamState.yPos, rgb.red(), rgb.green(), rgb.blue(), trailIndex);
 
                     {
                         // advance the trail, wrapping the trail ring buffer index if necessary
                         trailIndex++;
                         int size = trail.getActualSize();
                         if (trailIndex >= size) {
-                            trailIndex -= size;
+                            trailIndex %= size;
                         }
                     }
 
@@ -218,7 +220,7 @@ public final class LaserSimulator implements LaserDriver {
                         int size = demandFront.getActualSize();
                         if (frontIndex >= size) {
                             // wrap the ring buffer
-                            frontIndex -= size;
+                            frontIndex %= size;
                         }
                         // set new next point deadline
                         nsNextPoint += nsPp;
@@ -333,6 +335,10 @@ public final class LaserSimulator implements LaserDriver {
      */
     public float getSamplesPerPoint() {
         return sampleRate / tuning.getPps();
+    }
+
+    public float getSampleRate() {
+        return sampleRate;
     }
 
 

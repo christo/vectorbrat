@@ -36,6 +36,9 @@ public class LinearBeamPhysics implements BeamPhysics {
      * Construct with fixed linear coefficients of change over time. The arguments represent the fixed linear change in
      * the corresponding colour or coordinate units per second. Positive and negative change are symmetrical.
      *
+     * The colour change needs to reflect the beam colour change speed in the laser but the trail drawn by the simulator
+     * needs to incorporate the eye's persistence of vision.
+     *
      * @param xyRate    x and y position in units per second.
      * @param colorRate rgb units per second.
      */
@@ -98,9 +101,9 @@ public class LinearBeamPhysics implements BeamPhysics {
     }
 
     /**
-     * Using linear physics means position is determined by linear extrapolation.
+     * Modifies the given beam state Using linear physics; position is determined by linear interpolation.
      *
-     * @param state      previous state.
+     * @param state      state of beam (modified).
      * @param nsTimeStep time increment to calculate the new state for.
      */
     @Override

@@ -25,10 +25,17 @@ public class SimDemo {
 
     private static final Logger logger = LoggerFactory.getLogger(SimDemo.class);
 
-    public static final float CLOCK_RATE = 0.01f;
-    public static final float XY_RATE = 100f;
-    public static final float COLOR_RATE = 10f;
-    public static final float SAMPLE_RATE = XY_RATE * 12;
+    public static final float CLOCK_RATE = 0.001f;
+
+    /**
+     * Rate of motion in normalised bipolar units per second
+     */
+    public static final float XY_RATE = 20000f;
+
+    // COLOR_RATE is rgb units per second where 1 unit is the difference between full bright to full dark in the eye
+    public static final float COLOR_RATE = 5f;
+
+    public static final float SAMPLE_RATE = 96000f;
 
     public static void main(String[] args) {
         GraphicsConfiguration gConfig = UiUtil.getPreferredGraphicsConfiguration();
@@ -37,12 +44,14 @@ public class SimDemo {
 
         BeamPhysics physics = new LinearBeamPhysics(XY_RATE, COLOR_RATE);
         BulletClock clock = new BulletClock(CLOCK_RATE);
-        BeamTuning tuning = config.getBeamTuning();
+
+        BeamTuning tuning = new BeamTuning(30000, 3, 8, 3, 3, 3);
+
         LaserSpec laserSpec = LaserSpec.laserWorld1600Pro();
         LaserSimulator sim = new LaserSimulator(laserSpec, tuning, physics, clock);
         sim.setSampleRate(SAMPLE_RATE);
 
-        Model m = Pattern.boxGrid(3, 4, Rgb.CYAN);
+        Model m = Pattern.boxGrid(3, 3, Rgb.CYAN);
 
         Interpolation interpolation = config.getInterpolation();
         Interpolator pather = new Interpolator(interpolation, tuning);

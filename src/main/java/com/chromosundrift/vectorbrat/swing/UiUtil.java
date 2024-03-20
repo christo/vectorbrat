@@ -14,7 +14,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -69,6 +72,33 @@ public class UiUtil {
         } catch (UnsupportedLookAndFeelException e) {
             throw new VectorBratException(e);
         }
+    }
+
+    /**
+     * Renders a number of lines of subtle text in the bottom left of the given graphics.
+     *
+     * @param g2    the graphics to use for drawing
+     * @param h     the height of the display area, used to calculate bottom
+     * @param lines the text lines
+     * @param hudColor
+     * @param fontHud1
+     */
+    static void hudLines(Graphics2D g2, int h, String[] lines, Color hudColor, Font fontHud1) {
+        g2.setColor(hudColor);
+        g2.setFont(fontHud1);
+        int fontRoom = (int) (fontHud1.getSize() * 1.2);
+        int lineHeight = fontRoom;
+        int bottomPad = fontRoom;
+        int leftPad = fontRoom * 2;
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            int y = h - (lines.length - i) * lineHeight - bottomPad;
+            g2.drawString(line, leftPad, y);
+        }
+    }
+
+    static Font mkFont(int size) {
+        return new Font("HelveticaNeue", Font.PLAIN, size);
     }
 
     public enum HAlign {
