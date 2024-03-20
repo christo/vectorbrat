@@ -47,14 +47,14 @@ public class ServiceBridge {
                 256,
                 new ClientID("Lissajou"),
                 Connections.OUTPUT);
-        logger.info("created audio config: " + audioConfig);
+        logger.info("created audio config: {}", audioConfig);
         return audioConfig;
     }
 
     public AudioServerProvider getProvider() throws MissingAudioDevice {
         for (AudioServerProvider p : ServiceLoader.load(AudioServerProvider.class)) {
             if (backend.equals(p.getLibraryName())) {
-                logger.info("found provider " + p);
+                logger.info("found provider {}", p);
                 return p;
             }
         }
@@ -67,7 +67,7 @@ public class ServiceBridge {
         logger.info("configurations:");
         for (AudioConfiguration c : configurations) {
             // dump. TODO fix this
-            logger.info("c = " + c);
+            logger.info("c = {}", c);
         }
         return configurations;
     }
@@ -75,7 +75,7 @@ public class ServiceBridge {
     public List<Device> getDevices() throws MissingAudioDevice {
         List<Device> all = new ArrayList<>();
         for (Device dev : getProvider().findAll(Device.class)) {
-            logger.info(dev.getName() + " (inputs: " + dev.getMaxInputChannels() + ", outputs: " + dev.getMaxOutputChannels() + ")");
+            logger.info("{} (inputs: {}, outputs: {})", dev.getName(), dev.getMaxInputChannels(), dev.getMaxOutputChannels());
             all.add(dev);
         }
         return all;
