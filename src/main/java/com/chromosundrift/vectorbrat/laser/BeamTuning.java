@@ -2,14 +2,18 @@ package com.chromosundrift.vectorbrat.laser;
 
 
 /**
- * Mutable set of tuning parameters for a laser-backed vector display. May also be useful for CRO and Vectrex but more
- * likely they'll need a different implementation. These should be surfaced in the UI and modified in order to set
- * preferred signal optimisation, balancing effective frame rate (vector models per second) and geometric fidelity
- * (through interpolation points.)
- * future: create tuning implementation for modelling vector display deflection in Vectrex (electromagnetic) and
- *   Cathode Ray Oscilloscope (electrostatic)
+ * Mutable set of tuning parameters for a laser-backed vector display. Contains parameters like vertex points,
+ * points per point, black points etc. This affects the number of samples the demand signal dwells on geometric
+ * features to accommodate for vector lag.
+ * <p>
+ * May also be useful for CRO and Vectrex but more likely they'll need a different implementation. These should be
+ * surfaced in the UI and modified in order to set preferred signal optimisation, balancing effective frame rate
+ * (vector models per second) and geometric fidelity (through interpolation points.)
+ * <p>
  */
 public class BeamTuning {
+    // future: create tuning implementation for modelling vector display deflection in Vectrex (electromagnetic)
+    //  and Cathode Ray Oscilloscope (electrostatic)
     private int pps;
     private float pointsPerPoint;
     private float pointsPerUnit;
@@ -17,6 +21,12 @@ public class BeamTuning {
     private float blackPoints;
     private float pointsPerUnitOffset;
 
+    /**
+     * Constructs an instance with no interpolation, just the points per second.
+     *
+     * @param pps points per second.
+     * @return a no-interpolation BeamTuning
+     */
     public static BeamTuning noInterpolation(int pps) {
         return new BeamTuning(pps, 1f, 0f, 1f, 0f, 0f);
     }
@@ -90,9 +100,9 @@ public class BeamTuning {
     }
 
 
-
     /**
      * Based on points per second, give number of nanoseconds per point.
+     *
      * @return time per point in ns.
      */
     public long getNsPerPoint() {
