@@ -21,7 +21,6 @@ import com.chromosundrift.vectorbrat.audio.MissingAudioDevice;
 public class ServiceBridge {
 
     public static final String JACK = "JACK";
-    public static final String JAVASOUND = "JavaSound";
     private static final Logger logger = LoggerFactory.getLogger(ServiceBridge.class);
 
     static {
@@ -33,7 +32,7 @@ public class ServiceBridge {
     /**
      * The root accessor of sound servers.
      *
-     * @param backend ry {@link ServiceBridge#JACK} or {@link ServiceBridge#JAVASOUND}.
+     * @param backend ry {@link ServiceBridge#JACK}
      */
     public ServiceBridge(String backend) {
         this.backend = backend;
@@ -61,7 +60,8 @@ public class ServiceBridge {
         throw new MissingAudioDevice(JACK);
     }
 
-    public ImmutableList<AudioConfiguration> getConfigurations() throws MissingAudioDevice {
+    @SuppressWarnings("unused")
+    public ImmutableList<AudioConfiguration> getConfigurations() {
         Iterator<AudioConfiguration> iterator = ServiceLoader.load(AudioConfiguration.class).iterator();
         ImmutableList<AudioConfiguration> configurations = ImmutableList.copyOf(iterator);
         logger.info("configurations:");
@@ -72,6 +72,7 @@ public class ServiceBridge {
         return configurations;
     }
 
+    @SuppressWarnings("unused")
     public List<Device> getDevices() throws MissingAudioDevice {
         List<Device> all = new ArrayList<>();
         for (Device dev : getProvider().findAll(Device.class)) {
