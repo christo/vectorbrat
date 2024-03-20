@@ -4,7 +4,6 @@ import com.chromosundrift.vectorbrat.data.Maths;
 import com.chromosundrift.vectorbrat.data.SignalBuffer;
 import com.chromosundrift.vectorbrat.geom.Pather;
 import com.chromosundrift.vectorbrat.geom.Point;
-import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 import com.chromosundrift.vectorbrat.laser.LaserDriver;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
@@ -73,8 +72,8 @@ public final class LaserSimulator implements LaserDriver {
     private long nsPrev;
 
     /**
-     * History of past actual beam position and colour values in sample space. This is used to draw a persistence of vision in the
-     * simulation display.
+     * History of past actual beam position and colour values in sample space. This is used to draw a persistence of
+     * vision in the simulation display.
      */
     private SignalBuffer trail;
 
@@ -113,7 +112,7 @@ public final class LaserSimulator implements LaserDriver {
     /**
      * Current state of the scanning hardware.
      */
-    private BeamState beamState;
+    private final BeamState beamState;
 
     /**
      * Current sample rate. Can change over time.
