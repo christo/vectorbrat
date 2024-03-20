@@ -168,8 +168,8 @@ public final class LaserSimulator implements LaserDriver {
     }
 
     /**
-     * Update the simulation using the current sample rate and point rate from {@link BeamTuning}. Uses the given
-     * clock to determine simulation time.
+     * Update the simulation using the current sample rate and point rate from {@link BeamTuning}. Uses the configured
+     * clock to determine simulation time delta between calls.
      */
     public void update() {
         // if we have done a previous update, calculate the simulation updates based on the delta
