@@ -3,10 +3,10 @@ package com.chromosundrift.vectorbrat.physics;
 import com.chromosundrift.vectorbrat.geom.Rgb;
 
 /**
- * Mutable struct for physical state of hardware for a scanning laser, includes x and y velocity which are used to
- * determine impulse calculations.
+ * Mutable representation of physical hardware state of hardware for an RBG scanning laser, includes x and y
+ * velocity which may be used to determine impulse calculations, depending on the BeamPhysics implementation.
  */
-final class BeamState {
+final public class BeamState {
 
     float xPos;
     float yPos;
