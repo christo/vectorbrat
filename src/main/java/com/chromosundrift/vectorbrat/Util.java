@@ -21,7 +21,7 @@ public class Util {
         System.setProperty("jna.library.path", "/opt/homebrew/lib");
     }
 
-    public static final void bridgeJulToSlf4j() {
+    public static void bridgeJulToSlf4j() {
         logger.info("bridging JUL logging to Slf4j");
         try (InputStream is = Util.class.getClassLoader().getResourceAsStream("logging.properties")) {
             LogManager.getLogManager().readConfiguration(is);
