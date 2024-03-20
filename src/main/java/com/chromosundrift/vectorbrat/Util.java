@@ -26,6 +26,8 @@ public class Util {
         try (InputStream is = Util.class.getClassLoader().getResourceAsStream("logging.properties")) {
             LogManager.getLogManager().readConfiguration(is);
         } catch (IOException e) {
+            // can't use a "more robust logging method" here because we are logging the failure to set up logging!
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
         SLF4JBridgeHandler.removeHandlersForRootLogger();
