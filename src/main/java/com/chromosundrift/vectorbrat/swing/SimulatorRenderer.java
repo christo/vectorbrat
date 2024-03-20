@@ -47,11 +47,12 @@ class SimulatorRenderer {
                 .map(p -> p.offset(1f, 1f).scale((float) width / 2, (float) height / 2));
         final AtomicReference<Point> prev = new AtomicReference<>(null);
         AtomicInteger nPoints = new AtomicInteger(0);
-        trail.forEach(point -> {
+        trail.forEachOrdered(point -> {
             nPoints.incrementAndGet();
             boolean firstPoint = prev.compareAndSet(null, point);
-            // if no previous point, use current point for both ends of "line"
+            // if no previous point, use current point for both ends of "line", otherwise use prev
             Point fromPoint = firstPoint ? point : prev.get();
+            prev.set(point);
             // should colour always be set to from point?
             Color colour = new Color(fromPoint.r(), fromPoint.g(), fromPoint.b());
             g2.setColor(colour);
@@ -61,6 +62,7 @@ class SimulatorRenderer {
             int y2 = (int) point.y();
             g2.drawLine(x1, y1, x2, y2);
         });
+        prev.set(null);
         return nPoints.get();
     }
 

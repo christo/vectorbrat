@@ -25,9 +25,10 @@ public class SimDemo {
 
     private static final Logger logger = LoggerFactory.getLogger(SimDemo.class);
 
-    public static final float CLOCK_RATE = 0.1f;
-    public static final float XY_RATE = 100000f;
-    public static final float COLOR_RATE = 1000f;
+    public static final float CLOCK_RATE = 0.01f;
+    public static final float XY_RATE = 100f;
+    public static final float COLOR_RATE = 10f;
+    public static final float SAMPLE_RATE = XY_RATE * 12;
 
     public static void main(String[] args) {
         GraphicsConfiguration gConfig = UiUtil.getPreferredGraphicsConfiguration();
@@ -39,9 +40,9 @@ public class SimDemo {
         BeamTuning tuning = config.getBeamTuning();
         LaserSpec laserSpec = LaserSpec.laserWorld1600Pro();
         LaserSimulator sim = new LaserSimulator(laserSpec, tuning, physics, clock);
-        sim.setSampleRate(Config.DEFAULT_SAMPLE_RATE);
+        sim.setSampleRate(SAMPLE_RATE);
 
-        Model m = Pattern.boxGrid(5, 5, Rgb.CYAN);
+        Model m = Pattern.boxGrid(3, 4, Rgb.CYAN);
 
         Interpolation interpolation = config.getInterpolation();
         Interpolator pather = new Interpolator(interpolation, tuning);
@@ -51,7 +52,7 @@ public class SimDemo {
         simulatorPanel.showUpdates(true);
         jFrame.add(simulatorPanel);
         jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        jFrame.setPreferredSize(new Dimension(900, 700));
+        jFrame.setPreferredSize(new Dimension(1000, 800));
         jFrame.pack();
 
         // move the window to the center of preferred screen
@@ -60,7 +61,6 @@ public class SimDemo {
         jFrame.setLocation(bounds.width /2 - actualSize.width/2, bounds.height /2 - actualSize.height/2);
 
         jFrame.setVisible(true);
-        sim.setSampleRate(100f);
         sim.start();
         //noinspection InfiniteLoopStatement
         while (true) {
