@@ -25,15 +25,20 @@ public class SimDemo {
 
     private static final Logger logger = LoggerFactory.getLogger(SimDemo.class);
 
+    public static final float CLOCK_RATE = 0.1f;
+    public static final float XY_RATE = 100000f;
+    public static final float COLOR_RATE = 1000f;
+
     public static void main(String[] args) {
         GraphicsConfiguration gConfig = UiUtil.getPreferredGraphicsConfiguration();
         JFrame jFrame = new JFrame("Laser Simulator Demo", gConfig);
         Config config = new Config();
 
-        BeamPhysics physics = new LinearBeamPhysics(100000f, 1000f);
-        BulletClock clock = new BulletClock(0.01f);
+        BeamPhysics physics = new LinearBeamPhysics(XY_RATE, COLOR_RATE);
+        BulletClock clock = new BulletClock(CLOCK_RATE);
         BeamTuning tuning = config.getBeamTuning();
-        LaserSimulator sim = new LaserSimulator(LaserSpec.laserWorld1600Pro(), tuning, physics, clock);
+        LaserSpec laserSpec = LaserSpec.laserWorld1600Pro();
+        LaserSimulator sim = new LaserSimulator(laserSpec, tuning, physics, clock);
         sim.setSampleRate(Config.DEFAULT_SAMPLE_RATE);
 
         Model m = Pattern.boxGrid(5, 5, Rgb.CYAN);
@@ -59,7 +64,6 @@ public class SimDemo {
         sim.start();
         //noinspection InfiniteLoopStatement
         while (true) {
-
             simulatorPanel.repaint();
             try {
                 //noinspection BusyWait
@@ -67,7 +71,6 @@ public class SimDemo {
             } catch (InterruptedException e) {
                 logger.warn("interrupted exception (ignoring)", e);
             }
-
         }
     }
 
