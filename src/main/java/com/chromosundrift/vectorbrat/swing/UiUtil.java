@@ -15,9 +15,17 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+import java.util.Comparator;
+import java.util.Optional;
+
+import static java.util.Arrays.stream;
 
 public class UiUtil {
+    public static final Comparator<GraphicsDevice> WIDEST = Comparator.comparingInt(o -> o.getDisplayMode().getWidth());
     private static final Logger logger = LoggerFactory.getLogger(UiUtil.class);
 
     public static void centerFrame(JFrame f) {
@@ -38,6 +46,16 @@ public class UiUtil {
         return label;
     }
 
+    /**
+     * Gets the screen with the biggest resolution
+     */
+    public static GraphicsConfiguration getPreferredGraphicsConfiguration() {
+        GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] screenDevices = localGraphicsEnvironment.getScreenDevices();
+        Optional<GraphicsDevice> first = stream(screenDevices).max(WIDEST);
+        //noinspection OptionalGetWithoutIsPresent
+        return first.get().getDefaultConfiguration();
+    }
     /**
      * Sets ui scaling and look-and-feel.
      *

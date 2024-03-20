@@ -48,7 +48,7 @@ public class LinearBeamPhysics implements BeamPhysics {
     public long blackToWhite() {
         // time required to go from black to white is time required
         // to cross the full colour range
-        return (long) (this.colorRate * NANO);
+        return (long) (NANO / this.colorRate);
     }
 
     @Override
