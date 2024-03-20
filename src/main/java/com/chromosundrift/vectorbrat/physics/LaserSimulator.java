@@ -124,6 +124,7 @@ public final class LaserSimulator implements LaserDriver {
      */
     private long nsNextPoint;
     private volatile boolean running = false;
+    private long startTime = 0;
 
     public LaserSimulator(LaserSpec laserSpec, BeamTuning tuning, BeamPhysics physics, Clock clock) {
         logger.info("initialising LaserSimulator");
@@ -230,7 +231,7 @@ public final class LaserSimulator implements LaserDriver {
 
             nsPrev = simTime;
             // calculate the time delta to the now of this call. We only do whole sample simulation steps
-            nsIncomplete = nsNow - nsPrev;
+            nsIncomplete = nsNow;
         } else {
             // we haven't done a previous update, just set the previous clock time for next update
             nsPrev = clock.getNs();
@@ -285,6 +286,7 @@ public final class LaserSimulator implements LaserDriver {
             throw new IllegalStateException("sample rate is zero");
         }
         executorService.submit(this::run);
+        this.startTime = this.clock.getNs();
     }
 
     /**
@@ -295,7 +297,7 @@ public final class LaserSimulator implements LaserDriver {
 
         running = true;
         // only log update every so often
-        long nsPerLog = 1_000_000_00;
+        long nsPerLog = 100_000_000;
         long logUpdateDeadline = System.nanoTime() + nsPerLog;
         long nsUpdateDuration;
         while (running) {
@@ -336,8 +338,8 @@ public final class LaserSimulator implements LaserDriver {
 
     /// TEMPORARY TEST METHODS:
 
-    public long getTime() {
-        return nsPrev;
+    public long getElapsedTime() {
+        return nsPrev - startTime;
     }
 
     public int getTrailIndex() {
