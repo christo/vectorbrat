@@ -20,7 +20,7 @@ public class JackTest {
 
     /**
      * Makes a one second beep through jack using its sound device. Requires jackd to be running.
-     * TODO: move to integration test
+     * TODO: move to an integration test suite
      */
     @Test
     @Ignore

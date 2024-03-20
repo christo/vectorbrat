@@ -92,7 +92,6 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
     private Void render(Model model) {
         // TODO maybe we want to rerender models with previous path if model not dirty?
         if (modelDirty && !model.isEmpty()) {
-            // TODO: PERF: don't construct Interpolator each time, reuse one
             float xScale = this.getInvertX() ? -1f : 1f;
             float yScale = this.getInvertY() ? -1f : 1f;
             // calculate scan rate
