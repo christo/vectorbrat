@@ -19,6 +19,8 @@ public class SimulatorPanel extends JPanel {
     private final LaserSimulator simulator;
     private volatile boolean showUpdates;
     private final Font fontHud;
+    private BufferedImage im;
+    private Graphics2D g2;
 
     public SimulatorPanel(LaserSimulator laserSimulator) {
         simulatorRenderer = new SimulatorRenderer(laserSimulator);
@@ -33,13 +35,14 @@ public class SimulatorPanel extends JPanel {
         int width = s.width;
         int height = s.height;
 
-        final BufferedImage im = new BufferedImage(width, height, TYPE_INT_ARGB);
+        if (im == null || im.getWidth() != width || im.getHeight() != height) {
+            im = new BufferedImage(width, height, TYPE_INT_ARGB);
+            g2 = im.createGraphics();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g2.setBackground(Color.BLACK);
+        }
 
-        final Graphics2D g2 = im.createGraphics();
-
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        g2.setBackground(Color.BLACK);
         g2.clearRect(0, 0, width, height);
 
         int nPoints = simulatorRenderer.draw(im, g2);
@@ -53,10 +56,9 @@ public class SimulatorPanel extends JPanel {
         };
         if (showUpdates) {
             g2.setColor(Color.GREEN);
-            UiUtil.hudLines(g2, s.height, lines, Color.GREEN, fontHud);
+            UiUtil.hudLines(g2, height, lines, Color.GREEN, fontHud);
 
         }
-        im.flush();
         g.drawImage(im, 0, 0, null);
     }
 
