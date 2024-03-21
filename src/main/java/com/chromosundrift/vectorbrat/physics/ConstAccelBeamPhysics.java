@@ -7,6 +7,9 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
  * Implementation which applies a constant acceleration to the beam state. This can result in polynomial hysteresis
  * such as corner cutting and overshoot on xy motion. This is hopefully a useful approximation of real laser optics.
  * Colour change is linear with a fixed maximum rate of change.
+ * <p>
+ * And... no it doesn't. The result is dominated by hyperactive oscillation. Acceleration needs to be proportional to
+ * the delta from beamstate to demand point. That implementation is in {@link PropAccelBeamPhysics}
  */
 public class ConstAccelBeamPhysics implements BeamPhysics {
 
@@ -63,22 +66,8 @@ public class ConstAccelBeamPhysics implements BeamPhysics {
         // now update beam position using beam velocity, but only for timestep, not units per second
         // if we hit the edge of the range of motion, hard slam clamping position and reset velocity to zero
         state.xPos = state.xPos + state.xVel * secondsToTimestep;
-        if (state.xPos > 1) {
-            state.xVel = 0;
-            state.xPos = 1;
-        } else if (state.xPos < -1) {
-            state.xVel = 0;
-            state.xPos = -1;
-        }
         state.yPos = state.yPos + state.yVel * secondsToTimestep;
-        if (state.yPos > 1) {
-            state.yVel = 0;
-            state.yPos = 1;
-        } else if (state.yPos < -1) {
-            state.yVel = 0;
-            state.yPos = -1;
-        }
-
+        state.slamClamp();
         // interpolate colour change
         state.rgb = Rgb.boundedLerp(demandR, demandG, demandB, nsTimeStep, colourRate, state.rgb);
     }

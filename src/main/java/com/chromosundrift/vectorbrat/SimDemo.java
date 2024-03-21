@@ -8,6 +8,7 @@ import com.chromosundrift.vectorbrat.physics.BulletClock;
 import com.chromosundrift.vectorbrat.physics.ConstAccelBeamPhysics;
 import com.chromosundrift.vectorbrat.physics.LaserSimulator;
 import com.chromosundrift.vectorbrat.physics.LinearBeamPhysics;
+import com.chromosundrift.vectorbrat.physics.PropAccelBeamPhysics;
 import com.chromosundrift.vectorbrat.swing.SimulatorPanel;
 import com.chromosundrift.vectorbrat.swing.UiUtil;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class SimDemo {
 
     private static final Logger logger = LoggerFactory.getLogger(SimDemo.class);
 
-    public static final BulletClock CLOCK = new BulletClock(0.0008f);
+    public static final BulletClock CLOCK = new BulletClock(0.002f);
 
     // COLOR_RATE is rgb units per second where 1 unit is the difference between full bright to full dark in the eye
     public static final float COLOR_RATE = colorRate(10, MILLISECONDS);
@@ -41,11 +42,13 @@ public class SimDemo {
     public static final BeamPhysics LBP = new LinearBeamPhysics(xyRate(100, MICROSECONDS), COLOR_RATE);
 
     public static final float MAX_SPEED = 20_000f;
-    public static final float XY_ACCEL = MAX_SPEED * 2000;
+    public static final float XY_ACCEL = MAX_SPEED * 22000;
 
     public static final BeamPhysics CABP = new ConstAccelBeamPhysics(XY_ACCEL, MAX_SPEED, COLOR_RATE);
 
-    public static final float SAMPLE_RATE = 192000f;
+    public static final BeamPhysics PABP = new PropAccelBeamPhysics(9_000_000, COLOR_RATE);
+
+    public static final float SAMPLE_RATE = 96000f;
 
     public static void main(String[] args) {
         GraphicsConfiguration gConfig = UiUtil.getPreferredGraphicsConfiguration();
@@ -55,7 +58,7 @@ public class SimDemo {
         BeamTuning tuning = config.getBeamTuning();
 
         LaserSpec laserSpec = LaserSpec.laserWorld1600Pro();
-        LaserSimulator sim = new LaserSimulator(laserSpec, tuning, CABP, CLOCK);
+        LaserSimulator sim = new LaserSimulator(laserSpec, tuning, LBP, CLOCK);
         sim.setSampleRate(SAMPLE_RATE);
 
         Model m = Pattern.boxGrid(3, 3, Rgb.CYAN);
