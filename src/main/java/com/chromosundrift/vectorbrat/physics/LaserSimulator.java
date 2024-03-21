@@ -307,7 +307,7 @@ public final class LaserSimulator implements LaserDriver {
         } else {
             // convert trail to points using decreasing modulus index starting from current trailIndex
             // trail needs to darken according to the fade rate
-            return Maths.decRing(s, trailIndex).map(i -> trail.toPoint(i));
+            return Maths.decRing(s, trailIndex).map(trail::toPoint);
         }
     }
 
