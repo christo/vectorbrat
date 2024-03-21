@@ -80,7 +80,7 @@ class SimulatorRenderer {
         g2.setColor(Color.ORANGE);
         int vectorScale = width / 50;
         int x = (int) ((beamState.xPos + 1) * width/2);
-        int y = (int) ((beamState.yPos + 1) * height/2); ;
+        int y = (int) ((beamState.yPos + 1) * height/2);
         int x2 = (int) (x + beamState.xVel * vectorScale);
         int y2 = (int) (y + beamState.yVel * vectorScale);
         g2.drawLine(x, y, x2, y2);

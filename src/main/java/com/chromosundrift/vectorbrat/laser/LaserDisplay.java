@@ -52,7 +52,7 @@ public final class LaserDisplay implements VectorDisplay<BeamTuning>, LaserContr
     private volatile boolean modelDirty;
 
     private long lastPathPlanTime;
-    private Interpolator interpolator;
+    private final Interpolator interpolator;
     private long msNextListenersUpdate = 0L;
 
     public LaserDisplay(final Config config) {

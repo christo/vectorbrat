@@ -118,8 +118,8 @@ public final class Asteroids extends AbstractAnimator {
 
         private float x;
         private float y;
-        private float dx;
-        private float dy;
+        private final float dx;
+        private final float dy;
         private long nsPrev;
 
         /**

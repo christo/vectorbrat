@@ -98,7 +98,7 @@ public final class LaserSimulator implements LaserDriver {
      * History of past actual beam position and colour values in sample space. This is used to draw a persistence of
      * vision in the simulation display.
      */
-    private SignalBuffer trail;
+    private final SignalBuffer trail;
 
     /**
      * Ring index for trail. Previous value is at lower index, wrapping so that the highest index is the previous to
