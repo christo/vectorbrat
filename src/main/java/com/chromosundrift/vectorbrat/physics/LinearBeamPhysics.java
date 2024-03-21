@@ -8,6 +8,7 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
  */
 public class LinearBeamPhysics implements BeamPhysics {
 
+    public static final float NANOS_IN_SECOND = 1e9f;
     /**
      * Maximum sample units per second (position sample range is -1-1).
      */
@@ -103,17 +104,41 @@ public class LinearBeamPhysics implements BeamPhysics {
     /**
      * Modifies the given beam state Using linear physics; position is determined by linear interpolation.
      *
+     * @param demandX target x value
+     * @param demandY target y value
+     * @param demandR target red value
+     * @param demandG target green value
+     * @param demandB target blue value
      * @param state      state of beam (modified).
-     * @param nsTimeStep time increment to calculate the new state for.
+     * @param nsTimeStep time increment in ns to calculate the new state for.
      */
     @Override
-    public void timeStep(float demandX, float demandY, BeamState state, long nsTimeStep) {
-        float oldX = state.xPos;
-        float oldY = state.yPos;
-        float maxXyDelta = xyRate * (1e9f/nsTimeStep);
-        float demandDeltaX =  demandX - oldX;
-        float demandDeltaY = demandY - oldY;
-        state.xPos += Math.min(demandDeltaX, maxXyDelta);
-        state.yPos += Math.min(demandDeltaY, maxXyDelta);
+    public void timeStep(float demandX, float demandY, float demandR, float demandG, float demandB, BeamState state, long nsTimeStep) {
+        // calculate the maximum change in x or y for the given time step
+        // xyRate is in units/s, nsTimeStep is in ns, want units/nsTimeStep
+        float demandDeltaX =  demandX - state.xPos;
+        float demandDeltaY = demandY - state.yPos;
+        float maxXyDelta = xyRate * nsTimeStep / NANOS_IN_SECOND;
+        // handle negative deltas differently, want delta with minimum absolute value
+        if (demandDeltaX > 0) {
+            state.xPos += Math.min(demandDeltaX, maxXyDelta);
+        } else {
+            state.xPos += Math.max(demandDeltaX, -maxXyDelta);
+        }
+        if (demandDeltaY > 0) {
+            state.yPos += Math.min(demandDeltaY, maxXyDelta);
+        } else {
+            state.yPos += Math.max(demandDeltaY, -maxXyDelta);
+        }
+
+        // now calculate the maximum change for colours (unipolar)
+        float maxColorDelta = colorRate * nsTimeStep / NANOS_IN_SECOND;
+        float r = state.rgb.red() + Math.min(demandR - state.rgb.red(), maxColorDelta);
+        float g = state.rgb.green() + Math.min(demandG - state.rgb.green(), maxColorDelta);
+        float b = state.rgb.blue() + Math.min(demandB - state.rgb.blue(), maxColorDelta);
+        if (r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1) {
+            throw new IllegalStateException("Invalid beam colour: %s, %s, %s".formatted(r, g, b));
+        }
+        state.rgb = new Rgb(r, g, b);
     }
 }

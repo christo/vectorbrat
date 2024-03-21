@@ -29,4 +29,9 @@ final public class BeamState {
     public BeamState() {
         this(0f, 0f, 0f, 0f, Rgb.WHITE);
     }
+
+    @Override
+    public String toString() {
+        return "(%.2f,%.2f) R%.2f G%.2f B%.2f".formatted(xPos, yPos, rgb.red(), rgb.green(), rgb.blue());
+    }
 }

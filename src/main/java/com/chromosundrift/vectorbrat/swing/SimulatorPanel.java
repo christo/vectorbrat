@@ -48,7 +48,8 @@ public class SimulatorPanel extends JPanel {
                 "trail points: %s".formatted(nPoints),
                 "trailIndex: %s frontIndex: %s/%s".formatted(simulator.getTrailIndex(), simulator.getFrontIndex(), simulator.getFrontSize()),
                 "samples per point: %s".formatted(simulator.getSamplesPerPoint()),
-                "sample rate Hz: %s".formatted(simulator.getSampleRate())
+                "sample rate Hz: %s".formatted(simulator.getSampleRate()),
+                "beamstate: %s".formatted(simulator.getBeamState())
         };
         if (showUpdates) {
             g2.setColor(Color.GREEN);

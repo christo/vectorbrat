@@ -38,7 +38,7 @@ public class TeleportBeamPhysics implements BeamPhysics {
     }
 
     @Override
-    public void timeStep(float demandX, float demandY, BeamState state, long nsTimeStep) {
+    public void timeStep(float demandX, float demandY, float demandR, float demandG, float demandB, BeamState state, long nsTimeStep) {
         state.xPos = demandX;
         state.yPos = demandY;
     }

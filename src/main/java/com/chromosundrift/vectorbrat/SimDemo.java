@@ -30,10 +30,10 @@ public class SimDemo {
     /**
      * Rate of motion in normalised bipolar units per second
      */
-    public static final float XY_RATE = 20000f;
+    public static final float XY_RATE = 10000f;
 
     // COLOR_RATE is rgb units per second where 1 unit is the difference between full bright to full dark in the eye
-    public static final float COLOR_RATE = 5f;
+    public static final float COLOR_RATE = 1000f;
 
     public static final float SAMPLE_RATE = 96000f;
 

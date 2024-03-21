@@ -110,6 +110,10 @@ public final class LaserSimulator implements LaserDriver {
      */
     private long nsIncomplete;
 
+    public BeamState getBeamState() {
+        return beamState;
+    }
+
     /**
      * Current state of the scanning hardware.
      */
@@ -194,9 +198,12 @@ public final class LaserSimulator implements LaserDriver {
                     // look up demand location / current point being drawn
                     float demandX = demandFront.getX(frontIndex);
                     float demandY = demandFront.getY(frontIndex);
+                    float demandR = demandFront.getR(frontIndex);
+                    float demandG = demandFront.getG(frontIndex);
+                    float demandB = demandFront.getB(frontIndex);
 
                     // now use the demand signal for each corresponding time step to generate simulation updates
-                    physics.timeStep(demandX, demandY, beamState, nsPerSample);
+                    physics.timeStep(demandX, demandY, demandR, demandG, demandB, beamState, nsPerSample);
 
                     // depending on the physics, the beamState will be updated for the demand point
 
