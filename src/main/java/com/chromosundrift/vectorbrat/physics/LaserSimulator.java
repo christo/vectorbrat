@@ -1,5 +1,6 @@
 package com.chromosundrift.vectorbrat.physics;
 
+import com.chromosundrift.vectorbrat.Util;
 import com.chromosundrift.vectorbrat.data.Maths;
 import com.chromosundrift.vectorbrat.data.SignalBuffer;
 import com.chromosundrift.vectorbrat.geom.Pather;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
@@ -50,6 +52,26 @@ public final class LaserSimulator implements LaserDriver {
      */
     private static final long NS_POV = 1_000_000_000 / FPS_POV;
     private static final String THREAD_SIMULATOR = "simulator";
+
+    /**
+     * Calculate colour rate from a duration.
+     * @param blackToWhiteTime time units required to go from black to white.
+     * @param units time units
+     * @return colourRate in units per second (standard)
+     */
+    public static float colorRate(long blackToWhiteTime, TimeUnit units) {
+        return units.convert(blackToWhiteTime, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Calculates an xy rate by specifying the amount of time for the beam to cross the full signal range.
+     * @param rangeTime number of units it takes the beam to cross the full range.
+     * @param units time units for the rangeTime.
+     * @return an xyRate.
+     */
+    public static float xyRate(long rangeTime, TimeUnit units) {
+        return units.convert(rangeTime, TimeUnit.SECONDS);
+    }
 
     /*
       FUTURE: some overly optimistic ideas
@@ -306,7 +328,7 @@ public final class LaserSimulator implements LaserDriver {
 
         running = true;
         // only log update every so often
-        long nsPerLog = 100_000_000;
+        long nsPerLog = Util.NANOS_L * 2;
         long logUpdateDeadline = System.nanoTime() + nsPerLog;
         long nsUpdateDuration;
         while (running) {

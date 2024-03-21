@@ -1,6 +1,7 @@
 package com.chromosundrift.vectorbrat.swing;
 
 import com.chromosundrift.vectorbrat.geom.Point;
+import com.chromosundrift.vectorbrat.physics.BeamState;
 import com.chromosundrift.vectorbrat.physics.LaserSimulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,18 +11,16 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
 
 /**
  * Helper for drawing the simulator beam with the swing api.
  */
 class SimulatorRenderer {
 
-    public static final BasicStroke STROKE_HARD_CODED = new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-
     private static final Logger logger = LoggerFactory.getLogger(SimulatorRenderer.class);
+
+    public static final BasicStroke STROKE_HARD_CODED = new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static final Boolean DEBUG_ALL_POINTS = false;
     private static final Stroke DEBUG_POINT_STROKE = new BasicStroke(4f);
 
     private final LaserSimulator laserSimulator;
@@ -55,20 +54,60 @@ class SimulatorRenderer {
             int fromScreenX = (int) ((fromPoint.x() + 1) * width / 2);
             int fromScreenY = (int) ((fromPoint.y() + 1) * height / 2);
             // should colour always be set to from point?
+
             Color colour = new Color(fromPoint.r(), fromPoint.g(), fromPoint.b());
             g2.setColor(colour);
             g2.setStroke(getBeamStroke(width, height));
             g2.drawLine(fromScreenX, fromScreenY, screenX, screenY);
-            if (firstPoint) {
+            if (DEBUG_ALL_POINTS || firstPoint) {
+                // indicate first point
+                drawLocator(g2, screenX, screenY, width, height);
                 drawDebugPoint(g2, screenX, screenY, Color.RED);
             }
+            //drawVelocityVectors(g2, laserSimulator.getBeamState(), width, height);
         }
-        int lastScreenX = (int) ((prev.x() + 1) * width / 2);
-        int lastScreenY = (int) ((prev.y() + 1) * height / 2);
+        if (prev != null) {
+            // indicate last point
+            int lastScreenX = (int) ((prev.x() + 1) * width / 2);
+            int lastScreenY = (int) ((prev.y() + 1) * height / 2);
+            drawDebugPoint(g2, lastScreenX, lastScreenY, Color.GREEN);
+        }
 
-        drawDebugPoint(g2, lastScreenX, lastScreenY, Color.GREEN);
-        prev = null;
         return nPoints;
+    }
+
+    private void drawVelocityVectors(Graphics2D g2, BeamState beamState, int width, int height) {
+        g2.setColor(Color.ORANGE);
+        int vectorScale = width / 50;
+        int x = (int) ((beamState.xPos + 1) * width/2);
+        int y = (int) ((beamState.yPos + 1) * height/2); ;
+        int x2 = (int) (x + beamState.xVel * vectorScale);
+        int y2 = (int) (y + beamState.yVel * vectorScale);
+        g2.drawLine(x, y, x2, y2);
+    }
+
+    private void drawLocator(Graphics2D g2,int screenX, int screenY, int width, int height) {
+        g2.setColor(Color.PINK);
+        g2.setStroke(DEBUG_POINT_STROKE);
+        // draw locator ticks on the edges of the screen furthest from the point
+
+        int len = 20;
+        // height indicator is horizontal
+        if (screenX > width/2) {
+            // point is in right half
+            g2.drawLine(0, screenY, len, screenY);
+        } else {
+            // point is in left half
+            g2.drawLine(width, screenY, width - len, screenY);
+        }
+        // left-right indicator is vertical
+        if (screenY > height/2) {
+            // point is in bottom half
+            g2.drawLine(screenX, 0, screenX, len);
+        } else {
+            // point is in top half
+            g2.drawLine(screenX, height, screenX, height - len);
+        }
     }
 
     private void drawDebugPoint(Graphics2D g2, int x2, int y2, Color color) {

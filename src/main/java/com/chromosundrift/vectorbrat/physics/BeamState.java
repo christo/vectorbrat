@@ -9,10 +9,10 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
  */
 final public class BeamState {
 
-    float xPos;
-    float yPos;
-    float xVel;
-    float yVel;
+    public float xPos;
+    public float yPos;
+    public float xVel;
+    public float yVel;
     Rgb rgb;
 
     public BeamState(float xPos, float yPos, float xVel, float yVel, Rgb rgb) {
@@ -32,6 +32,6 @@ final public class BeamState {
 
     @Override
     public String toString() {
-        return "(%.2f,%.2f) R%.2f G%.2f B%.2f".formatted(xPos, yPos, rgb.red(), rgb.green(), rgb.blue());
+        return "(%.2f,%.2f)Δ(%.2f,%.2f) %s".formatted(xPos, yPos, xVel, yVel, rgb);
     }
 }

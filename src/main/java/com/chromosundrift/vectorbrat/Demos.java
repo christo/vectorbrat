@@ -31,8 +31,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static com.chromosundrift.vectorbrat.data.Maths.clamp;
-
 /**
  * Utility methods for creating chunks of models and animations with specific config
  * to make good demos. This contains a lot of content and configuration that we want

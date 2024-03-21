@@ -56,6 +56,7 @@ public class SimulatorPanel extends JPanel {
             UiUtil.hudLines(g2, s.height, lines, Color.GREEN, fontHud);
 
         }
+        im.flush();
         g.drawImage(im, 0, 0, null);
     }
 

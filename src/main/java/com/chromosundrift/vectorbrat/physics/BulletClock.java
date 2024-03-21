@@ -1,6 +1,7 @@
 package com.chromosundrift.vectorbrat.physics;
 
 import javax.annotation.Nonnull;
+import java.time.Duration;
 
 /**
  * Clock whose rate can be set and changed, based on an underlying clock. This is intended to be useful for analysing
