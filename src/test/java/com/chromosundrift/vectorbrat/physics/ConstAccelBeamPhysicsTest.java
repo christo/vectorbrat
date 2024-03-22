@@ -5,6 +5,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * Unit test for {@link ConstAccelBeamPhysics}
+ */
 public class ConstAccelBeamPhysicsTest {
 
     @Test
