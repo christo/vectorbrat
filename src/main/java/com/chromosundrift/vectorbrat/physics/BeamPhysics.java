@@ -14,11 +14,11 @@ public interface BeamPhysics {
      * Perform state transition calculations based on the physics model of the implmementation. The
      * state parameter is modified.
      *
-     * @param demandR
-     * @param demandG
-     * @param demandB
+     * @param r
+     * @param g
+     * @param b
      * @param state      state to be mutated.
      * @param nsTimeStep time increment in nanoseconds to calculate the new state for.
      */
-    void timeStep(float demandX, float demandY, float demandR, float demandG, float demandB, BeamState state, long nsTimeStep);
+    void timeStep(float x, float y, float r, float g, float b, BeamState state, long nsTimeStep);
 }

@@ -7,8 +7,8 @@ package com.chromosundrift.vectorbrat.physics;
 public class TeleportBeamPhysics implements BeamPhysics {
 
     @Override
-    public void timeStep(float demandX, float demandY, float demandR, float demandG, float demandB, BeamState state, long nsTimeStep) {
-        state.xPos = demandX;
-        state.yPos = demandY;
+    public void timeStep(float x, float y, float r, float g, float b, BeamState state, long nsTimeStep) {
+        state.xPos = x;
+        state.yPos = y;
     }
 }

@@ -18,12 +18,12 @@ public class PropAccelBeamPhysics implements BeamPhysics {
 
 
     @Override
-    public void timeStep(float demandX, float demandY, float demandR, float demandG, float demandB, BeamState state, long nsTimeStep) {
+    public void timeStep(float x, float y, float r, float g, float b, BeamState state, long nsTimeStep) {
         float secondsToTimestep = nsTimeStep / Util.NANOS_F;
 
         // calculate a normalised delta to use as the coefficient of acceleration
-        float kX = ((demandX + 1)/2 - (state.xPos + 1)/2) * this.maxAccel * secondsToTimestep;
-        float kY = ((demandY + 1)/2 - (state.yPos + 1)/2) * this.maxAccel * secondsToTimestep;
+        float kX = ((x + 1)/2 - (state.xPos + 1)/2) * this.maxAccel * secondsToTimestep;
+        float kY = ((y + 1)/2 - (state.yPos + 1)/2) * this.maxAccel * secondsToTimestep;
         state.xVel += kX*kX*kX;
         state.yVel += kY*kY*kY;
 
@@ -35,6 +35,6 @@ public class PropAccelBeamPhysics implements BeamPhysics {
         state.slamClamp();
 
         // interpolate colour change
-        state.rgb = Rgb.boundedLerp(demandR, demandG, demandB, nsTimeStep, colourRate, state.rgb);
+        state.rgb = Rgb.boundedLerp(r, g, b, nsTimeStep, colourRate, state.rgb);
     }
 }

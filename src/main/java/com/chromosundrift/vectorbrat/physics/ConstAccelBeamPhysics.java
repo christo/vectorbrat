@@ -36,30 +36,30 @@ public class ConstAccelBeamPhysics implements BeamPhysics {
      * Applies the acceleration to the current beam state for the whole nsTimeStep. Colour is linearly interpolated
      * within colourRate bounds.
      *
-     * @param demandX    new x coordinate
-     * @param demandY    new y coordinate
-     * @param demandR    new red value
-     * @param demandG    new green value
-     * @param demandB    new blue value
+     * @param x    new x coordinate
+     * @param y    new y coordinate
+     * @param r    new red value
+     * @param g    new green value
+     * @param b    new blue value
      * @param state      state to be mutated.
      * @param nsTimeStep time increment in nanoseconds to calculate the new state for.
      */
     @Override
-    public void timeStep(float demandX, float demandY, float demandR, float demandG, float demandB, BeamState state, long nsTimeStep) {
+    public void timeStep(float x, float y, float r, float g, float b, BeamState state, long nsTimeStep) {
 
         float secondsToTimestep = nsTimeStep / Util.NANOS_F;
 
         float accelPerTimetep = this.xyAccel * secondsToTimestep;
         // calculate new velocity components in units/s
         // first update beam velocity, maintaining units/s
-        if (demandX > state.xPos) {
+        if (x > state.xPos) {
             state.xVel = Math.min(state.xVel + accelPerTimetep, maxSpeed);
-        } else if (demandX < state.xPos) {
+        } else if (x < state.xPos) {
             state.xVel = Math.max(state.xVel - accelPerTimetep, -maxSpeed);
         }
-        if (demandY > state.yPos) {
+        if (y > state.yPos) {
             state.yVel = Math.min(state.yVel + accelPerTimetep, maxSpeed);
-        } else if (demandY < state.yPos) {
+        } else if (y < state.yPos) {
             state.yVel = Math.max(state.yVel - accelPerTimetep, -maxSpeed);
         }
 
@@ -69,6 +69,6 @@ public class ConstAccelBeamPhysics implements BeamPhysics {
         state.yPos = state.yPos + state.yVel * secondsToTimestep;
         state.slamClamp();
         // interpolate colour change
-        state.rgb = Rgb.boundedLerp(demandR, demandG, demandB, nsTimeStep, colourRate, state.rgb);
+        state.rgb = Rgb.boundedLerp(r, g, b, nsTimeStep, colourRate, state.rgb);
     }
 }

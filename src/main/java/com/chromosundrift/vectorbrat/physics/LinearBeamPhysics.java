@@ -46,20 +46,20 @@ public class LinearBeamPhysics implements BeamPhysics {
     /**
      * Modifies the given beam state Using linear physics; position is determined by linear interpolation.
      *
-     * @param demandX    target x value
-     * @param demandY    target y value
-     * @param demandR    target red value
-     * @param demandG    target green value
-     * @param demandB    target blue value
+     * @param x    target x value
+     * @param y    target y value
+     * @param r    target red value
+     * @param g    target green value
+     * @param b    target blue value
      * @param state      state of beam (modified).
      * @param nsTimeStep time increment in ns to calculate the new state for.
      */
     @Override
-    public void timeStep(float demandX, float demandY, float demandR, float demandG, float demandB, BeamState state, long nsTimeStep) {
+    public void timeStep(float x, float y, float r, float g, float b, BeamState state, long nsTimeStep) {
         // calculate the maximum change in x or y for the given time step
         // xyRate is in units/s, nsTimeStep is in ns, want units/nsTimeStep
-        float demandDeltaX = demandX - state.xPos;
-        float demandDeltaY = demandY - state.yPos;
+        float demandDeltaX = x - state.xPos;
+        float demandDeltaY = y - state.yPos;
         float maxXyDelta = xyRate * nsTimeStep / Util.NANOS_F;
         // handle negative deltas differently, want delta with minimum absolute value
         if (demandDeltaX > 0) {
@@ -73,7 +73,7 @@ public class LinearBeamPhysics implements BeamPhysics {
             state.yPos += Math.max(demandDeltaY, -maxXyDelta);
         }
 
-        state.rgb = Rgb.boundedLerp(demandR, demandG, demandB, nsTimeStep, colourRate, state.rgb);
+        state.rgb = Rgb.boundedLerp(r, g, b, nsTimeStep, colourRate, state.rgb);
     }
 
 }
