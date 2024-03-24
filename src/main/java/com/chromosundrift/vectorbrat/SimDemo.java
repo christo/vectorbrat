@@ -20,6 +20,8 @@ import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Rectangle;
 
+import static com.chromosundrift.vectorbrat.geom.Pattern.testPattern1;
+
 
 /**
  * Demo app for LaserSimulator.
@@ -28,7 +30,7 @@ public class SimDemo {
 
     private static final Logger logger = LoggerFactory.getLogger(SimDemo.class);
 
-    public static final BulletClock CLOCK = new BulletClock(0.01f);
+    public static final BulletClock CLOCK = new BulletClock(0.005f);
 
     // COLOR_RATE is rgb units per second where 1 unit is the difference between full bright to full dark in the eye
     public static final float COLOR_RATE = 4000f;
@@ -58,9 +60,8 @@ public class SimDemo {
         LaserSimulator sim = new LaserSimulator(laserSpec, tuning, CABP, CLOCK);
         sim.setSampleRate(SAMPLE_RATE);
 
-        Model m = Pattern.boxGrid(3, 3, Rgb.CYAN).scale(0.9f, 0.9f).merge(
-                Pattern.boxGrid(2, 2, Rgb.ORANGE)
-        );
+
+        Model m = testPattern1();
 
         Interpolation interpolation = config.getInterpolation();
         Interpolator pather = new Interpolator(interpolation, tuning);
@@ -90,5 +91,15 @@ public class SimDemo {
                 logger.warn("interrupted exception (ignoring)", e);
             }
         }
+    }
+
+    private static Model simpleModel() {
+        return Pattern.boxGrid(2, 2, Rgb.ORANGE);
+    }
+
+    private static Model complexModel() {
+        return Pattern.boxGrid(3, 3, Rgb.CYAN).scale(0.9f, 0.9f).merge(
+                Pattern.boxGrid(2, 2, Rgb.ORANGE)
+        );
     }
 }
