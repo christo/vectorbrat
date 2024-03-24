@@ -49,6 +49,7 @@ public class ConstAccelBeamPhysicsTest {
      */
     @Test
     public void timeStepsWhileSpeeding() throws IOException {
+        // TODO calculate assertions for this test and add assertions
         // change in speed per second
         double xyAccel = 1d;
         // maximum speed permitted
