@@ -18,6 +18,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
+// TODO fix bug that prevents this running properly in VectorBrat application (swing painting/threads etc.?)
+// TODO fix bug that makes colours pulse and no lit trail on geometry edges
+
+
 /**
  * Physical simulation of vector display replicating real-world laser projector with scanner galvanometers and
  * brightness changes over time. Configuration is intended to produce equivalent output to a real laser with
@@ -50,7 +54,6 @@ public final class LaserSimulator implements LaserDriver {
     private static final long NS_POV = 1_000_000_000 / FPS_POV;
     private static final String THREAD_SIMULATOR = "simulator";
 
-
     /*
       FUTURE: some overly optimistic ideas
 
@@ -66,55 +69,67 @@ public final class LaserSimulator implements LaserDriver {
     private final Clock clock;
     private final ExecutorService executorService;
     private final BeamPhysics physics;
+
     /**
      * History of past actual beam position and colour values in sample space. This is used to draw a persistence of
      * vision in the simulation display.
      */
     private final SignalBuffer trail;
+
     /**
      * Reentrant lock for double buffered updates to the demand signal.
      */
     private final ReentrantLock bufferLock = new ReentrantLock();
+
     /**
      * Current state of the scanning hardware.
      */
     private final BeamState beamState;
+
     /**
      * Nanosecond time of previous frame.
      */
     private long nsPrev;
+
     /**
      * Ring index for trail. Previous value is at lower index, wrapping so that the highest index is the previous to
      * the zero index.
      */
     private int trailIndex = 0;
+
     /**
      * Buffer for demand signal being rendered.
      */
     private SignalBuffer demandFront;
+
     /**
      * Buffer for demand signal being updated.
      */
     private SignalBuffer demandBack;
+
     /**
      * Cursor for the front buffer.
      */
     private int frontIndex;
+
     /**
      * Difference between time on clock and last simulation update due to no new sample being due at
      * the current sample rate.
      */
     private long nsIncomplete;
+
     /**
      * Current sample rate. Can change over time.
      */
     private float sampleRate;
+
     /**
      * Nanosecond deadline for next point.
      */
     private long nsNextPoint;
     private volatile boolean running = false;
     private long startTime = 0;
+
     public LaserSimulator(LaserSpec laserSpec, BeamTuning tuning, BeamPhysics physics, Clock clock) {
         logger.info("initialising LaserSimulator");
         this.physics = physics;
@@ -165,6 +180,7 @@ public final class LaserSimulator implements LaserDriver {
      * clock to determine simulation time delta between calls.
      */
     public void update() {
+        // TODO calculate updates per second
         // if we have done a previous update, calculate the simulation updates based on the delta
         if (nsPrev >= 0) {
             // determine the now time for this update
@@ -172,7 +188,7 @@ public final class LaserSimulator implements LaserDriver {
             long nsElapsed = nsNow - nsPrev;
 
             // calculate how many samples to update for
-            long nsPerSample = 1_000_000_000 / ((long) sampleRate);
+            long nsPerSample = 1_000_000_000L / ((long) sampleRate);
             int samplesThisUpdate = (int) (nsElapsed / nsPerSample);
             // simTime will be the time at each discrete simulation step calculation
             long simTime = nsPrev;

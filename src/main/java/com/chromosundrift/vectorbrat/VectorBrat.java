@@ -48,7 +48,7 @@ public class VectorBrat {
         logger.info("initialising VectorBrat");
         final Config config = new Config();
         laser = new LaserDisplay(config);
-        final BulletClock clock = new BulletClock(1.0f);
+        final BulletClock clock = new BulletClock(1.0d);
         simulator = new LaserSimulator(config.getLaserSpec(), laser.getTuning(), config.getBeamPhysics(), clock);
         DisplayController displayController = new DisplayController(DisplayController.Mode.DISPLAY);
         displayPanel = new DisplayPanel(config, displayController, laser, simulator);

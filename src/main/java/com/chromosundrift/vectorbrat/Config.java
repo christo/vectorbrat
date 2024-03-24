@@ -7,6 +7,7 @@ import com.chromosundrift.vectorbrat.geom.Interpolation;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 import com.chromosundrift.vectorbrat.physics.BeamPhysics;
+import com.chromosundrift.vectorbrat.physics.ConstAccelBeamPhysics;
 import com.chromosundrift.vectorbrat.physics.LinearBeamPhysics;
 
 
@@ -87,6 +88,7 @@ public final class Config {
     private static final float DEFAULT_POINTS_PER_UNIT_OFFSET = 9f;
 
     private static final Interpolation DEFAULT_INTERPOLATION = Interpolation.QUINTIC;
+    // TODO get this working with more advanced BeamPhysics implementations
     public static final BeamPhysics DEFAULT_BEAM_PHYSICS = new LinearBeamPhysics(1d, 1f);
 
     private final Channel channelX;

@@ -3,12 +3,12 @@ package com.chromosundrift.vectorbrat.physics;
 import javax.annotation.Nonnull;
 
 /**
- * Clock whose rate can be set and changed, based on an underlying clock. This is intended to be useful for analysing
+ * Clock whose rate can be set and changed, relative to an underlying clock. This is intended to be useful for analysing
  * {@link LaserSimulator} paths at slower than real time (rates between 0 and 1.0).
  */
 public final class BulletClock implements Clock {
     private final Clock real;
-    private volatile float rate;
+    private volatile double rate;
 
     /**
      * Smaller rate means slower time.
@@ -16,7 +16,7 @@ public final class BulletClock implements Clock {
      * @param real underlying clock source.
      * @param rate multiplier for simulating slower (or faster) time. Must be > 0.
      */
-    public BulletClock(@Nonnull Clock real, float rate) {
+    public BulletClock(@Nonnull Clock real, double rate) {
         if (rate <= 0) {
             throw new IllegalArgumentException("Rate must be > 0");
         }
@@ -29,7 +29,7 @@ public final class BulletClock implements Clock {
      *
      * @param rate time multiplier.
      */
-    public BulletClock(float rate) {
+    public BulletClock(double rate) {
         this(SystemClock.INSTANCE, rate);
     }
 
@@ -38,7 +38,7 @@ public final class BulletClock implements Clock {
         return (long) (real.getNs() * rate);
     }
 
-    public float rate() {
+    public double rate() {
         return rate;
     }
 

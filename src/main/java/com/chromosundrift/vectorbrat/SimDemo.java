@@ -55,7 +55,6 @@ public class SimDemo {
 //        BeamTuning tuning = BeamTuning.noInterpolation(30000);
 //        BeamTuning tuning = new BeamTuning(30000, 5f, 15f, 3f, 4f, 2f);
 
-
         LaserSpec laserSpec = LaserSpec.laserWorld1600Pro();
         LaserSimulator sim = new LaserSimulator(laserSpec, tuning, CABP, CLOCK);
         sim.setSampleRate(SAMPLE_RATE);
