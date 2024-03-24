@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
@@ -33,20 +32,17 @@ import java.util.stream.Stream;
  */
 public final class LaserSimulator implements LaserDriver {
 
-    private static final Logger logger = LoggerFactory.getLogger(LaserSimulator.class);
-
-    /**
-     * Size of signal buffers in number of samples.
-     */
-    private static final int INITIAL_BUFFER_SIZE = 10000;
     public static final int TRAIL_BUFFER_SIZE = 500000;
-
     /**
      * Frames per second that make in-eye persistence appear continuous. In other words, what fraction of a second does
      * apparent afterimage vision persist.
      */
     public static final int FPS_POV = 25; // canonical value from movies
-
+    private static final Logger logger = LoggerFactory.getLogger(LaserSimulator.class);
+    /**
+     * Size of signal buffers in number of samples.
+     */
+    private static final int INITIAL_BUFFER_SIZE = 10000;
     /**
      * Estimate of nanoseconds for full bright beam spot to fade to black, aka afterimage latency. An accurate estimate
      * will depend on beam intensity, relative ambient brightness and individual ocular differences.
@@ -70,71 +66,55 @@ public final class LaserSimulator implements LaserDriver {
     private final Clock clock;
     private final ExecutorService executorService;
     private final BeamPhysics physics;
-
-    /**
-     * Nanosecond time of previous frame.
-     */
-    private long nsPrev;
-
     /**
      * History of past actual beam position and colour values in sample space. This is used to draw a persistence of
      * vision in the simulation display.
      */
     private final SignalBuffer trail;
-
+    /**
+     * Reentrant lock for double buffered updates to the demand signal.
+     */
+    private final ReentrantLock bufferLock = new ReentrantLock();
+    /**
+     * Current state of the scanning hardware.
+     */
+    private final BeamState beamState;
+    /**
+     * Nanosecond time of previous frame.
+     */
+    private long nsPrev;
     /**
      * Ring index for trail. Previous value is at lower index, wrapping so that the highest index is the previous to
      * the zero index.
      */
     private int trailIndex = 0;
-
-    /**
-     * Reentrant lock for double buffered updates to the demand signal.
-     */
-    private final ReentrantLock bufferLock = new ReentrantLock();
-
     /**
      * Buffer for demand signal being rendered.
      */
     private SignalBuffer demandFront;
-
     /**
      * Buffer for demand signal being updated.
      */
     private SignalBuffer demandBack;
-
     /**
      * Cursor for the front buffer.
      */
     private int frontIndex;
-
     /**
      * Difference between time on clock and last simulation update due to no new sample being due at
      * the current sample rate.
      */
     private long nsIncomplete;
-
-    public BeamState getBeamState() {
-        return beamState;
-    }
-
-    /**
-     * Current state of the scanning hardware.
-     */
-    private final BeamState beamState;
-
     /**
      * Current sample rate. Can change over time.
      */
     private float sampleRate;
-
     /**
      * Nanosecond deadline for next point.
      */
     private long nsNextPoint;
     private volatile boolean running = false;
     private long startTime = 0;
-
     public LaserSimulator(LaserSpec laserSpec, BeamTuning tuning, BeamPhysics physics, Clock clock) {
         logger.info("initialising LaserSimulator");
         this.physics = physics;
@@ -151,6 +131,10 @@ public final class LaserSimulator implements LaserDriver {
         this.executorService = Executors.newSingleThreadExecutor(r -> new Thread(r, THREAD_SIMULATOR));
         this.beamState = new BeamState();
         this.nsNextPoint = clock.getNs(); // deadline for next demand buffer point
+    }
+
+    public BeamState getBeamState() {
+        return beamState;
     }
 
     /**
@@ -252,29 +236,6 @@ public final class LaserSimulator implements LaserDriver {
 
     }
 
-    public void setSampleRate(float sampleRate) {
-        try {
-            bufferLock.lock();
-            this.sampleRate = sampleRate;
-            // need to update the trail size based on pps and sample rate samples per POV
-            // we assume the full bright trail is visible for the entire persistence of vision duration,
-            // as derived by the FPS_POV constant
-
-            float samplesToFullFade = sampleRate / FPS_POV;
-            int newSize = (int) Math.ceil(samplesToFullFade);
-            if (newSize != trail.getActualSize()) {
-                int size = trail.setActualSize(newSize);
-                //noinspection ConstantValue
-                if (size != newSize) {
-                    logger.warn("cannot set trail size to {}, set to {} instead", newSize, size);
-                }
-            }
-        } finally {
-            bufferLock.unlock();
-        }
-    }
-
-
     /**
      * Returns a stream of beam {@link Point Points} in normalised sample range, each having a colour derived from its
      * past beam colour.
@@ -350,6 +311,28 @@ public final class LaserSimulator implements LaserDriver {
 
     public float getSampleRate() {
         return sampleRate;
+    }
+
+    public void setSampleRate(float sampleRate) {
+        try {
+            bufferLock.lock();
+            this.sampleRate = sampleRate;
+            // need to update the trail size based on pps and sample rate samples per POV
+            // we assume the full bright trail is visible for the entire persistence of vision duration,
+            // as derived by the FPS_POV constant
+
+            float samplesToFullFade = sampleRate / FPS_POV;
+            int newSize = (int) Math.ceil(samplesToFullFade);
+            if (newSize != trail.getActualSize()) {
+                int size = trail.setActualSize(newSize);
+                //noinspection ConstantValue
+                if (size != newSize) {
+                    logger.warn("cannot set trail size to {}, set to {} instead", newSize, size);
+                }
+            }
+        } finally {
+            bufferLock.unlock();
+        }
     }
 
 

@@ -6,13 +6,13 @@ package com.chromosundrift.vectorbrat.physics;
 public final class TimeMachine implements Clock {
     private long ns = 0L;
 
-    public void setNs(long ns) {
-        this.ns = ns;
-    }
-
     @Override
     public long getNs() {
         return ns;
+    }
+
+    public void setNs(long ns) {
+        this.ns = ns;
     }
 
     public void add(long nsDelta) {

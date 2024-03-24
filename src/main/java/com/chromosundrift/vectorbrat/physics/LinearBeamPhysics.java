@@ -9,24 +9,21 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
  */
 public class LinearBeamPhysics implements BeamPhysics {
 
-    /**
-     * Maximum sample units per second (position sample range is -1-1).
-     */
-    private final double xyRate;
-
-    /**
-     * Maximum sample units per second (colour sample range is 0-1).
-     */
-    private final float colourRate;
-
-    // TODO parametise with configuration the maximum and minimum values for colour and coordinates
-
     private static final float COLOUR_MAX_VALUE = 1.0f;
     private static final float COLOUR_MIN_VALUE = 0.0f;
+
     private static final float COLOUR_RANGE = (COLOUR_MAX_VALUE - COLOUR_MIN_VALUE);
     private static final float XY_MAX_VALUE = 1.0f;
     private static final float XY_MIN_VALUE = -1.0f;
     private static final float XY_RANGE = (XY_MAX_VALUE - XY_MIN_VALUE);
+    /**
+     * Maximum sample units per second (position sample range is -1-1).
+     */
+    private final double xyRate;
+    /**
+     * Maximum sample units per second (colour sample range is 0-1).
+     */
+    private final float colourRate;
 
     /**
      * Construct with fixed linear coefficients of change over time. The arguments represent the fixed linear change in
@@ -46,11 +43,11 @@ public class LinearBeamPhysics implements BeamPhysics {
     /**
      * Modifies the given beam state Using linear physics; position is determined by linear interpolation.
      *
-     * @param x    target x value
-     * @param y    target y value
-     * @param r    target red value
-     * @param g    target green value
-     * @param b    target blue value
+     * @param x          target x value
+     * @param y          target y value
+     * @param r          target red value
+     * @param g          target green value
+     * @param b          target blue value
      * @param state      state of beam (modified).
      * @param nsTimeStep time increment in ns to calculate the new state for.
      */

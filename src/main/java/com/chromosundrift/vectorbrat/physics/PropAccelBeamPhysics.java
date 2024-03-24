@@ -23,8 +23,8 @@ public class PropAccelBeamPhysics implements BeamPhysics {
 
         // calculate normalised position deltas to use as the coefficient of acceleration
         // if we are almost at the demand position the acceleration towards the point should be almost zero
-        double kX = ((x + 1)/2 - (state.xPos + 1)/2) * this.maxAccel * secondsToTimestep;
-        double kY = ((y + 1)/2 - (state.yPos + 1)/2) * this.maxAccel * secondsToTimestep;
+        double kX = ((x + 1) / 2 - (state.xPos + 1) / 2) * this.maxAccel * secondsToTimestep;
+        double kY = ((y + 1) / 2 - (state.yPos + 1) / 2) * this.maxAccel * secondsToTimestep;
         state.xVel += kX;
         state.yVel += kY;
 

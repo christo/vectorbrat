@@ -49,7 +49,7 @@ final public class BeamState {
             yPos = -1;
         }
     }
-    
+
     @Override
     public String toString() {
         return "(%.2f,%.2f)Δ(%.2f,%.2f) %s".formatted(xPos, yPos, xVel, yVel, rgb);
