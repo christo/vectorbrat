@@ -32,23 +32,20 @@ public record Rgb(float red, float green, float blue) {
         this.blue = Maths.clamp0to1(blue);
     }
 
-
-
     public Rgb boundedLerp(float demandR, float demandG, float demandB, long nsTimeStep, float rate) {
+        // based on the rate and number of timesteps, calculate the maximum change in colour
         float maxColorDelta = rate * nsTimeStep / Util.NANOS_F;
+        // for each component,
         float r = (demandR > red)
-            ? red + Math.min(demandR - red, maxColorDelta)
-            : red - Math.max(red - demandR, -maxColorDelta);
+            ? Math.max(1f, red + Math.min(demandR - red, maxColorDelta))
+            : Math.min(0f, red - Math.max(red - demandR, -maxColorDelta));
         float g = (demandG > green)
-            ? green + Math.min(demandG - green, maxColorDelta)
-            : green - Math.max(green - demandR, -maxColorDelta);
+            ? Math.max(1f, green + Math.min(demandG - green, maxColorDelta))
+            : Math.min(0f, green - Math.max(green - demandR, -maxColorDelta));
         float b = (demandB > blue)
-            ? blue + Math.min(demandB - blue, maxColorDelta)
-            : blue - Math.max(blue - demandB, -maxColorDelta);
+            ? Math.max(1f, blue + Math.min(demandB - blue, maxColorDelta))
+            : Math.min(0f, blue - Math.max(blue - demandB, -maxColorDelta));
 
-        if (r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1) {
-            throw new IllegalStateException("Invalid beam colour: %s, %s, %s".formatted(r, g, b));
-        }
         return new Rgb(r, g, b);
     }
 
