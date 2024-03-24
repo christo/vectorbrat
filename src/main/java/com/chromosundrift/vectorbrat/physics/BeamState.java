@@ -9,13 +9,13 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
  */
 final public class BeamState {
 
-    public float xPos;
-    public float yPos;
-    public float xVel;
-    public float yVel;
+    public double xPos;
+    public double yPos;
+    public double xVel;
+    public double yVel;
     Rgb rgb;
 
-    public BeamState(float xPos, float yPos, float xVel, float yVel, Rgb rgb) {
+    public BeamState(double xPos, double yPos, double xVel, double yVel, Rgb rgb) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.xVel = xVel;
@@ -30,6 +30,9 @@ final public class BeamState {
         this(0f, 0f, 0f, 0f, Rgb.WHITE);
     }
 
+    /**
+     * Update position and velocity to dead stop if boundaries exceeded.
+     */
     public void slamClamp() {
         if (xPos > 1) {
             xVel = 0;

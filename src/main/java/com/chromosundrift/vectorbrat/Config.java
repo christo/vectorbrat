@@ -87,7 +87,7 @@ public final class Config {
     private static final float DEFAULT_POINTS_PER_UNIT_OFFSET = 9f;
 
     private static final Interpolation DEFAULT_INTERPOLATION = Interpolation.QUINTIC;
-    public static final BeamPhysics DEFAULT_BEAM_PHYSICS = new LinearBeamPhysics(1f, 1f);
+    public static final BeamPhysics DEFAULT_BEAM_PHYSICS = new LinearBeamPhysics(1d, 1f);
 
     private final Channel channelX;
     private final Channel channelY;

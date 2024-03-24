@@ -12,7 +12,7 @@ public class LinearBeamPhysics implements BeamPhysics {
     /**
      * Maximum sample units per second (position sample range is -1-1).
      */
-    private final float xyRate;
+    private final double xyRate;
 
     /**
      * Maximum sample units per second (colour sample range is 0-1).
@@ -38,7 +38,7 @@ public class LinearBeamPhysics implements BeamPhysics {
      * @param xyRate     x and y position in units per second.
      * @param colourRate rgb units per second.
      */
-    public LinearBeamPhysics(float xyRate, float colourRate) {
+    public LinearBeamPhysics(double xyRate, float colourRate) {
         this.xyRate = xyRate;
         this.colourRate = colourRate;
     }
@@ -55,12 +55,12 @@ public class LinearBeamPhysics implements BeamPhysics {
      * @param nsTimeStep time increment in ns to calculate the new state for.
      */
     @Override
-    public void timeStep(float x, float y, float r, float g, float b, BeamState state, long nsTimeStep) {
+    public void timeStep(double x, double y, float r, float g, float b, BeamState state, long nsTimeStep) {
         // calculate the maximum change in x or y for the given time step
         // xyRate is in units/s, nsTimeStep is in ns, want units/nsTimeStep
-        float demandDeltaX = x - state.xPos;
-        float demandDeltaY = y - state.yPos;
-        float maxXyDelta = xyRate * nsTimeStep / Util.NANOS_F;
+        double demandDeltaX = x - state.xPos;
+        double demandDeltaY = y - state.yPos;
+        double maxXyDelta = xyRate * nsTimeStep / Util.NANOS_F;
         // handle negative deltas differently, want delta with minimum absolute value
         if (demandDeltaX > 0) {
             state.xPos += Math.min(demandDeltaX, maxXyDelta);

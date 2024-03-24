@@ -20,5 +20,5 @@ public interface BeamPhysics {
      * @param state      state to be mutated.
      * @param nsTimeStep time increment in nanoseconds to calculate the new state for.
      */
-    void timeStep(float x, float y, float r, float g, float b, BeamState state, long nsTimeStep);
+    void timeStep(double x, double y, float r, float g, float b, BeamState state, long nsTimeStep);
 }

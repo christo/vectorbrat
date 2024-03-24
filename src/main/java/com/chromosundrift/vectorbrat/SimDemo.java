@@ -19,13 +19,7 @@ import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Rectangle;
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
-import static com.chromosundrift.vectorbrat.physics.LaserSimulator.colorRate;
-import static com.chromosundrift.vectorbrat.physics.LaserSimulator.xyRate;
-import static java.util.concurrent.TimeUnit.MICROSECONDS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * Demo app for LaserSimulator.
@@ -34,19 +28,19 @@ public class SimDemo {
 
     private static final Logger logger = LoggerFactory.getLogger(SimDemo.class);
 
-    public static final BulletClock CLOCK = new BulletClock(0.002f);
+    public static final BulletClock CLOCK = new BulletClock(0.01f);
 
     // COLOR_RATE is rgb units per second where 1 unit is the difference between full bright to full dark in the eye
-    public static final float COLOR_RATE = colorRate(10, MILLISECONDS);
+    public static final float COLOR_RATE = 4000f;
 
-    public static final BeamPhysics LBP = new LinearBeamPhysics(xyRate(100, MICROSECONDS), COLOR_RATE);
+    public static final BeamPhysics LBP = new LinearBeamPhysics(0.000d, COLOR_RATE);
 
-    public static final float MAX_SPEED = 20_000f;
-    public static final float XY_ACCEL = MAX_SPEED * 22000;
+    public static final double MAX_SPEED = 50_000_000d;
+    public static final double XY_ACCEL = MAX_SPEED * 50000;
 
     public static final BeamPhysics CABP = new ConstAccelBeamPhysics(XY_ACCEL, MAX_SPEED, COLOR_RATE);
 
-    public static final BeamPhysics PABP = new PropAccelBeamPhysics(9_000_000, COLOR_RATE);
+    public static final BeamPhysics PABP = new PropAccelBeamPhysics(10_000_000d, COLOR_RATE);
 
     public static final float SAMPLE_RATE = 96000f;
 
@@ -56,12 +50,17 @@ public class SimDemo {
         Config config = new Config();
 
         BeamTuning tuning = config.getBeamTuning();
+//        BeamTuning tuning = BeamTuning.noInterpolation(30000);
+//        BeamTuning tuning = new BeamTuning(30000, 5f, 15f, 3f, 4f, 2f);
+
 
         LaserSpec laserSpec = LaserSpec.laserWorld1600Pro();
-        LaserSimulator sim = new LaserSimulator(laserSpec, tuning, LBP, CLOCK);
+        LaserSimulator sim = new LaserSimulator(laserSpec, tuning, CABP, CLOCK);
         sim.setSampleRate(SAMPLE_RATE);
 
-        Model m = Pattern.boxGrid(3, 3, Rgb.CYAN);
+        Model m = Pattern.boxGrid(3, 3, Rgb.CYAN).scale(0.9f, 0.9f).merge(
+                Pattern.boxGrid(2, 2, Rgb.ORANGE)
+        );
 
         Interpolation interpolation = config.getInterpolation();
         Interpolator pather = new Interpolator(interpolation, tuning);

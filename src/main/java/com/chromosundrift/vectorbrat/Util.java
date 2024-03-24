@@ -11,6 +11,7 @@ import java.util.logging.LogManager;
 public class Util {
 
     public static final float NANOS_F = 1e9f;
+    public static final double NANOS_D = 1e9d;
     public static final Long NANOS_L = 1_000_000_000L;
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
 

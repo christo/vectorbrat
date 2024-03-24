@@ -8,27 +8,27 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
  */
 public class PropAccelBeamPhysics implements BeamPhysics {
 
-    private final float maxAccel;
+    private final double maxAccel;
     private final float colourRate;
 
-    public PropAccelBeamPhysics(float maxAccel, float colourRate) {
+    public PropAccelBeamPhysics(double maxAccel, float colourRate) {
         this.maxAccel = maxAccel;
         this.colourRate = colourRate;
     }
 
 
     @Override
-    public void timeStep(float x, float y, float r, float g, float b, BeamState state, long nsTimeStep) {
-        float secondsToTimestep = nsTimeStep / Util.NANOS_F;
+    public void timeStep(double x, double y, float r, float g, float b, BeamState state, long nsTimeStep) {
+        double secondsToTimestep = nsTimeStep / Util.NANOS_F;
 
-        // calculate a normalised delta to use as the coefficient of acceleration
-        float kX = ((x + 1)/2 - (state.xPos + 1)/2) * this.maxAccel * secondsToTimestep;
-        float kY = ((y + 1)/2 - (state.yPos + 1)/2) * this.maxAccel * secondsToTimestep;
-        state.xVel += kX*kX*kX;
-        state.yVel += kY*kY*kY;
+        // calculate normalised position deltas to use as the coefficient of acceleration
+        // if we are almost at the demand position the acceleration towards the point should be almost zero
+        double kX = ((x + 1)/2 - (state.xPos + 1)/2) * this.maxAccel * secondsToTimestep;
+        double kY = ((y + 1)/2 - (state.yPos + 1)/2) * this.maxAccel * secondsToTimestep;
+        state.xVel += kX;
+        state.yVel += kY;
 
         // now update beam position using beam velocity, but only for timestep, not units per second
-        // if we hit the edge of the range of motion, hard slam clamping position and reset velocity to zero
         state.xPos = state.xPos + state.xVel * secondsToTimestep;
         state.yPos = state.yPos + state.yVel * secondsToTimestep;
 

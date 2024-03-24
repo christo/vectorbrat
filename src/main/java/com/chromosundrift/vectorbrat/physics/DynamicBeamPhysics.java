@@ -21,7 +21,7 @@ public class DynamicBeamPhysics implements BeamPhysics {
      * @param nsTimeStep time increment in nanoseconds to calculate the new state for.
      */
     @Override
-    public void timeStep(float x, float y, float r, float g, float b, BeamState state, long nsTimeStep) {
+    public void timeStep(double x, double y, float r, float g, float b, BeamState state, long nsTimeStep) {
         // TODO
     }
 }

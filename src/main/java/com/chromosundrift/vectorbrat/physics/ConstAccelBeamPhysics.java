@@ -13,8 +13,8 @@ import com.chromosundrift.vectorbrat.geom.Rgb;
  */
 public class ConstAccelBeamPhysics implements BeamPhysics {
 
-    private final float xyAccel;
-    private final float maxSpeed;
+    private final double xyAccel;
+    private final double maxSpeed;
     private final float colourRate;
 
     /**
@@ -26,7 +26,7 @@ public class ConstAccelBeamPhysics implements BeamPhysics {
      * @param maxSpeed   velocity cap in units/s for x and y independently.
      * @param colourRate linear rate of change for colour in units/s
      */
-    public ConstAccelBeamPhysics(float xyAccel, float maxSpeed, float colourRate) {
+    public ConstAccelBeamPhysics(double xyAccel, double maxSpeed, float colourRate) {
         this.xyAccel = xyAccel;
         this.maxSpeed = maxSpeed;
         this.colourRate = colourRate;
@@ -36,37 +36,40 @@ public class ConstAccelBeamPhysics implements BeamPhysics {
      * Applies the acceleration to the current beam state for the whole nsTimeStep. Colour is linearly interpolated
      * within colourRate bounds.
      *
-     * @param x    new x coordinate
-     * @param y    new y coordinate
-     * @param r    new red value
-     * @param g    new green value
-     * @param b    new blue value
+     * @param x          new x coordinate
+     * @param y          new y coordinate
+     * @param r          new red value
+     * @param g          new green value
+     * @param b          new blue value
      * @param state      state to be mutated.
      * @param nsTimeStep time increment in nanoseconds to calculate the new state for.
      */
     @Override
-    public void timeStep(float x, float y, float r, float g, float b, BeamState state, long nsTimeStep) {
-        // TODO unit test
-        float secondsToTimestep = nsTimeStep / Util.NANOS_F;
+    public void timeStep(double x, double y, float r, float g, float b, BeamState state, long nsTimeStep) {
+        double secondsToTimestep = ((double) nsTimeStep) / Util.NANOS_D;
 
-        float accelPerTimetep = this.xyAccel * secondsToTimestep;
+        // convert constant acceleration into timestep basis
+        double accelPerTimetep = this.xyAccel * secondsToTimestep;
+        // convert max speed into timestep basis
+        double maxSpeedPerTimestep = maxSpeed * secondsToTimestep;
         // calculate new velocity components in units/s
         // first update beam velocity, maintaining units/s
-        if (x > state.xPos) {
-            state.xVel = Math.min(state.xVel + accelPerTimetep, maxSpeed);
-        } else if (x < state.xPos) {
-            state.xVel = Math.max(state.xVel - accelPerTimetep, -maxSpeed);
-        }
-        if (y > state.yPos) {
-            state.yVel = Math.min(state.yVel + accelPerTimetep, maxSpeed);
-        } else if (y < state.yPos) {
-            state.yVel = Math.max(state.yVel - accelPerTimetep, -maxSpeed);
-        }
+        double newXvel = (x > state.xPos)
+                ? Math.min(state.xVel + accelPerTimetep, maxSpeedPerTimestep)
+                : Math.max(state.xVel - accelPerTimetep, -maxSpeedPerTimestep);
+
+        double newYvel = (y > state.yPos)
+                ? Math.min(state.yVel + accelPerTimetep, maxSpeedPerTimestep)
+                : Math.max(state.yVel - accelPerTimetep, -maxSpeedPerTimestep);
 
         // now update beam position using beam velocity, but only for timestep, not units per second
+        state.xPos += (newXvel * secondsToTimestep);
+        state.yPos += (newYvel * secondsToTimestep);
+
+        // update new velocities
+        state.xVel = newXvel;
+        state.yVel = newYvel;
         // if we hit the edge of the range of motion, hard slam clamping position and reset velocity to zero
-        state.xPos = state.xPos + state.xVel * secondsToTimestep;
-        state.yPos = state.yPos + state.yVel * secondsToTimestep;
         state.slamClamp();
         // interpolate colour change
         state.rgb = Rgb.boundedLerp(r, g, b, nsTimeStep, colourRate, state.rgb);

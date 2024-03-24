@@ -38,7 +38,8 @@ public final class LaserSimulator implements LaserDriver {
     /**
      * Size of signal buffers in number of samples.
      */
-    private static final int INITIAL_BUFFER_SIZE = 100000;
+    private static final int INITIAL_BUFFER_SIZE = 10000;
+    public static final int TRAIL_BUFFER_SIZE = 500000;
 
     /**
      * Frames per second that make in-eye persistence appear continuous. In other words, what fraction of a second does
@@ -53,25 +54,6 @@ public final class LaserSimulator implements LaserDriver {
     private static final long NS_POV = 1_000_000_000 / FPS_POV;
     private static final String THREAD_SIMULATOR = "simulator";
 
-    /**
-     * Calculate colour rate from a duration.
-     * @param blackToWhiteTime time units required to go from black to white.
-     * @param units time units
-     * @return colourRate in units per second (standard)
-     */
-    public static float colorRate(long blackToWhiteTime, TimeUnit units) {
-        return units.convert(blackToWhiteTime, TimeUnit.SECONDS);
-    }
-
-    /**
-     * Calculates an xy rate by specifying the amount of time for the beam to cross the full signal range.
-     * @param rangeTime number of units it takes the beam to cross the full range.
-     * @param units time units for the rangeTime.
-     * @return an xyRate.
-     */
-    public static float xyRate(long rangeTime, TimeUnit units) {
-        return units.convert(rangeTime, TimeUnit.SECONDS);
-    }
 
     /*
       FUTURE: some overly optimistic ideas
@@ -164,7 +146,7 @@ public final class LaserSimulator implements LaserDriver {
         this.demandFront = new SignalBuffer(INITIAL_BUFFER_SIZE);
         this.demandBack = new SignalBuffer(INITIAL_BUFFER_SIZE);
         this.nsPrev = -1L;
-        this.trail = new SignalBuffer(INITIAL_BUFFER_SIZE);
+        this.trail = new SignalBuffer(TRAIL_BUFFER_SIZE);
         this.trail.reset();
         this.executorService = Executors.newSingleThreadExecutor(r -> new Thread(r, THREAD_SIMULATOR));
         this.beamState = new BeamState();
@@ -231,7 +213,7 @@ public final class LaserSimulator implements LaserDriver {
 
                     // update the trail history for this sample
                     Rgb rgb = beamState.rgb;
-                    trail.set(beamState.xPos, beamState.yPos, rgb.red(), rgb.green(), rgb.blue(), trailIndex);
+                    trail.set((float) beamState.xPos, (float) beamState.yPos, rgb.red(), rgb.green(), rgb.blue(), trailIndex);
 
                     {
                         // advance the trail, wrapping the trail ring buffer index if necessary
