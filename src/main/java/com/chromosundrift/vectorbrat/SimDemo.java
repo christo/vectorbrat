@@ -1,6 +1,10 @@
 package com.chromosundrift.vectorbrat;
 
-import com.chromosundrift.vectorbrat.geom.*;
+import com.chromosundrift.vectorbrat.geom.Interpolation;
+import com.chromosundrift.vectorbrat.geom.Interpolator;
+import com.chromosundrift.vectorbrat.geom.Model;
+import com.chromosundrift.vectorbrat.geom.Pattern;
+import com.chromosundrift.vectorbrat.geom.Rgb;
 import com.chromosundrift.vectorbrat.laser.BeamTuning;
 import com.chromosundrift.vectorbrat.laser.LaserSpec;
 import com.chromosundrift.vectorbrat.physics.BeamPhysics;
@@ -15,14 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.JFrame;
-import javax.swing.WindowConstants;
-import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
-import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
-import static com.chromosundrift.vectorbrat.geom.Pattern.testPattern1;
 
 
 /**
@@ -63,7 +62,8 @@ public class SimDemo {
 
 
 //        Model m = testPattern1();
-        Model m = simpleModel();
+//        Model m = simpleModel();
+        Model m = complexModel();
 
         Interpolation interpolation = config.getInterpolation();
         Interpolator pather = new Interpolator(interpolation, tuning);

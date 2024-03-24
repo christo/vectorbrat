@@ -209,7 +209,7 @@ public final class LaserSimulator implements LaserDriver {
                     // now use the demand signal for each corresponding time step to generate simulation updates
                     physics.timeStep(demandX, demandY, demandR, demandG, demandB, beamState, nsPerSample);
 
-                    // depending on the physics, the beamState will be updated for the demand point
+                    // the beamState will havebeen updated for the demand point according to on the physics,
 
                     // update the trail history for this sample
                     Rgb rgb = beamState.rgb;
