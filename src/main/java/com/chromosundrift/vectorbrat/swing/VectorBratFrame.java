@@ -32,6 +32,7 @@ public class VectorBratFrame extends JFrame {
 
         setPreferredSize(new Dimension(Math.min(1600, screenSize.width), Math.min(1000, screenSize.height)));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         setLayout(new BorderLayout(5, 5));
 
         JSplitPane split = new JSplitPane();

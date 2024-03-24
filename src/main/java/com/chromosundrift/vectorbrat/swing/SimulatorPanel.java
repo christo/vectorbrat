@@ -17,6 +17,9 @@ public class SimulatorPanel extends JPanel {
 
     private final SimulatorRenderer simulatorRenderer;
     private final LaserSimulator simulator;
+    /**
+     * Whether to show contextual info about the simulation.
+     */
     private volatile boolean showUpdates;
     private final Font fontHud;
     private BufferedImage im;
@@ -62,7 +65,17 @@ public class SimulatorPanel extends JPanel {
         g.drawImage(im, 0, 0, null);
     }
 
+    /**
+     * Set whether or not debug style data is shown on screen.
+     *
+     * @param showUpdates if true, updates are shown.
+     */
     public void showUpdates(boolean showUpdates) {
         this.showUpdates = showUpdates;
+    }
+
+    public boolean toggleShowUpdates() {
+        showUpdates = !showUpdates;
+        return showUpdates;
     }
 }

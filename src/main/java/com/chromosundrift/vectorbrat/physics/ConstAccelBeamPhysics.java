@@ -72,6 +72,6 @@ public class ConstAccelBeamPhysics implements BeamPhysics {
         // if we hit the edge of the range of motion, hard slam clamping position and reset velocity to zero
         state.slamClamp();
         // interpolate colour change
-        state.rgb = Rgb.boundedLerp(r, g, b, nsTimeStep, colourRate, state.rgb);
+        state.rgb = state.rgb.boundedLerp(r, g, b, nsTimeStep, colourRate);
     }
 }

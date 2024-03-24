@@ -32,17 +32,19 @@ public record Rgb(float red, float green, float blue) {
         this.blue = Maths.clamp0to1(blue);
     }
 
-    public static Rgb boundedLerp(float demandR, float demandG, float demandB, long nsTimeStep, float rate, Rgb rgb) {
+
+
+    public Rgb boundedLerp(float demandR, float demandG, float demandB, long nsTimeStep, float rate) {
         float maxColorDelta = rate * nsTimeStep / Util.NANOS_F;
-        float r = (demandR > rgb.red)
-            ? rgb.red + Math.min(demandR - rgb.red, maxColorDelta)
-            : rgb.red - Math.max(rgb.red - demandR, -maxColorDelta);
-        float g = (demandG > rgb.green)
-            ? rgb.green + Math.min(demandG - rgb.green, maxColorDelta)
-            : rgb.green - Math.max(rgb.green - demandR, -maxColorDelta);
-        float b = (demandB > rgb.blue)
-            ? rgb.blue + Math.min(demandB - rgb.blue, maxColorDelta)
-            : rgb.blue - Math.max(rgb.blue - demandB, -maxColorDelta);
+        float r = (demandR > red)
+            ? red + Math.min(demandR - red, maxColorDelta)
+            : red - Math.max(red - demandR, -maxColorDelta);
+        float g = (demandG > green)
+            ? green + Math.min(demandG - green, maxColorDelta)
+            : green - Math.max(green - demandR, -maxColorDelta);
+        float b = (demandB > blue)
+            ? blue + Math.min(demandB - blue, maxColorDelta)
+            : blue - Math.max(blue - demandB, -maxColorDelta);
 
         if (r < 0 || r > 1 || g < 0 || g > 1 || b < 0 || b > 1) {
             throw new IllegalStateException("Invalid beam colour: %s, %s, %s".formatted(r, g, b));

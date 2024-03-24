@@ -70,7 +70,7 @@ public class LinearBeamPhysics implements BeamPhysics {
             state.yPos += Math.max(demandDeltaY, -maxXyDelta);
         }
 
-        state.rgb = Rgb.boundedLerp(r, g, b, nsTimeStep, colourRate, state.rgb);
+        state.rgb = state.rgb.boundedLerp(r, g, b, nsTimeStep, colourRate);
     }
 
 }

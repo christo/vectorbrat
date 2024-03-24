@@ -35,6 +35,6 @@ public class PropAccelBeamPhysics implements BeamPhysics {
         state.slamClamp();
 
         // interpolate colour change
-        state.rgb = Rgb.boundedLerp(r, g, b, nsTimeStep, colourRate, state.rgb);
+        state.rgb = state.rgb.boundedLerp(r, g, b, nsTimeStep, colourRate);
     }
 }

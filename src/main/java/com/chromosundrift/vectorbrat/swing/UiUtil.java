@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.Color;
@@ -34,6 +35,20 @@ public class UiUtil {
     public static void centerFrame(JFrame f) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         f.setLocation(screenSize.width / 2 - f.getWidth() / 2, screenSize.height / 2 - f.getHeight() / 2);
+    }
+
+    /**
+     * Exit on close, centre frame with given dimensions.
+     * @param jFrame the {@link JFrame}
+     * @param width desired width.
+     * @param height desired height.
+     */
+    public static void typifyFrame(JFrame jFrame, int width, int height) {
+        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jFrame.setPreferredSize(new Dimension(width, height));
+        jFrame.pack();
+        UiUtil.centerFrame(jFrame);
+        jFrame.setVisible(true);
     }
 
     public static TitledBorder titledBorder(String title, HAlign hAlign) {

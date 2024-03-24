@@ -19,6 +19,8 @@ import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Rectangle;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import static com.chromosundrift.vectorbrat.geom.Pattern.testPattern1;
 
@@ -60,32 +62,33 @@ public class SimDemo {
         sim.setSampleRate(SAMPLE_RATE);
 
 
-        Model m = testPattern1();
+//        Model m = testPattern1();
+        Model m = simpleModel();
 
         Interpolation interpolation = config.getInterpolation();
         Interpolator pather = new Interpolator(interpolation, tuning);
         pather.plan(m);
         sim.makePath(pather);
         SimulatorPanel simulatorPanel = new SimulatorPanel(sim);
+        simulatorPanel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() == KeyEvent.VK_SPACE) {
+                    simulatorPanel.toggleShowUpdates();
+                }
+            }
+        });
         simulatorPanel.showUpdates(true);
         jFrame.add(simulatorPanel);
-        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        jFrame.setPreferredSize(new Dimension(1000, 800));
-        jFrame.pack();
-
-        // move the window to the center of preferred screen
-        Dimension actualSize = jFrame.getSize();
-        Rectangle bounds = gConfig.getBounds();
-        jFrame.setLocation(bounds.width /2 - actualSize.width/2, bounds.height /2 - actualSize.height/2);
-
-        jFrame.setVisible(true);
+        UiUtil.typifyFrame(jFrame, 1000, 800);
         sim.start();
         //noinspection InfiniteLoopStatement
         while (true) {
+
             simulatorPanel.repaint();
             try {
                 //noinspection BusyWait
-                Thread.sleep(10);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 logger.warn("interrupted exception (ignoring)", e);
             }
